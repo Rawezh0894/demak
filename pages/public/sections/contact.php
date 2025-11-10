@@ -30,7 +30,7 @@
                         <i class="fas fa-phone text-white text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3"><?php echo t('phone'); ?></h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-lg mb-2">+964 750 123 4567</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-lg mb-2">+964 770 924 0894</p>
                     <p class="text-gray-500 dark:text-gray-400 text-sm"><?php echo t('available_24_7') ?? 'Available 24/7'; ?></p>
                 </div>
             </div>
