@@ -1,0 +1,184 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Allow direct access to process files (for AJAX calls)
+RewriteCond %{REQUEST_URI} ^/process/.*\.php$ [NC]
+RewriteRule ^ - [L]
+
+# Allow direct access to includes files
+RewriteCond %{REQUEST_URI} ^/includes/.*\.php$ [NC]
+RewriteRule ^ - [L]
+
+# Allow direct access to core files
+RewriteCond %{REQUEST_URI} ^/core/.*\.php$ [NC]
+RewriteRule ^ - [L]
+
+# Allow direct access to config files
+RewriteCond %{REQUEST_URI} ^/config/.*\.php$ [NC]
+RewriteRule ^ - [L]
+
+# Allow direct access to database files
+RewriteCond %{REQUEST_URI} ^/database/.*\.php$ [NC]
+RewriteRule ^ - [L]
+
+# Allow direct access to assets (CSS, JS, images)
+RewriteRule ^assets/ - [L]
+
+# Allow direct access to vendor directory
+RewriteRule ^vendor/ - [L]
+
+# Allow direct access to .env file (for environment loading)
+RewriteCond %{REQUEST_URI} ^/\.env$ [NC]
+RewriteRule ^ - [L]
+
+# Redirect .php URLs to clean URLs (removes .php from browser address bar)
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.php [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Remove .php extension from URLs (internal rewrite)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Handle pages directory without .php extension
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^pages/([^\.]+)$ pages/$1.php [NC,L]
+
+# If the requested path is dashboard.php, redirect to the new location
+RewriteRule ^dashboard\.php$ pages/dashboard.php [R=301,L]
+
+# Fix for other top-level pages
+RewriteRule ^users\.php$ pages/users.php [R=301,L]
+RewriteRule ^reports\.php$ pages/reports.php [R=301,L]
+RewriteRule ^profile\.php$ pages/profile.php [R=301,L]
+
+# Browser Caching - کاتی cache بۆ فایلە جیاوازەکان
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Images - 1 مانگ
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # CSS and JavaScript - 1 هەفتە
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType text/javascript "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType application/x-javascript "access plus 1 week"
+    
+    # Fonts - 1 ساڵ
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    
+    # HTML - 1 کاتژمێر
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType application/xhtml+xml "access plus 1 hour"
+    
+    # Default - 2 ڕۆژ
+    ExpiresDefault "access plus 2 days"
+</IfModule>
+
+# Gzip Compression - کەمکردنەوەی قەبارەی فایلەکان
+<IfModule mod_deflate.c>
+    # Compress HTML, CSS, JavaScript, Text, XML and fonts
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+    AddOutputFilterByType DEFLATE application/x-font
+    AddOutputFilterByType DEFLATE application/x-font-opentype
+    AddOutputFilterByType DEFLATE application/x-font-otf
+    AddOutputFilterByType DEFLATE application/x-font-truetype
+    AddOutputFilterByType DEFLATE application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE font/opentype
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE image/x-icon
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+    
+    # Remove browser bugs (only needed for really old browsers)
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    Header append Vary User-Agent
+</IfModule>
+
+# Cache Control Headers
+<IfModule mod_headers.c>
+    # 1 YEAR - وێنەکان، فۆنتەکان
+    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|webp|svg|swf|woff|woff2|ttf|otf|eot)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+    
+    # 1 WEEK - CSS و JavaScript
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+    
+    # 1 HOUR - HTML
+    <FilesMatch "\.(html|htm|php)$">
+        Header set Cache-Control "max-age=3600, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Disable ETags
+<IfModule mod_headers.c>
+    Header unset ETag
+</IfModule>
+FileETag None
+
+# Prevent directory listing
+Options -Indexes
+
+# Deny access to hidden files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect sensitive files (but allow .env for internal use)
+<FilesMatch "\.(json|log|yml|yaml|config|ini|htaccess|htpasswd)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Increase upload limits
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 100M
+    php_value post_max_size 100M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+    php_value max_input_time 300
+</IfModule>
+
+
+# PHP Settings - کەمکردنەوەی memory usage
+<IfModule mod_php7.c>
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+</IfModule>

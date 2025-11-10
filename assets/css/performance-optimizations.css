@@ -1,0 +1,186 @@
+/* 
+ * Performance Optimizations CSS
+ * کەمکردنەوە و باشترکردنی ئەنیمەیشنەکان بۆ performance-ی باشتر
+ */
+
+/* 1. کەمکردنەوەی ئەنیمەیشن بۆ ئامێرە لاوازەکان */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* 2. بەکارهێنانی GPU Acceleration بۆ ئەنیمەیشنە گرنگەکان */
+.hero-content,
+.project-slide,
+.category-section,
+.floating-shapes {
+    will-change: auto;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* 3. کەمکردنەوەی floating shapes لە مۆبایل */
+@media (max-width: 768px) {
+    .floating-shapes .shape {
+        display: none;
+    }
+    
+    .floating-shapes .shape:nth-child(1),
+    .floating-shapes .shape:nth-child(2) {
+        display: block; /* تەنها 2 دانە */
+    }
+}
+
+/* 4. Lazy Loading Helper */
+.lazy-load {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+}
+
+.lazy-load.loaded {
+    opacity: 1;
+}
+
+/* 5. Skeleton Loading بۆ وێنەکان */
+.skeleton-loading {
+    background: linear-gradient(
+        90deg,
+        #f0f0f0 0%,
+        #e0e0e0 20%,
+        #f0f0f0 40%,
+        #f0f0f0 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* 6. کەمکردنەوەی Repaints و Reflows */
+.project-image {
+    content-visibility: auto;
+    contain-intrinsic-size: 400px 300px;
+}
+
+/* 7. Debounce Scroll Events */
+.scroll-optimized {
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+}
+
+/* 8. Critical CSS Inlining Helper */
+.above-fold {
+    /* ئەو ستایلانەی سەرەوەی پەڕە پێویستیانە */
+    min-height: 100vh;
+}
+
+/* 9. Font Loading Optimization */
+@font-face {
+    font-family: 'Rabar';
+    src: url('../fonts/Rabar_021.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* پێشاندانی فۆنتی fallback تا فۆنتی سەرەکی لۆد بێت */
+}
+
+/* 10. Intersection Observer Helper */
+.fade-in-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 11. کەمکردنەوەی Shadow Rendering */
+.optimized-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* لە جیاتی زۆر shadow layer */
+}
+
+/* 12. Efficient Gradients */
+.optimized-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* ساکارتر لە زۆر color stop */
+}
+
+/* 13. Image Optimization Hints */
+img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* 14. Contain Layout Shifts */
+.aspect-ratio-box {
+    position: relative;
+    padding-bottom: 75%; /* 4:3 aspect ratio */
+}
+
+.aspect-ratio-box > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 15. Optimize Modal Rendering */
+.project-modal {
+    contain: layout style paint;
+    will-change: opacity;
+}
+
+/* 16. کەمکردنەوەی Animation Complexity لە مۆبایل */
+@media (max-width: 768px) {
+    .hero-overlay::before,
+    .hero-overlay::after,
+    .infrastructure-hero::before,
+    .infrastructure-hero::after,
+    .design-hero::before,
+    .design-hero::after {
+        animation: none !important;
+        opacity: 0.5;
+    }
+}
+
+/* 17. Efficient Hover Effects */
+.service-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* کەمتر transition property = باشتر performance */
+}
+
+/* 18. Optimize Blur Effects */
+.optimized-blur {
+    backdrop-filter: blur(5px);
+    /* کەمتر blur = خێراتر render */
+}
+
+/* 19. Content Visibility for Off-Screen Elements */
+.off-screen-content {
+    content-visibility: auto;
+}
+
+/* 20. Async CSS Loading */
+.async-css-placeholder {
+    /* بۆشایی بۆ پاراستن لە layout shift */
+    min-height: 50px;
+}
+

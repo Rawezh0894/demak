@@ -1,0 +1,52 @@
+/* 
+ * Custom Icons CSS - تەنها ئەو ئایکۆنانە کە بەکاریاندەهێنین
+ * ئەمە زۆر کەمترە لە Font Awesome-ی تەواو
+ */
+
+/* Base Icon Styles */
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+}
+
+/* تەنها ئەو ئایکۆنانەی کە لە پڕۆژەکەدا بەکاریان دەهێنین */
+.icon-home::before { content: "\f015"; }
+.icon-building::before { content: "\f1ad"; }
+.icon-school::before { content: "\f549"; }
+.icon-house::before { content: "\f015"; }
+.icon-tools::before { content: "\f7d9"; }
+.icon-drafting-compass::before { content: "\f568"; }
+.icon-eye::before { content: "\f06e"; }
+.icon-times::before { content: "\f00d"; }
+.icon-dollar-sign::before { content: "\f155"; }
+.icon-clock::before { content: "\f017"; }
+.icon-user-tie::before { content: "\f508"; }
+.icon-calculator::before { content: "\f1ec"; }
+.icon-phone::before { content: "\f095"; }
+.icon-download::before { content: "\f019"; }
+.icon-arrow-up::before { content: "\f062"; }
+.icon-chevron-left::before { content: "\f053"; }
+.icon-chevron-right::before { content: "\f054"; }
+.icon-bars::before { content: "\f0c9"; }
+
+/* Sizes */
+.icon-sm { font-size: 0.875rem; }
+.icon-lg { font-size: 1.25rem; }
+.icon-xl { font-size: 1.5rem; }
+.icon-2x { font-size: 2rem; }
+
+/* تێبینی: ئەم شێوازە تەنها بە 2-3KB CSS دەگات لە جیاتی 200KB+ Font Awesome */
+
+/* 
+ * بۆ بەکارهێنان لە جیاتی Font Awesome:
+ * پێشتر: <i class="fas fa-home"></i>
+ * ئێستا: <i class="icon-home"></i>
+ */
+
