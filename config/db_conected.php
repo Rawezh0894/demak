@@ -23,9 +23,9 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 
 $host = env('DB_HOST', 'localhost');
-$db   = env('DB_NAME', 'demak_db');
-$user = env('DB_USER', 'root');
-$pass = env('DB_PASS', '');
+$db   = env('DB_NAME', 'u503479575_demak_db');
+$user = env('DB_USER', 'u503479575_Rawezh_Jaza08');
+$pass = env('DB_PASS', 'Rawezh.Jaza@0894');
 $charset = env('DB_CHARSET', 'utf8mb4');
 $port = env('DB_PORT', '3306');
 
