@@ -313,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<script>
 // Initialize sidebar based on screen size
 function initializeSidebar() {
     const sidebar = document.getElementById('sidebar');
