@@ -79,29 +79,29 @@ $sidebar_top_radius = 'rounded-t-lg';
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
-                <div id="servicesSidebarDropdown" class="sidebar-submenu mt-2 space-y-2 pl-4 border-l border-gray-200 dark:border-gray-700 <?php echo $is_services_active ? '' : 'hidden'; ?>">
-                    <a href="index.php#services" class="flex items-center text-sm text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'font-medium'; ?>">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                <div id="servicesSidebarDropdown" class="sidebar-submenu mt-2 space-y-3 pl-4 pr-2 border-l border-gray-200 dark:border-gray-700 <?php echo $is_services_active ? '' : 'hidden'; ?>">
+                    <a href="index.php#services" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="whitespace-nowrap truncate"><?php echo t('our_services'); ?></span>
                     </a>
-                    <a href="pages/public/commercial-residential-design.php" class="flex items-center text-sm text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'commercial-residential-design.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'font-medium'; ?>">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                    <a href="pages/public/commercial-residential-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'commercial-residential-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="whitespace-nowrap truncate"><?php echo t('commercial_design_management'); ?></span>
                     </a>
-                    <a href="pages/public/infrastructure.php" class="flex items-center text-sm text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'infrastructure.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'font-medium'; ?>">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                    <a href="pages/public/infrastructure.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'infrastructure.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="whitespace-nowrap truncate"><?php echo t('infrastructure_construction'); ?></span>
                     </a>
-                    <a href="pages/public/design-reconstruction.php" class="flex items-center text-sm text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'design-reconstruction.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'font-medium'; ?>">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 dark:bg-purple-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                    <a href="pages/public/design-reconstruction.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'design-reconstruction.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 dark:bg-purple-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="whitespace-nowrap truncate"><?php echo t('design_reconstruction'); ?></span>
                     </a>
-                    <a href="pages/public/exterior-design.php" class="flex items-center text-sm text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'exterior-design.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'font-medium'; ?>">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-orange-500 dark:bg-orange-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                    <a href="pages/public/exterior-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'exterior-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-orange-500 dark:bg-orange-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="whitespace-nowrap truncate"><?php echo t('exterior_design_implementation'); ?></span>
                     </a>
-                    <a href="pages/public/interior-design.php" class="flex items-center text-sm text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'interior-design.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'font-medium'; ?>">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-pink-500 dark:bg-pink-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                    <a href="pages/public/interior-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'interior-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-pink-500 dark:bg-pink-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="whitespace-nowrap truncate"><?php echo t('interior_design_implementation'); ?></span>
                     </a>
                 </div>
