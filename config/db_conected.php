@@ -40,7 +40,7 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
     PDO::ATTR_TIMEOUT            => $connection_timeout,
     PDO::ATTR_PERSISTENT          => false, // Don't use persistent connections to avoid "gone away" issues
-    PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=28800, interactive_timeout=28800, max_allowed_packet=67108864",
+    PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=28800, interactive_timeout=28800",
 ];
 
 // Function to create database connection with retry logic
