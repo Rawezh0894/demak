@@ -6,10 +6,42 @@ require_once __DIR__ . '/translations.php';
 $page_dir = $languages[$current_lang]['dir'];
 $is_rtl = ($page_dir === 'rtl');
 
-// Contact information (can be moved to database later)
+// Load contact information from database settings
+// Make sure we have database connection
+if (!isset($pdo)) {
+    // Try to load database connection if not already loaded
+    $db_path = __DIR__ . '/../config/db_conected.php';
+    if (file_exists($db_path)) {
+        require_once $db_path;
+    }
+}
+
+// Load settings functions
+$select_path = __DIR__ . '/../process/settings_management/select.php';
+if (file_exists($select_path) && isset($pdo)) {
+    require_once $select_path;
+}
+
+// Get contact information from settings (with fallback values)
 $contact_phone = '+964 750 123 4567';
 $contact_email = 'info@demak.com';
-$contact_facebook = 'https://www.facebook.com/demak'; // Replace with actual Facebook page URL
+$contact_facebook = 'https://www.facebook.com/demak';
+
+if (isset($pdo) && function_exists('getSettingValue')) {
+    try {
+        $contact_phone = getSettingValue($pdo, 'contact_phone', '+964 750 123 4567');
+        $contact_email = getSettingValue($pdo, 'contact_email', 'info@demak.com');
+        $contact_facebook = getSettingValue($pdo, 'facebook_url', 'https://www.facebook.com/demak');
+        
+        // If Facebook URL is empty, use default
+        if (empty($contact_facebook) || $contact_facebook === '#') {
+            $contact_facebook = 'https://www.facebook.com/demak';
+        }
+    } catch (Exception $e) {
+        // Use default values if there's an error
+        error_log("Error loading floating contact settings: " . $e->getMessage());
+    }
+}
 
 // Set position based on direction
 $contact_position = $is_rtl ? 'left-0' : 'right-0';
