@@ -79,50 +79,88 @@ if (isset($pdo) && function_exists('getSettingValue')) {
 $current_year = date('Y');
 ?>
 <!-- Footer -->
-<footer class="bg-gray-800 dark:bg-gray-900 text-white py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<footer class="bg-gray-800 dark:bg-gray-900 text-white py-16 relative overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div class="absolute inset-0 opacity-5 dark:opacity-10">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
             <!-- Company Info -->
-            <div>
-                <h3 class="text-xl font-bold mb-4"><?php echo htmlspecialchars($site_name); ?></h3>
-                <p class="text-gray-300 mb-4">
-                    <?php echo htmlspecialchars($site_description); ?>
-                </p>
+            <div class="lg:col-span-1">
+                <div class="mb-6">
+                    <!-- Logo/Brand -->
+                    <div class="flex items-center space-x-3 rtl:space-x-reverse mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-green-600 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
+                            <?php echo htmlspecialchars($site_name); ?>
+                        </h3>
+                    </div>
+                    <p class="text-gray-300 dark:text-gray-400 leading-relaxed mb-6 text-sm">
+                        <?php echo htmlspecialchars($site_description); ?>
+                    </p>
+                </div>
+                
+                <!-- Social Media Links -->
                 <?php if (!empty($facebook_url) || !empty($instagram_url) || !empty($twitter_url) || !empty($linkedin_url) || !empty($youtube_url) || !empty($whatsapp_number)): ?>
-                <div class="flex space-x-4 rtl:space-x-reverse">
+                <div class="flex flex-wrap gap-3">
                     <?php if (!empty($facebook_url) && $facebook_url !== '#'): ?>
-                    <a href="<?php echo htmlspecialchars($facebook_url); ?>" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white transition-colors" title="Facebook">
-                        <i class="fab fa-facebook-f"></i>
+                    <a href="<?php echo htmlspecialchars($facebook_url); ?>" target="_blank" rel="noopener noreferrer" 
+                       class="group relative w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 transform hover:-translate-y-1" 
+                       title="Facebook">
+                        <i class="fab fa-facebook-f text-sm"></i>
+                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </a>
                     <?php endif; ?>
                     
                     <?php if (!empty($twitter_url) && $twitter_url !== '#'): ?>
-                    <a href="<?php echo htmlspecialchars($twitter_url); ?>" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white transition-colors" title="Twitter">
-                        <i class="fab fa-twitter"></i>
+                    <a href="<?php echo htmlspecialchars($twitter_url); ?>" target="_blank" rel="noopener noreferrer" 
+                       class="group relative w-11 h-11 bg-gradient-to-br from-sky-500 to-sky-600 rounded-xl flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-sky-500/50 transition-all duration-300 transform hover:-translate-y-1" 
+                       title="Twitter">
+                        <i class="fab fa-twitter text-sm"></i>
+                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </a>
                     <?php endif; ?>
                     
                     <?php if (!empty($linkedin_url) && $linkedin_url !== '#'): ?>
-                    <a href="<?php echo htmlspecialchars($linkedin_url); ?>" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white transition-colors" title="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
+                    <a href="<?php echo htmlspecialchars($linkedin_url); ?>" target="_blank" rel="noopener noreferrer" 
+                       class="group relative w-11 h-11 bg-gradient-to-br from-blue-700 to-blue-800 rounded-xl flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-blue-700/50 transition-all duration-300 transform hover:-translate-y-1" 
+                       title="LinkedIn">
+                        <i class="fab fa-linkedin-in text-sm"></i>
+                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </a>
                     <?php endif; ?>
                     
                     <?php if (!empty($instagram_url) && $instagram_url !== '#'): ?>
-                    <a href="<?php echo htmlspecialchars($instagram_url); ?>" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white transition-colors" title="Instagram">
-                        <i class="fab fa-instagram"></i>
+                    <a href="<?php echo htmlspecialchars($instagram_url); ?>" target="_blank" rel="noopener noreferrer" 
+                       class="group relative w-11 h-11 bg-gradient-to-br from-pink-500 via-purple-500 to-orange-500 rounded-xl flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-300 transform hover:-translate-y-1" 
+                       title="Instagram">
+                        <i class="fab fa-instagram text-sm"></i>
+                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </a>
                     <?php endif; ?>
                     
                     <?php if (!empty($youtube_url) && $youtube_url !== '#'): ?>
-                    <a href="<?php echo htmlspecialchars($youtube_url); ?>" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white transition-colors" title="YouTube">
-                        <i class="fab fa-youtube"></i>
+                    <a href="<?php echo htmlspecialchars($youtube_url); ?>" target="_blank" rel="noopener noreferrer" 
+                       class="group relative w-11 h-11 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 transform hover:-translate-y-1" 
+                       title="YouTube">
+                        <i class="fab fa-youtube text-sm"></i>
+                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </a>
                     <?php endif; ?>
                     
                     <?php if (!empty($whatsapp_number)): ?>
-                    <a href="https://wa.me/<?php echo str_replace([' ', '-', '(', ')', '+'], '', $whatsapp_number); ?>" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white transition-colors" title="WhatsApp">
-                        <i class="fab fa-whatsapp"></i>
+                    <a href="https://wa.me/<?php echo str_replace([' ', '-', '(', ')', '+'], '', $whatsapp_number); ?>" target="_blank" rel="noopener noreferrer" 
+                       class="group relative w-11 h-11 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 transform hover:-translate-y-1" 
+                       title="WhatsApp">
+                        <i class="fab fa-whatsapp text-sm"></i>
+                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </a>
                     <?php endif; ?>
                 </div>
@@ -131,31 +169,49 @@ $current_year = date('Y');
             
             <!-- Services -->
             <div>
-                <h4 class="text-lg font-semibold mb-4"><?php echo t('our_services'); ?></h4>
-                <ul class="space-y-2 text-gray-300">
+                <h4 class="text-lg font-bold mb-6 text-white relative inline-block">
+                    <?php echo t('our_services'); ?>
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 to-green-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </h4>
+                <ul class="space-y-3">
                     <li>
-                        <a href="pages/public/commercial-residential-design.php" class="hover:text-white transition-colors">
-                            <?php echo t('commercial_design_management'); ?>
+                        <a href="pages/public/commercial-residential-design.php" 
+                           class="group flex items-center text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                            <span class="w-1.5 h-1.5 bg-blue-500 dark:bg-blue-400 rounded-full mr-3 rtl:ml-3 rtl:mr-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            <span class="flex-1"><?php echo t('commercial_design_management'); ?></span>
+                            <i class="fas fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 rtl:rotate-180"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="pages/public/infrastructure.php" class="hover:text-white transition-colors">
-                            <?php echo t('infrastructure_construction'); ?>
+                        <a href="pages/public/infrastructure.php" 
+                           class="group flex items-center text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                            <span class="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full mr-3 rtl:ml-3 rtl:mr-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            <span class="flex-1"><?php echo t('infrastructure_construction'); ?></span>
+                            <i class="fas fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 rtl:rotate-180"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="pages/public/design-reconstruction.php" class="hover:text-white transition-colors">
-                            <?php echo t('design_reconstruction'); ?>
+                        <a href="pages/public/design-reconstruction.php" 
+                           class="group flex items-center text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                            <span class="w-1.5 h-1.5 bg-purple-500 dark:bg-purple-400 rounded-full mr-3 rtl:ml-3 rtl:mr-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            <span class="flex-1"><?php echo t('design_reconstruction'); ?></span>
+                            <i class="fas fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 rtl:rotate-180"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="pages/public/exterior-design.php" class="hover:text-white transition-colors">
-                            <?php echo t('exterior_design_implementation'); ?>
+                        <a href="pages/public/exterior-design.php" 
+                           class="group flex items-center text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                            <span class="w-1.5 h-1.5 bg-orange-500 dark:bg-orange-400 rounded-full mr-3 rtl:ml-3 rtl:mr-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            <span class="flex-1"><?php echo t('exterior_design_implementation'); ?></span>
+                            <i class="fas fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 rtl:rotate-180"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="pages/public/interior-design.php" class="hover:text-white transition-colors">
-                            <?php echo t('interior_design_implementation'); ?>
+                        <a href="pages/public/interior-design.php" 
+                           class="group flex items-center text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                            <span class="w-1.5 h-1.5 bg-pink-500 dark:bg-pink-400 rounded-full mr-3 rtl:ml-3 rtl:mr-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                            <span class="flex-1"><?php echo t('interior_design_implementation'); ?></span>
+                            <i class="fas fa-chevron-left text-xs opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 rtl:rotate-180"></i>
                         </a>
                     </li>
                 </ul>
@@ -163,21 +219,29 @@ $current_year = date('Y');
             
             <!-- Quick Links -->
             <div>
-                <h4 class="text-lg font-semibold mb-4"><?php echo t('quick_links'); ?></h4>
-                <ul class="space-y-2 text-gray-300">
+                <h4 class="text-lg font-bold mb-6 text-white">
+                    <?php echo t('quick_links'); ?>
+                </h4>
+                <ul class="space-y-3">
                     <li>
-                        <a href="index.php" class="hover:text-white transition-colors">
-                            <?php echo t('home'); ?>
+                        <a href="index.php" 
+                           class="group flex items-center text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                            <i class="fas fa-home w-5 text-blue-400 dark:text-blue-300 mr-3 rtl:ml-3 rtl:mr-0 group-hover:scale-110 transition-transform duration-300"></i>
+                            <span><?php echo t('home'); ?></span>
                         </a>
                     </li>
                     <li>
-                        <a href="index.php#services" class="hover:text-white transition-colors">
-                            <?php echo t('our_services'); ?>
+                        <a href="index.php#services" 
+                           class="group flex items-center text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                            <i class="fas fa-briefcase w-5 text-green-400 dark:text-green-300 mr-3 rtl:ml-3 rtl:mr-0 group-hover:scale-110 transition-transform duration-300"></i>
+                            <span><?php echo t('our_services'); ?></span>
                         </a>
                     </li>
                     <li>
-                        <a href="index.php#contact" class="hover:text-white transition-colors">
-                            <?php echo t('contact_us'); ?>
+                        <a href="index.php#contact" 
+                           class="group flex items-center text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                            <i class="fas fa-envelope w-5 text-purple-400 dark:text-purple-300 mr-3 rtl:ml-3 rtl:mr-0 group-hover:scale-110 transition-transform duration-300"></i>
+                            <span><?php echo t('contact_us'); ?></span>
                         </a>
                     </li>
                 </ul>
@@ -185,29 +249,58 @@ $current_year = date('Y');
             
             <!-- Contact Info -->
             <div>
-                <h4 class="text-lg font-semibold mb-4"><?php echo t('contact_info'); ?></h4>
-                <div class="space-y-2 text-gray-300">
-                    <p>
-                        <i class="fas fa-phone mr-2 rtl:ml-2 rtl:mr-0"></i>
-                        <a href="tel:<?php echo str_replace([' ', '-', '(', ')'], '', $contact_phone); ?>" class="hover:text-white transition-colors">
-                            <?php echo htmlspecialchars($contact_phone); ?>
-                        </a>
-                    </p>
-                    <p>
-                        <i class="fas fa-envelope mr-2 rtl:ml-2 rtl:mr-0"></i>
-                        <a href="mailto:<?php echo htmlspecialchars($contact_email); ?>" class="hover:text-white transition-colors break-all">
-                            <?php echo htmlspecialchars($contact_email); ?>
-                        </a>
-                    </p>
-                    <p>
-                        <i class="fas fa-map-marker-alt mr-2 rtl:ml-2 rtl:mr-0"></i>
-                        <?php echo htmlspecialchars($display_address); ?>
-                    </p>
+                <h4 class="text-lg font-bold mb-6 text-white">
+                    <?php echo t('contact_info'); ?>
+                </h4>
+                <div class="space-y-4">
+                    <a href="tel:<?php echo str_replace([' ', '-', '(', ')'], '', $contact_phone); ?>" 
+                       class="group flex items-start text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 dark:from-green-400 dark:to-green-500 rounded-lg flex items-center justify-center mr-3 rtl:ml-3 rtl:mr-0 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-green-500/50 dark:group-hover:shadow-green-400/50 transition-all duration-300">
+                            <i class="fas fa-phone text-sm text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium"><?php echo htmlspecialchars($contact_phone); ?></p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1"><?php echo t('call_us') ?? 'Call Us'; ?></p>
+                        </div>
+                    </a>
+                    
+                    <a href="mailto:<?php echo htmlspecialchars($contact_email); ?>" 
+                       class="group flex items-start text-gray-300 dark:text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1">
+                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500 rounded-lg flex items-center justify-center mr-3 rtl:ml-3 rtl:mr-0 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-500/50 dark:group-hover:shadow-blue-400/50 transition-all duration-300">
+                            <i class="fas fa-envelope text-sm text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium break-all"><?php echo htmlspecialchars($contact_email); ?></p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1"><?php echo t('email_us') ?? 'Email Us'; ?></p>
+                        </div>
+                    </a>
+                    
+                    <div class="flex items-start text-gray-300 dark:text-gray-400">
+                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-400 dark:to-purple-500 rounded-lg flex items-center justify-center mr-3 rtl:ml-3 rtl:mr-0">
+                            <i class="fas fa-map-marker-alt text-sm text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium"><?php echo htmlspecialchars($display_address); ?></p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1"><?php echo t('visit_us') ?? 'Visit Us'; ?></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-            <p>&copy; <?php echo $current_year; ?> <?php echo htmlspecialchars($site_name); ?>. <?php echo t('all_rights_reserved'); ?></p>
+        
+        <!-- Bottom Bar -->
+        <div class="border-t border-gray-600/50 dark:border-gray-700/50 pt-8 mt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="text-gray-300 dark:text-gray-400 text-sm text-center md:text-left">
+                    <p>&copy; <?php echo $current_year; ?> <span class="text-white dark:text-gray-100 font-semibold"><?php echo htmlspecialchars($site_name); ?></span>. <?php echo t('all_rights_reserved'); ?></p>
+                </div>
+                <div class="flex items-center space-x-6 rtl:space-x-reverse text-sm text-gray-300 dark:text-gray-400">
+                    <span class="flex items-center">
+                        <i class="fas fa-heart text-red-500 dark:text-red-400 mr-2 rtl:ml-2 rtl:mr-0 animate-pulse"></i>
+                        <?php echo t('made_with_love') ?? 'Made with'; ?> <?php echo t('in_kurdistan') ?? 'in Kurdistan'; ?>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 </footer>

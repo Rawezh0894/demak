@@ -98,7 +98,7 @@ if (isset($current_lang) && $current_lang === 'ku') {
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Phone Card -->
-            <div class="service-card group contact-phone-card" style="cursor: pointer;" dir="ltr">
+            <div class="service-card group contact-phone-card" style="cursor: pointer;">
                 <!-- Floating Particles -->
                 <div class="floating-particles">
                     <div class="particle"></div>
@@ -122,58 +122,14 @@ if (isset($current_lang) && $current_lang === 'ku') {
                 <h3 class="service-title">
                     <?php echo t('phone'); ?>
                 </h3>
-                <p class="service-description" dir="ltr">
-                    <?php
-                    // Ensure phone number starts with +964
-                    $phone_display = $contact_phone;
-                    $phone_link = str_replace([' ', '-', '(', ')'], '', $contact_phone);
-                    
-                    // If phone doesn't start with +964, add it
-                    if (!empty($phone_link) && !str_starts_with($phone_link, '+964') && !str_starts_with($phone_link, '964')) {
-                        // Remove any existing country code
-                        $phone_link = preg_replace('/^(\+?964|00964)/', '', $phone_link);
-                        $phone_link = '+964' . $phone_link;
-                        
-                        // Update display if it doesn't already have +964
-                        if (!str_contains($phone_display, '+964') && !str_contains($phone_display, '964')) {
-                            $phone_display = '+964 ' . ltrim($phone_display, '+0');
-                        }
-                    } elseif (!empty($phone_link) && str_starts_with($phone_link, '964') && !str_starts_with($phone_link, '+964')) {
-                        $phone_link = '+' . $phone_link;
-                        if (!str_contains($phone_display, '+964')) {
-                            $phone_display = '+' . $phone_display;
-                        }
-                    }
-                    ?>
-                    <a href="tel:<?php echo htmlspecialchars($phone_link); ?>" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                        <?php echo htmlspecialchars($phone_display); ?>
+                <p class="service-description">
+                    <a href="tel:<?php echo str_replace([' ', '-', '(', ')'], '', $contact_phone); ?>" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <?php echo htmlspecialchars($contact_phone); ?>
                     </a>
                     <?php if (!empty($contact_phone_2)): ?>
                     <br>
-                    <?php
-                    // Ensure phone_2 number starts with +964
-                    $phone_2_display = $contact_phone_2;
-                    $phone_2_link = str_replace([' ', '-', '(', ')'], '', $contact_phone_2);
-                    
-                    // If phone_2 doesn't start with +964, add it
-                    if (!empty($phone_2_link) && !str_starts_with($phone_2_link, '+964') && !str_starts_with($phone_2_link, '964')) {
-                        // Remove any existing country code
-                        $phone_2_link = preg_replace('/^(\+?964|00964)/', '', $phone_2_link);
-                        $phone_2_link = '+964' . $phone_2_link;
-                        
-                        // Update display if it doesn't already have +964
-                        if (!str_contains($phone_2_display, '+964') && !str_contains($phone_2_display, '964')) {
-                            $phone_2_display = '+964 ' . ltrim($phone_2_display, '+0');
-                        }
-                    } elseif (!empty($phone_2_link) && str_starts_with($phone_2_link, '964') && !str_starts_with($phone_2_link, '+964')) {
-                        $phone_2_link = '+' . $phone_2_link;
-                        if (!str_contains($phone_2_display, '+964')) {
-                            $phone_2_display = '+' . $phone_2_display;
-                        }
-                    }
-                    ?>
-                    <a href="tel:<?php echo htmlspecialchars($phone_2_link); ?>" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                        <?php echo htmlspecialchars($phone_2_display); ?>
+                    <a href="tel:<?php echo str_replace([' ', '-', '(', ')'], '', $contact_phone_2); ?>" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <?php echo htmlspecialchars($contact_phone_2); ?>
                     </a>
                     <?php endif; ?>
                 </p>
