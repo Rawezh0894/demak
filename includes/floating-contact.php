@@ -18,9 +18,9 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
 ?>
 
 <!-- Floating Contact Sidebar -->
-<div id="floatingContact" class="fixed z-40 draggable-floating-contact" data-direction="<?php echo $page_dir; ?>" style="cursor: move;">
+<div id="floatingContact" class="fixed z-40 draggable-floating-contact" data-direction="<?php echo $page_dir; ?>" style="cursor: move; touch-action: none; -webkit-touch-callout: none;">
     <!-- Toggle Button -->
-    <button id="floatingContactToggle" class="relative w-14 h-14 bg-gradient-to-br from-blue-600 via-blue-500 to-green-500 text-white rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all duration-500 flex items-center justify-center group hover:scale-110 hover:rotate-12 ring-4 ring-blue-500/20 hover:ring-blue-500/40" onmousedown="handleDragStart(event)" ontouchstart="handleDragStart(event)">
+    <button id="floatingContactToggle" class="relative w-14 h-14 bg-gradient-to-br from-blue-600 via-blue-500 to-green-500 text-white rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all duration-500 flex items-center justify-center group hover:scale-110 hover:rotate-12 ring-4 ring-blue-500/20 hover:ring-blue-500/40" onmousedown="handleDragStart(event)" ontouchstart="handleDragStart(event)" style="touch-action: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; cursor: move;">
         <!-- Animated Background -->
         <div class="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-green-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
         <!-- Icon -->
@@ -36,7 +36,7 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
     </button>
     
     <!-- Contact Panel -->
-    <div id="floatingContactPanel" class="fixed max-w-[calc(100vw-20px)] bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hidden transform transition-all duration-500 ease-out" style="z-index: 39; width: 288px;">
+    <div id="floatingContactPanel" class="fixed max-w-[calc(100vw-20px)] bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hidden transform transition-all duration-500 ease-out" style="z-index: 39; width: 288px; max-width: calc(100vw - 20px);">
         <!-- Gradient Background -->
         <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-green-50/50 dark:from-blue-900/10 dark:via-transparent dark:to-green-900/10 rounded-2xl pointer-events-none"></div>
         
@@ -174,53 +174,81 @@ function updatePanelPosition() {
     
     // Check if screen is too small - adjust panel width for mobile
     const isSmallScreen = screenWidth < 640; // sm breakpoint
+    const isMobile = screenWidth < 480; // Extra small mobile
     const actualPanelWidth = isSmallScreen ? Math.min(panelWidth, screenWidth - minPadding * 2) : panelWidth;
     
-    // Calculate panel position horizontally
-    if (isRTL) {
-        // For RTL: panel appears to the right of button
-        let panelLeft = buttonLeft + buttonSize + fixedOffset;
-        
-        // Ensure panel doesn't go off screen to the right
-        if (panelLeft + actualPanelWidth > screenWidth - minPadding) {
-            panelLeft = screenWidth - actualPanelWidth - minPadding;
-        }
-        
-        // Ensure panel doesn't go off screen to the left
-        if (panelLeft < minPadding) {
-            panelLeft = minPadding;
-        }
-        
+    // On mobile, center the panel horizontally
+    if (isMobile) {
+        const panelLeft = (screenWidth - actualPanelWidth) / 2;
         panel.style.left = panelLeft + 'px';
         panel.style.right = 'auto';
         panel.style.width = actualPanelWidth + 'px';
     } else {
-        // For LTR: panel appears to the left of button
-        let panelRight = screenWidth - buttonLeft - buttonSize - fixedOffset;
-        
-        // Calculate panel left position
-        let panelLeft = screenWidth - panelRight - actualPanelWidth;
-        
-        // Ensure panel doesn't go off screen to the left
-        if (panelLeft < minPadding) {
-            panelLeft = minPadding;
-            panelRight = screenWidth - panelLeft - actualPanelWidth;
+        // Calculate panel position horizontally for desktop/tablet
+        if (isRTL) {
+            // For RTL: panel appears to the right of button
+            let panelLeft = buttonLeft + buttonSize + fixedOffset;
+            
+            // Ensure panel doesn't go off screen to the right
+            if (panelLeft + actualPanelWidth > screenWidth - minPadding) {
+                panelLeft = screenWidth - actualPanelWidth - minPadding;
+            }
+            
+            // Ensure panel doesn't go off screen to the left
+            if (panelLeft < minPadding) {
+                panelLeft = minPadding;
+            }
+            
+            panel.style.left = panelLeft + 'px';
+            panel.style.right = 'auto';
+            panel.style.width = actualPanelWidth + 'px';
+        } else {
+            // For LTR: panel appears to the left of button
+            let panelRight = screenWidth - buttonLeft - buttonSize - fixedOffset;
+            
+            // Calculate panel left position
+            let panelLeft = screenWidth - panelRight - actualPanelWidth;
+            
+            // Ensure panel doesn't go off screen to the left
+            if (panelLeft < minPadding) {
+                panelLeft = minPadding;
+                panelRight = screenWidth - panelLeft - actualPanelWidth;
+            }
+            
+            // Ensure panel doesn't go off screen to the right
+            if (panelLeft + actualPanelWidth > screenWidth - minPadding) {
+                panelRight = minPadding;
+                panelLeft = screenWidth - actualPanelWidth - minPadding;
+            }
+            
+            panel.style.left = panelLeft + 'px';
+            panel.style.right = 'auto';
+            panel.style.width = actualPanelWidth + 'px';
         }
-        
-        // Ensure panel doesn't go off screen to the right
-        if (panelLeft + actualPanelWidth > screenWidth - minPadding) {
-            panelRight = minPadding;
-            panelLeft = screenWidth - actualPanelWidth - minPadding;
-        }
-        
-        panel.style.left = panelLeft + 'px';
-        panel.style.right = 'auto';
-        panel.style.width = actualPanelWidth + 'px';
     }
     
-    // Calculate panel position vertically - center it with button
-    const buttonCenter = buttonTop + buttonSize / 2;
-    let panelTop = buttonCenter - panelHeight / 2;
+    // Calculate panel position vertically
+    let panelTop;
+    if (isMobile) {
+        // On mobile, position panel above button if there's space, otherwise below
+        const spaceAbove = buttonTop;
+        const spaceBelow = screenHeight - buttonTop - buttonSize;
+        
+        if (spaceAbove >= panelHeight + fixedOffset) {
+            // Position above button
+            panelTop = buttonTop - panelHeight - fixedOffset;
+        } else if (spaceBelow >= panelHeight + fixedOffset) {
+            // Position below button
+            panelTop = buttonTop + buttonSize + fixedOffset;
+        } else {
+            // Center vertically if not enough space
+            panelTop = (screenHeight - panelHeight) / 2;
+        }
+    } else {
+        // On desktop/tablet, center it with button
+        const buttonCenter = buttonTop + buttonSize / 2;
+        panelTop = buttonCenter - panelHeight / 2;
+    }
     
     // Keep panel within viewport vertically
     const maxTop = screenHeight - panelHeight;
@@ -250,8 +278,9 @@ function handleDragStart(e) {
     userActuallyDragged = false;
     
     // Only check vertical movement (Y axis) for drag detection
-    const clickThreshold = 5; // pixels
-    const startEvent = e.touches ? e.touches[0] : e;
+    const clickThreshold = 8; // pixels - increased for better mobile detection
+    const isTouch = e.touches && e.touches.length > 0;
+    const startEvent = isTouch ? e.touches[0] : e;
     dragStartX = startEvent.clientX;
     dragStartY = startEvent.clientY;
     initialX = currentX; // Keep X position fixed
@@ -259,6 +288,12 @@ function handleDragStart(e) {
     
     // Don't prevent default immediately - allow click to work
     let hasMoved = false;
+    let touchStartTime = Date.now();
+    
+    // For touch events, prevent default scrolling immediately to improve drag responsiveness
+    if (isTouch) {
+        e.preventDefault();
+    }
     
     // Set dragging flag after a small delay to distinguish click from drag
     let dragTimer = setTimeout(() => {
@@ -266,30 +301,44 @@ function handleDragStart(e) {
             isDragging = true;
             floatingContact.style.transition = 'none';
             document.body.style.userSelect = 'none';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling while dragging
             document.body.style.cursor = 'ns-resize'; // Vertical resize cursor
             
             // Add dragging class for visual feedback
             floatingContact.classList.add('dragging');
         }
-    }, 100); // Reduced delay for better responsiveness
+    }, 150); // Slightly increased delay for better click detection
     
     // Handle mouse/touch move
     const handleMove = (moveEvent) => {
-        const moveClientX = moveEvent.touches ? moveEvent.touches[0].clientX : moveEvent.clientX;
-        const moveClientY = moveEvent.touches ? moveEvent.touches[0].clientY : moveEvent.clientY;
+        // Prevent default scrolling on touch move when dragging
+        if (isTouch && isDragging) {
+            moveEvent.preventDefault();
+        }
+        
+        const moveClientX = moveEvent.touches ? (moveEvent.touches[0] ? moveEvent.touches[0].clientX : dragStartX) : moveEvent.clientX;
+        const moveClientY = moveEvent.touches ? (moveEvent.touches[0] ? moveEvent.touches[0].clientY : dragStartY) : moveEvent.clientY;
         
         // Only check vertical movement (Y axis) for drag detection
         const deltaY = Math.abs(moveClientY - dragStartY);
+        const deltaX = Math.abs(moveClientX - dragStartX);
         
-        if (deltaY > clickThreshold) {
+        // Consider it a drag if vertical movement is significant, or if both X and Y move (touch)
+        if (deltaY > clickThreshold || (isTouch && deltaX > clickThreshold && deltaY > 3)) {
             hasMoved = true;
             userActuallyDragged = true; // Mark that user actually dragged
             clearTimeout(dragTimer);
             isDragging = true;
-            e.preventDefault(); // Prevent default only when actually dragging
+            
+            if (isTouch) {
+                moveEvent.preventDefault(); // Prevent scrolling
+            }
+            
             floatingContact.style.transition = 'none';
             document.body.style.userSelect = 'none';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling while dragging
             document.body.style.cursor = 'ns-resize'; // Vertical resize cursor
+            document.body.style.touchAction = 'none'; // Prevent touch actions
             floatingContact.classList.add('dragging');
         }
         
@@ -330,14 +379,21 @@ function handleDragStart(e) {
         const endEventX = endEvent.touches ? (endEvent.touches[0] ? endEvent.touches[0].clientX : dragStartX) : endEvent.clientX;
         const endEventY = endEvent.touches ? (endEvent.touches[0] ? endEvent.touches[0].clientY : dragStartY) : endEvent.clientY;
         const totalDeltaY = Math.abs(endEventY - dragStartY);
+        const totalDeltaX = Math.abs(endEventX - dragStartX);
+        const touchDuration = Date.now() - touchStartTime;
         
         // If it was a drag, save position
-        if (userActuallyDragged && totalDeltaY > clickThreshold) {
+        if (userActuallyDragged && (totalDeltaY > clickThreshold || totalDeltaX > clickThreshold)) {
             saveFloatingContactPosition();
         }
         
-        // If it was a click (not a drag), toggle the panel immediately
-        if (!userActuallyDragged && totalDeltaY <= clickThreshold) {
+        // If it was a click (not a drag), toggle the panel
+        // For touch: check both movement and duration (quick tap)
+        // For mouse: just check movement
+        const isQuickTap = isTouch && touchDuration < 300 && totalDeltaY <= clickThreshold && totalDeltaX <= clickThreshold;
+        const isClick = !isTouch && totalDeltaY <= clickThreshold;
+        
+        if ((isQuickTap || isClick) && !userActuallyDragged) {
             // Use requestAnimationFrame for immediate execution without blocking
             requestAnimationFrame(() => {
                 toggleFloatingContact(endEvent);
@@ -350,21 +406,25 @@ function handleDragStart(e) {
         userActuallyDragged = false;
         floatingContact.style.transition = '';
         document.body.style.userSelect = '';
+        document.body.style.overflow = '';
         document.body.style.cursor = '';
+        document.body.style.touchAction = '';
         floatingContact.classList.remove('dragging');
         
         // Remove event listeners
         document.removeEventListener('mousemove', handleMove);
         document.removeEventListener('mouseup', handleEnd);
-        document.removeEventListener('touchmove', handleMove);
+        document.removeEventListener('touchmove', handleMove, { passive: false });
         document.removeEventListener('touchend', handleEnd);
+        document.removeEventListener('touchcancel', handleEnd);
     };
     
-    // Add event listeners
+    // Add event listeners with passive: false for touch to allow preventDefault
     document.addEventListener('mousemove', handleMove);
     document.addEventListener('mouseup', handleEnd);
-    document.addEventListener('touchmove', handleMove);
+    document.addEventListener('touchmove', handleMove, { passive: false });
     document.addEventListener('touchend', handleEnd);
+    document.addEventListener('touchcancel', handleEnd);
 }
 
 // Save Floating Contact Position
@@ -490,3 +550,48 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<style>
+/* Floating Contact Mobile Optimizations */
+#floatingContact.dragging {
+    opacity: 0.9;
+    transform: scale(1.1);
+    z-index: 9999 !important;
+}
+
+#floatingContact.dragging #floatingContactToggle {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+}
+
+/* Prevent text selection while dragging */
+#floatingContact.dragging * {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Mobile touch optimizations */
+@media (max-width: 640px) {
+    #floatingContact {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    #floatingContactPanel {
+        width: calc(100vw - 20px) !important;
+        max-width: 320px !important;
+    }
+}
+
+/* Smooth transitions when not dragging */
+#floatingContact:not(.dragging) {
+    transition: transform 0.2s ease-out;
+}
+
+/* Prevent iOS bounce scrolling interference */
+@supports (-webkit-touch-callout: none) {
+    #floatingContact {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+    }
+}
+</style>
