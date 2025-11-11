@@ -6,6 +6,19 @@ require_once __DIR__ . '/translations.php';
 $current_page = basename($_SERVER['PHP_SELF']);
 $current_section = $_GET['section'] ?? '';
 
+$service_pages = [
+    'commercial-residential-design.php',
+    'infrastructure.php',
+    'design-reconstruction.php',
+    'exterior-design.php',
+    'interior-design.php'
+];
+$is_services_active = (
+    $current_section === 'services' ||
+    (isset($_GET['section']) && $_GET['section'] === 'services') ||
+    in_array($current_page, $service_pages, true)
+);
+
 // Get current language direction
 $page_dir = $languages[$current_lang]['dir'];
 $is_rtl = ($page_dir === 'rtl');
@@ -45,40 +58,61 @@ $sidebar_top_radius = 'rounded-t-lg';
                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
-                <span><?php echo t('home'); ?></span>
+                <span class="whitespace-nowrap truncate"><?php echo t('home'); ?></span>
             </a>
 
-            <!-- Services -->
-            <a href="index.php#services" class="sidebar-nav-link <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'active' : ''; ?>">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <!-- Services Dropdown -->
+            <div class="sidebar-dropdown">
+                <button type="button"
+                        class="sidebar-nav-link flex items-center justify-between <?php echo $is_services_active ? 'active' : ''; ?>"
+                        data-dropdown-target="servicesSidebarDropdown"
+                        onclick="toggleSidebarDropdown('servicesSidebarDropdown')"
+                        aria-expanded="<?php echo $is_services_active ? 'true' : 'false'; ?>">
+                    <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="whitespace-nowrap truncate"><?php echo t('our_services'); ?></span>
+                    </div>
+                    <svg class="dropdown-arrow w-4 h-4 text-gray-400 transition-transform duration-200 <?php echo $is_services_active ? 'transform rotate-90' : ''; ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
-                <span><?php echo t('our_services'); ?></span>
-            </a>
-
-            <!-- Infrastructure -->
-            <a href="pages/public/infrastructure.php" class="sidebar-nav-link <?php echo ($current_page == 'infrastructure.php') ? 'active' : ''; ?>">
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                <span><?php echo t('infrastructure_construction'); ?></span>
-            </a>
-
-            <!-- Design & Reconstruction -->
-            <a href="pages/public/design-reconstruction.php" class="sidebar-nav-link <?php echo ($current_page == 'design-reconstruction.php') ? 'active' : ''; ?>">
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                </svg>
-                <span><?php echo t('design_reconstruction'); ?></span>
-            </a>
+                </button>
+                <div id="servicesSidebarDropdown" class="sidebar-submenu mt-2 space-y-2 pl-4 border-l border-gray-200 dark:border-gray-700 <?php echo $is_services_active ? '' : 'hidden'; ?>">
+                    <a href="index.php#services" class="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        <span class="whitespace-nowrap truncate"><?php echo t('our_services'); ?></span>
+                    </a>
+                    <a href="pages/public/commercial-residential-design.php" class="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'commercial-residential-design.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        <span class="whitespace-nowrap truncate"><?php echo t('commercial_design_management'); ?></span>
+                    </a>
+                    <a href="pages/public/infrastructure.php" class="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'infrastructure.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        <span class="whitespace-nowrap truncate"><?php echo t('infrastructure_construction'); ?></span>
+                    </a>
+                    <a href="pages/public/design-reconstruction.php" class="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'design-reconstruction.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 dark:bg-purple-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        <span class="whitespace-nowrap truncate"><?php echo t('design_reconstruction'); ?></span>
+                    </a>
+                    <a href="pages/public/exterior-design.php" class="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'exterior-design.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-orange-500 dark:bg-orange-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        <span class="whitespace-nowrap truncate"><?php echo t('exterior_design_implementation'); ?></span>
+                    </a>
+                    <a href="pages/public/interior-design.php" class="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors <?php echo ($current_page == 'interior-design.php') ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''; ?>">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-pink-500 dark:bg-pink-400 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        <span class="whitespace-nowrap truncate"><?php echo t('interior_design_implementation'); ?></span>
+                    </a>
+                </div>
+            </div>
 
             <!-- Contact -->
             <a href="index.php#contact" class="sidebar-nav-link <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
-                <span><?php echo t('contact'); ?></span>
+                <span class="whitespace-nowrap truncate"><?php echo t('contact'); ?></span>
             </a>
         </nav>
 
@@ -93,3 +127,23 @@ $sidebar_top_radius = 'rounded-t-lg';
 
 <!-- Sidebar Overlay (Mobile Only) -->
 <div id="sidebarOverlay" class="md:hidden fixed top-20 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-30 hidden" onclick="toggleSidebar()"></div>
+
+<script>
+function toggleSidebarDropdown(id) {
+    const menu = document.getElementById(id);
+    const button = document.querySelector(`[data-dropdown-target="${id}"]`);
+    if (!menu || !button) {
+        return;
+    }
+
+    const isHidden = menu.classList.contains('hidden');
+    menu.classList.toggle('hidden');
+    button.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+
+    const arrow = button.querySelector('.dropdown-arrow');
+    if (arrow) {
+        arrow.classList.toggle('transform', true);
+        arrow.classList.toggle('rotate-90', isHidden);
+    }
+}
+</script>
