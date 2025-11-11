@@ -231,6 +231,28 @@ require_once '../../process/settings_management/settings_management.php';
                     </div>
                 </div>
             <?php endif; ?>
+            
+            <?php if (isset($settings_error) && $settings_error): ?>
+                <div class="mb-6 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-3"></i>
+                        <div class="flex-1">
+                            <span class="font-semibold"><?php echo $settings_error; ?></span>
+                            <div class="mt-2">
+                                <a href="../../database/settings_table.sql" download class="text-yellow-800 underline hover:text-yellow-900">
+                                    <i class="fas fa-download mr-2"></i>
+                                    داونلۆدکردنی SQL فایل
+                                </a>
+                                <span class="mx-2">|</span>
+                                <button onclick="createSettingsTable()" class="text-yellow-800 underline hover:text-yellow-900">
+                                    <i class="fas fa-database mr-2"></i>
+                                    دروستکردنی تەیبڵی settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <!-- Settings Form -->
             <form id="settingsForm" method="POST" enctype="multipart/form-data">
@@ -429,6 +451,46 @@ require_once '../../process/settings_management/settings_management.php';
                 submitBtn.innerHTML = originalText;
             });
         });
+        
+        // Function to create settings table
+        function createSettingsTable() {
+            if (!confirm('ئایا دڵنیایت لە دروستکردنی تەیبڵی settings؟')) {
+                return;
+            }
+            
+            // Show loading
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> دروستکردن...';
+            
+            fetch('../../process/settings_management/create_table.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    csrf_token: '<?php echo $_SESSION['csrf_token']; ?>'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('تەیبڵی settings بە سەرکەوتوویی دروست کرا!');
+                    window.location.reload();
+                } else {
+                    alert('هەڵە: ' + data.message);
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('هەڵەیەک ڕوویدا. تکایە دووبارە هەوڵ بەرەوە.');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
+        }
     </script>
 </body>
 </html>

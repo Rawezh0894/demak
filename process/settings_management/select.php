@@ -4,25 +4,56 @@
 // Load all settings from database grouped by group_name
 $settings = [];
 $settings_by_group = [];
+$settings_error = null;
 
 try {
-    $stmt = $pdo->query("
-        SELECT * 
-        FROM settings 
-        ORDER BY group_name ASC, sort_order ASC, id ASC
-    ");
-    $all_settings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // First, check if settings table exists
+    $table_check = $pdo->query("SHOW TABLES LIKE 'settings'");
+    $table_exists = $table_check->rowCount() > 0;
     
-    // Organize settings by group
-    foreach ($all_settings as $setting) {
-        $group = $setting['group_name'] ?? 'other';
-        if (!isset($settings_by_group[$group])) {
-            $settings_by_group[$group] = [];
+    if (!$table_exists) {
+        $settings_error = "تەیبڵی settings نەدۆزرایەوە. تکایە سەرەتا تەیبڵی settings دروست بکە.";
+        error_log("Settings table does not exist");
+    } else {
+        // Try to load settings
+        $stmt = $pdo->query("
+            SELECT * 
+            FROM settings 
+            ORDER BY group_name ASC, sort_order ASC, id ASC
+        ");
+        $all_settings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if (empty($all_settings)) {
+            $settings_error = "تەیبڵی settings هەیە بەڵام هیچ داتایەک تێدا نییە. تکایە داتاکان زیاد بکە.";
+            error_log("Settings table exists but is empty");
+        } else {
+            // Organize settings by group
+            foreach ($all_settings as $setting) {
+                $group = $setting['group_name'] ?? 'other';
+                if (!isset($settings_by_group[$group])) {
+                    $settings_by_group[$group] = [];
+                }
+                $settings_by_group[$group][] = $setting;
+                $settings[$setting['key']] = $setting;
+            }
         }
-        $settings_by_group[$group][] = $setting;
-        $settings[$setting['key']] = $setting;
     }
+} catch (PDOException $e) {
+    $error_code = $e->getCode();
+    $error_message = $e->getMessage();
+    
+    // Check if it's a table doesn't exist error
+    if ($error_code == '42S02' || strpos($error_message, "doesn't exist") !== false || strpos($error_message, "Unknown table") !== false) {
+        $settings_error = "تەیبڵی settings نەدۆزرایەوە. تکایە سەرەتا تەیبڵی settings دروست بکە.";
+    } else {
+        $settings_error = "هەڵە لە خوێندنەوەی ڕێکخستنەکان: " . htmlspecialchars($error_message);
+    }
+    
+    error_log("Error loading settings: " . $error_message);
+    $settings = [];
+    $settings_by_group = [];
 } catch (Exception $e) {
+    $settings_error = "هەڵەیەک ڕوویدا: " . htmlspecialchars($e->getMessage());
     error_log("Error loading settings: " . $e->getMessage());
     $settings = [];
     $settings_by_group = [];
