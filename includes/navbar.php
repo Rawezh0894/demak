@@ -196,78 +196,86 @@ function toggleSidebar() {
     }
 }
 
-// Dark mode toggle - Universal function for navbar toggle button
-function toggleDarkMode() {
-    const body = document.body;
-    
-    // Get navbar icon elements
-    const lightIcon = document.getElementById('lightModeIcon');
-    const darkIcon = document.getElementById('darkModeIcon');
-    const toggle = document.getElementById('darkModeToggle');
-    
-    const isDarkMode = body.classList.contains('dark-mode');
-    
-    // Toggle body class
-    if (isDarkMode) {
-        body.classList.remove('dark-mode');
-        localStorage.setItem('darkMode', 'false');
-    } else {
-        body.classList.add('dark-mode');
-        localStorage.setItem('darkMode', 'true');
-    }
-    
-    // Update navbar icons
-    if (lightIcon && darkIcon && toggle) {
-        if (isDarkMode) {
-            // Switch to light mode: Show sun, hide moon
-            lightIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
-            lightIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
-            darkIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
-            darkIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
-            toggle.title = '<?php echo t('light_mode'); ?>';
+// Load unified dark mode script
+<?php
+$base_path = isset($base_path) ? $base_path : '';
+?>
+<script src="<?php echo $base_path; ?>assets/js/dark-mode-unified.js"></script>
+
+<script>
+// Override toggleDarkMode to use unified function if available
+// This ensures backward compatibility
+if (typeof window.toggleDarkMode === 'undefined') {
+    window.toggleDarkMode = function() {
+        const html = document.documentElement;
+        const body = document.body;
+        const lightIcon = document.getElementById('lightModeIcon');
+        const darkIcon = document.getElementById('darkModeIcon');
+        const toggle = document.getElementById('darkModeToggle');
+        
+        const isDarkMode = html.classList.contains('dark') || body.classList.contains('dark-mode');
+        const newDarkState = !isDarkMode;
+        
+        // Apply to both html and body for compatibility
+        if (newDarkState) {
+            html.classList.add('dark');
+            body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'true');
         } else {
-            // Switch to dark mode: Hide sun, show moon
-            lightIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
-            lightIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
-            darkIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
-            darkIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
-            toggle.title = '<?php echo t('dark_mode'); ?>';
+            html.classList.remove('dark');
+            body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', 'false');
         }
-    }
+        
+        // Update icons
+        if (lightIcon && darkIcon) {
+            if (newDarkState) {
+                lightIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
+                lightIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
+                darkIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
+                darkIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
+            } else {
+                lightIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
+                lightIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
+                darkIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
+                darkIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
+            }
+        }
+        
+        if (toggle) {
+            toggle.title = newDarkState ? '<?php echo t('dark_mode'); ?>' : '<?php echo t('light_mode'); ?>';
+        }
+    };
 }
 
-// Initialize dark mode from localStorage
+// Initialize dark mode and navigation on DOM ready
 document.addEventListener('DOMContentLoaded', function() {
-    const darkMode = localStorage.getItem('darkMode');
-    const body = document.body;
-    
-    // Get navbar icon elements
+    // Unified dark mode script will handle initialization
+    // But we ensure icons are updated for navbar
     const lightIcon = document.getElementById('lightModeIcon');
     const darkIcon = document.getElementById('darkModeIcon');
     const toggle = document.getElementById('darkModeToggle');
+    const html = document.documentElement;
+    const body = document.body;
     
-    if (darkMode === 'true') {
-        body.classList.add('dark-mode');
-        
-        // Update navbar icons
-        if (lightIcon && darkIcon && toggle) {
+    const isDark = html.classList.contains('dark') || body.classList.contains('dark-mode');
+    
+    if (lightIcon && darkIcon) {
+        if (isDark) {
             lightIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
             lightIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
             darkIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
             darkIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
-        toggle.title = '<?php echo t('dark_mode'); ?>';
-        }
-    } else {
-        body.classList.remove('dark-mode');
-        
-        // Update navbar icons
-        if (lightIcon && darkIcon && toggle) {
+        } else {
             lightIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
             lightIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
             darkIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
             darkIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
-        toggle.title = '<?php echo t('light_mode'); ?>';
         }
+    }
+    
+    if (toggle) {
+        toggle.title = isDark ? '<?php echo t('dark_mode'); ?>' : '<?php echo t('light_mode'); ?>';
     }
     
     // Initialize navigation active states
@@ -276,7 +284,34 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize sidebar for desktop/mobile
     initializeSidebar();
+    
+    // Listen for dark mode changes from unified script
+    document.addEventListener('darkModeChanged', function(e) {
+        const isDark = e.detail.isDark;
+        const lightIcon = document.getElementById('lightModeIcon');
+        const darkIcon = document.getElementById('darkModeIcon');
+        const toggle = document.getElementById('darkModeToggle');
+        
+        if (lightIcon && darkIcon) {
+            if (isDark) {
+                lightIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
+                lightIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
+                darkIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
+                darkIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
+            } else {
+                lightIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
+                lightIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
+                darkIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
+                darkIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
+            }
+        }
+        
+        if (toggle) {
+            toggle.title = isDark ? '<?php echo t('dark_mode'); ?>' : '<?php echo t('light_mode'); ?>';
+        }
+    });
 });
+</script>
 
 // Initialize sidebar based on screen size
 function initializeSidebar() {

@@ -50,6 +50,50 @@ if (file_exists(__DIR__ . '/../' . str_replace('../', '', $tailwindLocal))) {
 <!-- Performance Optimization Meta Tags -->
 <meta http-equiv="x-dns-prefetch-control" content="on">
 
+<!-- Dark Mode - Apply immediately to prevent flash -->
+<script>
+(function() {
+    'use strict';
+    const STORAGE_KEY = 'darkMode';
+    const HTML_DARK_CLASS = 'dark';
+    
+    function getStoredDarkMode() {
+        try {
+            return localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+            return null;
+        }
+    }
+    
+    function getSystemPreference() {
+        if (window.matchMedia) {
+            try {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches;
+            } catch (e) {
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    // Apply dark mode immediately before page render
+    const stored = getStoredDarkMode();
+    let isDark = false;
+    
+    if (stored !== null) {
+        isDark = stored === 'true';
+    } else {
+        isDark = getSystemPreference();
+    }
+    
+    if (isDark) {
+        document.documentElement.classList.add(HTML_DARK_CLASS);
+    } else {
+        document.documentElement.classList.remove(HTML_DARK_CLASS);
+    }
+})();
+</script>
+
 <!-- تێبینیەکان بۆ باشترکردنی زیاتر:
 1. بەکارهێنانی icons.css لە جیاتی Font Awesome (کەمکردنەوەی 200KB)
 2. دروستکردنی Tailwind build-ێکی کەمتر (کەمکردنەوەی 400KB)
