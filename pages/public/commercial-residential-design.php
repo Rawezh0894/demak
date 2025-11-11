@@ -640,8 +640,7 @@ try {
     <script src="../../assets/js/design-reconstruction/design-reconstruction-public.js"></script>
     <script src="../../assets/js/commercial_residential_design/responsive-slider.js"></script>
     <script src="../../assets/js/commercial_residential_design/commercial_residential_design_public.js"></script>
-    <!-- Unified Dark Mode Script - Works consistently across all browsers -->
-    <script src="../../assets/js/dark-mode-unified.js"></script>
+    <script src="../../assets/js/commercial_residential_design/dark-mode.js"></script>
     
     <!-- Pass projects data to JavaScript -->
     <script>
