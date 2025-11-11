@@ -54,25 +54,29 @@
         container.classList.add('mobile-layout');
         slider.classList.add('mobile-slider');
         
-        // Change slider to grid on mobile
-        slider.style.display = 'grid';
-        slider.style.gridTemplateColumns = '1fr';
-        slider.style.gap = '1.5rem';
-        slider.style.transform = 'none';
-        slider.style.transition = 'none';
+        // Change slider to grid on mobile - let CSS handle it
+        slider.style.display = '';
+        slider.style.gridTemplateColumns = '';
+        slider.style.gap = '';
+        slider.style.transform = '';
+        slider.style.transition = '';
         
-        // Hide arrows on mobile (use swipe instead)
+        // Hide arrows on mobile (use swipe instead) - CSS will handle this
         const arrows = container.querySelectorAll('.slider-arrow');
         arrows.forEach(arrow => {
             arrow.style.display = 'none';
         });
         
-        // Show all projects in grid
+        // Show all projects in grid - CSS will handle layout
         const slides = slider.querySelectorAll('.project-slide');
         slides.forEach(slide => {
-            slide.style.display = 'flex';
-            slide.style.width = '100%';
-            slide.style.flexDirection = 'column';
+            slide.style.display = '';
+            slide.style.width = '';
+            slide.style.flexDirection = '';
+            // Remove any inline styles that might interfere
+            slide.style.flex = '';
+            slide.style.minWidth = '';
+            slide.style.maxWidth = '';
         });
         
         // Add swipe support for image galleries
@@ -86,7 +90,10 @@
             const totalSlides = counter.querySelector('.total-slides');
             if (totalSlides) {
                 totalSlides.textContent = slides.length;
-                counter.querySelector('.current-slide').textContent = slides.length;
+                const currentSlide = counter.querySelector('.current-slide');
+                if (currentSlide) {
+                    currentSlide.textContent = slides.length;
+                }
             }
         }
     }
@@ -96,16 +103,25 @@
         container.classList.add('tablet-layout');
         slider.classList.add('tablet-slider');
         
-        // Keep slider but optimize for tablet
+        // Keep slider but optimize for tablet - CSS will handle most styling
         slider.style.display = 'flex';
         slider.style.transform = 'translateX(0%)';
         
-        // Make arrows more prominent
+        // Make arrows visible - CSS will handle sizing
         const arrows = container.querySelectorAll('.slider-arrow');
         arrows.forEach(arrow => {
             arrow.style.display = 'flex';
-            arrow.style.width = '3.5rem';
-            arrow.style.height = '3.5rem';
+            // Let CSS handle dimensions
+            arrow.style.width = '';
+            arrow.style.height = '';
+        });
+        
+        // Ensure slides are properly sized
+        const slides = slider.querySelectorAll('.project-slide');
+        slides.forEach(slide => {
+            slide.style.flex = '0 0 100%';
+            slide.style.minWidth = '100%';
+            slide.style.maxWidth = '100%';
         });
         
         // Add touch swipe support
@@ -122,12 +138,21 @@
         // Ensure slider is in flex mode
         slider.style.display = 'flex';
         
-        // Make arrows prominent
+        // Make arrows visible - CSS will handle sizing
         const arrows = container.querySelectorAll('.slider-arrow');
         arrows.forEach(arrow => {
             arrow.style.display = 'flex';
-            arrow.style.width = '4rem';
-            arrow.style.height = '4rem';
+            // Let CSS handle dimensions
+            arrow.style.width = '';
+            arrow.style.height = '';
+        });
+        
+        // Ensure slides are properly sized
+        const slides = slider.querySelectorAll('.project-slide');
+        slides.forEach(slide => {
+            slide.style.flex = '0 0 100%';
+            slide.style.minWidth = '100%';
+            slide.style.maxWidth = '100%';
         });
     }
     
