@@ -344,6 +344,9 @@ function initializeNavigation() {
     
     navLinks.forEach(link => {
         const href = link.getAttribute('href');
+        if (!href) {
+            return;
+        }
         
         // Check if it's the home page
         if (href === 'index.php' && (currentPage === 'index.php' || currentPage === '')) {
@@ -387,6 +390,9 @@ function initializeSidebarNavigation() {
     
     sidebarLinks.forEach(link => {
         const href = link.getAttribute('href');
+        if (!href) {
+            return;
+        }
         
         // Check if it's the home page
         if (href === 'index.php' && (currentPage === 'index.php' || currentPage === '')) {
