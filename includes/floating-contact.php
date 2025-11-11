@@ -24,14 +24,12 @@ if (file_exists($select_path) && isset($pdo)) {
 
 // Get contact information from settings (with fallback values)
 $contact_phone = '+964 750 123 4567';
-$contact_phone_2 = '';
 $contact_email = 'info@demak.com';
 $contact_facebook = 'https://www.facebook.com/demak';
 
 if (isset($pdo) && function_exists('getSettingValue')) {
     try {
         $contact_phone = getSettingValue($pdo, 'contact_phone', '+964 750 123 4567');
-        $contact_phone_2 = getSettingValue($pdo, 'contact_phone_2', '');
         $contact_email = getSettingValue($pdo, 'contact_email', 'info@demak.com');
         $contact_facebook = getSettingValue($pdo, 'facebook_url', 'https://www.facebook.com/demak');
         
@@ -95,36 +93,19 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
             <!-- Contact Options -->
             <div class="space-y-3">
                 <!-- Call -->
-                <a href="tel:<?php echo str_replace([' ', '-', '(', ')'], '', $contact_phone); ?>" class="floating-contact-item floating-contact-call flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
+                <a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>" class="floating-contact-item floating-contact-call flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
                     <div class="relative w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-green-500/30 icon-container-call">
                         <i class="fas fa-phone-alt text-lg relative z-10"></i>
                         <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide mb-1"><?php echo t('phone'); ?></p>
-                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($contact_phone); ?></p>
+                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $contact_phone; ?></p>
                     </div>
                     <svg class="w-5 h-5 text-green-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </a>
-                
-                <?php if (!empty($contact_phone_2)): ?>
-                <!-- Call 2 -->
-                <a href="tel:<?php echo str_replace([' ', '-', '(', ')'], '', $contact_phone_2); ?>" class="floating-contact-item floating-contact-call-2 flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
-                    <div class="relative w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-teal-500/30 icon-container-call-2">
-                        <i class="fas fa-phone-alt text-lg relative z-10"></i>
-                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wide mb-1"><?php echo t('phone'); ?> 2</p>
-                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo htmlspecialchars($contact_phone_2); ?></p>
-                    </div>
-                    <svg class="w-5 h-5 text-teal-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-                <?php endif; ?>
                 
                 <!-- Gmail -->
                 <a href="mailto:<?php echo $contact_email; ?>" class="floating-contact-item floating-contact-gmail flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">

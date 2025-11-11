@@ -96,7 +96,6 @@ try {
                 ['site_description', 'Professional construction and building services in Kurdistan', 'text', 'Website description', 'وەسفی وێبسایت', 'وصف الموقع', 1, 'general', 4],
                 ['contact_email', 'info@demak.com', 'text', 'Contact email', 'ئیمەیلی پەیوەندی', 'البريد الإلكتروني للاتصال', 1, 'contact', 1],
                 ['contact_phone', '+964 750 123 4567', 'text', 'Contact phone', 'تەلەفۆنی پەیوەندی', 'رقم الهاتف للاتصال', 1, 'contact', 2],
-                ['contact_phone_2', '', 'text', 'Contact phone 2', 'تەلەفۆنی پەیوەندی 2', 'رقم الهاتف للاتصال 2', 1, 'contact', 3],
                 ['maintenance_mode', '0', 'boolean', 'Enable maintenance mode', 'چالاککردنی مۆدی چاککردن', 'تفعيل وضع الصيانة', 0, 'system', 1],
             ];
             
