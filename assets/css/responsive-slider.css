@@ -11,7 +11,8 @@
 .projects-slider-wrapper {
     position: relative;
     width: 100%;
-    overflow: hidden;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-y: visible; /* Allow vertical scroll */
     box-sizing: border-box;
 }
 
@@ -19,7 +20,7 @@
 .projects-slider {
     display: flex;
     overflow-x: hidden;
-    overflow-y: visible;
+    overflow-y: auto; /* Allow vertical scrolling */
     scroll-behavior: smooth;
     gap: 0;
     padding: 1rem 0;
@@ -30,7 +31,8 @@
     align-items: stretch;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
+    touch-action: pan-x pan-y; /* Allow both horizontal and vertical scrolling */
+    max-height: none; /* Remove any height restrictions */
 }
 
 /* Base Project Slide */
@@ -47,7 +49,7 @@
     background: var(--bg-card, #ffffff);
     border: 2px solid rgba(0, 0, 0, 0.1);
     border-radius: 24px;
-    overflow: hidden;
+    overflow: visible; /* Allow content to scroll */
     box-sizing: border-box;
     padding: 0;
     margin: 0;
@@ -55,6 +57,7 @@
     visibility: visible !important;
     scroll-snap-align: start;
     scroll-snap-stop: always;
+    pointer-events: auto; /* Ensure pointer events work */
 }
 
 /* Desktop Styles (1024px and above) */
@@ -152,9 +155,11 @@
         grid-template-columns: 1fr !important;
         gap: 1.5rem !important;
         transform: none !important;
-        overflow: visible !important;
+        overflow-x: hidden !important;
+        overflow-y: visible !important; /* Allow vertical scroll */
         padding: 1rem 0 !important;
         scroll-behavior: auto !important;
+        touch-action: pan-y !important; /* Allow vertical pan on mobile */
     }
     
     .projects-slider-container.mobile-layout .project-slide,
@@ -285,11 +290,14 @@
     .projects-slider {
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
+        touch-action: pan-x pan-y; /* Allow both directions */
+        overflow-y: auto; /* Enable vertical scroll */
     }
     
     .project-slide {
         scroll-snap-align: start;
         scroll-snap-stop: always;
+        overflow: visible; /* Allow content scrolling */
     }
     
     /* Larger touch targets */
@@ -302,6 +310,56 @@
         min-width: 44px;
         min-height: 44px;
     }
+}
+
+/* Enable scrolling on hover - Allow both horizontal and vertical */
+.projects-slider,
+.projects-slider:hover {
+    overflow-y: auto !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+/* Ensure project slide content can scroll */
+.project-slide-content {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: 100%;
+}
+
+.project-slide-content:hover {
+    overflow-y: auto !important;
+}
+
+.projects-slider:hover::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.projects-slider:hover::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.projects-slider:hover::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.projects-slider:hover::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Dark mode scrollbar */
+.dark-mode .projects-slider:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.dark-mode .projects-slider:hover::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.dark-mode .projects-slider:hover::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
 }
 
 /* Edge Browser Specific Fixes */
@@ -403,6 +461,42 @@
     
     .project-slide {
         animation: none;
+    }
+}
+
+/* Ensure scroll works on all elements */
+.projects-slider-container,
+.projects-slider-wrapper,
+.projects-slider,
+.project-slide,
+.project-slide-content {
+    /* Allow wheel events to propagate */
+    pointer-events: auto;
+}
+
+/* Enable mouse wheel scrolling */
+.projects-slider,
+.project-slide-content {
+    /* Ensure scroll works with mouse wheel */
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent scroll blocking on hover */
+.projects-slider:hover,
+.project-slide:hover,
+.project-slide-content:hover {
+    pointer-events: auto !important;
+    overflow-y: auto !important;
+}
+
+/* Ensure touch scrolling works */
+@media (hover: none) and (pointer: coarse) {
+    .projects-slider,
+    .project-slide-content {
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x pan-y;
+        overflow-y: auto;
     }
 }
 

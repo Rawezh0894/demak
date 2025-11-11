@@ -1882,10 +1882,42 @@ body.dark-mode .tab-button.active .tab-button-icon {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scroll */
     contain: layout style paint;
     position: relative;
     z-index: 1;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.project-slide-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.project-slide-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.project-slide-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.project-slide-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .project-slide-content {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.dark-mode .project-slide-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .project-slide-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .project-slide-title {
