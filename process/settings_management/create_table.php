@@ -83,19 +83,6 @@ try {
             }
         }
         
-        // Check if contact_phone_2 exists, if not, insert it
-        $check_phone2 = $pdo->query("SELECT COUNT(*) as count FROM settings WHERE `key` = 'contact_phone_2'");
-        $phone2_exists = $check_phone2->fetch(PDO::FETCH_ASSOC)['count'] > 0;
-        
-        if (!$phone2_exists) {
-            // Insert contact_phone_2 if it doesn't exist
-            $insert_phone2 = $pdo->prepare("
-                INSERT INTO settings (`key`, `value`, `type`, `description`, `description_ku`, `description_ar`, `is_public`, `group_name`, `sort_order`) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ");
-            $insert_phone2->execute(['contact_phone_2', '', 'text', 'Secondary contact phone', 'تەلەفۆنی پەیوەندی دووەم', 'رقم الهاتف الثانوي', 1, 'contact', 3]);
-        }
-        
         // Check if table is empty, if so, insert default data
         $check_stmt = $pdo->query("SELECT COUNT(*) as count FROM settings");
         $count = $check_stmt->fetch(PDO::FETCH_ASSOC)['count'];
@@ -109,10 +96,7 @@ try {
                 ['site_description', 'Professional construction and building services in Kurdistan', 'text', 'Website description', 'وەسفی وێبسایت', 'وصف الموقع', 1, 'general', 4],
                 ['contact_email', 'info@demak.com', 'text', 'Contact email', 'ئیمەیلی پەیوەندی', 'البريد الإلكتروني للاتصال', 1, 'contact', 1],
                 ['contact_phone', '+964 750 123 4567', 'text', 'Contact phone', 'تەلەفۆنی پەیوەندی', 'رقم الهاتف للاتصال', 1, 'contact', 2],
-                ['contact_phone_2', '', 'text', 'Secondary contact phone', 'تەلەفۆنی پەیوەندی دووەم', 'رقم الهاتف الثانوي', 1, 'contact', 3],
-                ['contact_address', 'Erbil, Kurdistan Region, Iraq', 'text', 'Contact address', 'ناونیشانی پەیوەندی', 'عنوان الاتصال', 1, 'contact', 4],
-                ['contact_address_ku', 'هەولێر، هەرێمی کوردستان، عێراق', 'text', 'Contact address in Kurdish', 'ناونیشانی پەیوەندی بە کوردی', 'عنوان الاتصال بالكردية', 1, 'contact', 5],
-                ['contact_address_ar', 'أربيل، إقليم كردستان، العراق', 'text', 'Contact address in Arabic', 'ناونیشانی پەیوەندی بە عەرەبی', 'عنوان الاتصال بالعربية', 1, 'contact', 6],
+                ['contact_phone_2', '', 'text', 'Contact phone 2', 'تەلەفۆنی پەیوەندی 2', 'رقم الهاتف للاتصال 2', 1, 'contact', 3],
                 ['maintenance_mode', '0', 'boolean', 'Enable maintenance mode', 'چالاککردنی مۆدی چاککردن', 'تفعيل وضع الصيانة', 0, 'system', 1],
             ];
             
