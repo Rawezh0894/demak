@@ -140,6 +140,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Load data
 require_once '../../process/settings_management/select.php';
+
+// Make sure settings_error is available in the view
+if (!isset($settings_error)) {
+    $settings_error = null;
+}
 ?>
 
 

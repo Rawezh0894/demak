@@ -23,33 +23,65 @@ if (!isset($input['csrf_token']) || $input['csrf_token'] !== $_SESSION['csrf_tok
 }
 
 try {
+    // Check if table exists
+    $table_check = $pdo->query("SHOW TABLES LIKE 'settings'");
+    $table_exists = $table_check->rowCount() > 0;
+    
     $pdo->beginTransaction();
     
     try {
-        // Execute CREATE TABLE statement
-        $create_table_sql = "
-        CREATE TABLE IF NOT EXISTS `settings` (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
-          `key` varchar(100) NOT NULL,
-          `value` text DEFAULT NULL,
-          `type` enum('text','number','boolean','json','file') DEFAULT 'text',
-          `description` text DEFAULT NULL,
-          `description_ku` text DEFAULT NULL,
-          `description_ar` text DEFAULT NULL,
-          `is_public` tinyint(1) DEFAULT 0,
-          `group_name` varchar(50) DEFAULT NULL,
-          `sort_order` int(11) DEFAULT 0,
-          `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-          `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-          PRIMARY KEY (`id`),
-          UNIQUE KEY `key` (`key`),
-          KEY `idx_public` (`is_public`),
-          KEY `idx_group` (`group_name`),
-          KEY `idx_sort` (`sort_order`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-        ";
-        
-        $pdo->exec($create_table_sql);
+        if (!$table_exists) {
+            // Create new table with all columns
+            $create_table_sql = "
+            CREATE TABLE `settings` (
+              `id` int(11) NOT NULL AUTO_INCREMENT,
+              `key` varchar(100) NOT NULL,
+              `value` text DEFAULT NULL,
+              `type` enum('text','number','boolean','json','file') DEFAULT 'text',
+              `description` text DEFAULT NULL,
+              `description_ku` text DEFAULT NULL,
+              `description_ar` text DEFAULT NULL,
+              `is_public` tinyint(1) DEFAULT 0,
+              `group_name` varchar(50) DEFAULT NULL,
+              `sort_order` int(11) DEFAULT 0,
+              `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+              `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+              PRIMARY KEY (`id`),
+              UNIQUE KEY `key` (`key`),
+              KEY `idx_public` (`is_public`),
+              KEY `idx_group` (`group_name`),
+              KEY `idx_sort` (`sort_order`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+            ";
+            
+            $pdo->exec($create_table_sql);
+        } else {
+            // Table exists, check and add missing columns
+            $columns_check = $pdo->query("SHOW COLUMNS FROM settings");
+            $existing_columns = [];
+            while ($col = $columns_check->fetch(PDO::FETCH_ASSOC)) {
+                $existing_columns[] = $col['Field'];
+            }
+            
+            // Add missing columns
+            if (!in_array('description_ku', $existing_columns)) {
+                $pdo->exec("ALTER TABLE settings ADD COLUMN `description_ku` text DEFAULT NULL AFTER `description`");
+            }
+            
+            if (!in_array('description_ar', $existing_columns)) {
+                $pdo->exec("ALTER TABLE settings ADD COLUMN `description_ar` text DEFAULT NULL AFTER `description_ku`");
+            }
+            
+            if (!in_array('group_name', $existing_columns)) {
+                $pdo->exec("ALTER TABLE settings ADD COLUMN `group_name` varchar(50) DEFAULT NULL AFTER `is_public`");
+                $pdo->exec("ALTER TABLE settings ADD KEY `idx_group` (`group_name`)");
+            }
+            
+            if (!in_array('sort_order', $existing_columns)) {
+                $pdo->exec("ALTER TABLE settings ADD COLUMN `sort_order` int(11) DEFAULT 0 AFTER `group_name`");
+                $pdo->exec("ALTER TABLE settings ADD KEY `idx_sort` (`sort_order`)");
+            }
+        }
         
         // Check if table is empty, if so, insert default data
         $check_stmt = $pdo->query("SELECT COUNT(*) as count FROM settings");

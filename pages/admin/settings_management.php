@@ -246,7 +246,7 @@ require_once '../../process/settings_management/settings_management.php';
                                 <span class="mx-2">|</span>
                                 <button onclick="createSettingsTable()" class="text-yellow-800 underline hover:text-yellow-900">
                                     <i class="fas fa-database mr-2"></i>
-                                    دروستکردنی تەیبڵی settings
+                                    <?php echo (isset($settings_by_group) && !empty($settings_by_group)) ? 'نوێکردنەوەی تەیبڵی settings' : 'دروستکردنی تەیبڵی settings'; ?>
                                 </button>
                             </div>
                         </div>
