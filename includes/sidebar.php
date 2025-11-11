@@ -80,10 +80,6 @@ $sidebar_top_radius = 'rounded-t-lg';
                     </svg>
                 </button>
                 <div id="servicesSidebarDropdown" class="sidebar-submenu mt-2 space-y-3 pl-4 pr-2 border-l border-gray-200 dark:border-gray-700 <?php echo $is_services_active ? '' : 'hidden'; ?>">
-                    <a href="index.php#services" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
-                        <span class="flex-1 leading-snug text-left rtl:text-right"><?php echo t('our_services'); ?></span>
-                    </a>
                     <a href="pages/public/commercial-residential-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'commercial-residential-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="flex-1 leading-snug text-left rtl:text-right"><?php echo t('commercial_design_management'); ?></span>
