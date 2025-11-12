@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://cdn.tailwindcss.com">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://images.unsplash.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <!-- Preload بۆ فایلە گرنگەکان -->
 <?php
@@ -16,6 +18,7 @@ $base_path = isset($base_path) ? $base_path : '';
 ?>
 <link rel="preload" href="<?php echo $base_path; ?>assets/fonts/Rabar_021.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="<?php echo $base_path; ?>assets/css/main.css" as="style">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap">
 
 <!-- Tailwind CSS: Prefer compiled CSS in production, fallback to CDN in dev -->
 <?php

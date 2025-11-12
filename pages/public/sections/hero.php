@@ -57,7 +57,7 @@ $brand_highlight_alignment = $is_rtl ? 'md:ml-auto md:mr-0' : 'md:mr-auto md:ml-
                     <span class="relative flex w-fit mx-auto md:mx-0 px-6 py-3 md:px-10 md:py-4 rounded-full <?php echo $brand_highlight_alignment; ?> overflow-visible">
                         <span class="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-white/20 via-white/5 to-white/20 opacity-25"></span>
                         <span class="pointer-events-none absolute inset-0 rounded-full border border-white/30 opacity-40"></span>
-                        <span class="relative text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-r from-yellow-200 via-amber-400 to-orange-500 text-transparent bg-clip-text drop-shadow-2xl leading-none">
+                        <span class="relative text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-r from-yellow-200 via-amber-400 to-orange-500 text-transparent bg-clip-text drop-shadow-2xl leading-none" style="font-family: 'Lalezar', 'Rabar', sans-serif;">
                             <?php echo t('construction_company'); ?>
                         </span>
                     </span>
