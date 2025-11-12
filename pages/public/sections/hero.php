@@ -7,7 +7,6 @@
     <div class="hero-slider">
         <div class="slider-container">
             <!-- Slide 1: Modern Construction -->
-           <h1>Hello</h1>
             <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')"></div>
             
             <!-- Slide 2: Building Construction -->
