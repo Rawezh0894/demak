@@ -96,7 +96,7 @@ if (isset($current_lang) && $current_lang === 'ku') {
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Phone Card -->
             <div class="service-card group contact-phone-card" style="cursor: pointer;">
                 <!-- Floating Particles -->
@@ -172,42 +172,6 @@ if (isset($current_lang) && $current_lang === 'ku') {
                     </a>
                 </p>
                 <p class="text-gray-500 dark:text-gray-400 text-sm mt-2"><?php echo t('quick_response') ?? 'Quick Response'; ?></p>
-                <div class="service-arrow">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Address Card -->
-            <div class="service-card group contact-address-card" style="cursor: pointer;">
-                <!-- Floating Particles -->
-                <div class="floating-particles">
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                </div>
-                
-                <!-- Animated Lines -->
-                <div class="animated-lines">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                </div>
-                
-                <div class="service-icon">
-                    <i class="fas fa-map-marker-alt text-2xl"></i>
-                </div>
-                <h3 class="service-title">
-                    <?php echo t('address'); ?>
-                </h3>
-                <p class="service-description leading-relaxed">
-                    <?php echo htmlspecialchars($display_address); ?>
-                </p>
-                <p class="text-gray-500 dark:text-gray-400 text-sm mt-2"><?php echo t('visit_us') ?? 'Visit Us'; ?></p>
                 <div class="service-arrow">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
