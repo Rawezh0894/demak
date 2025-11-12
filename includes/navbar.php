@@ -1,6 +1,18 @@
 <?php
 // Include shared translations
 require_once __DIR__ . '/translations.php';
+
+// Calculate base path to index.php based on where navbar is included from
+$current_file = $_SERVER['PHP_SELF'];
+$base_path = '';
+if (strpos($current_file, '/pages/public/') !== false) {
+    // If we're in pages/public/, go up two levels
+    $base_path = '../../';
+} elseif (strpos($current_file, '/pages/') !== false) {
+    // If we're in pages/, go up one level
+    $base_path = '../';
+}
+// If we're in root, base_path stays empty
 ?>
 
 <nav class="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
@@ -9,7 +21,7 @@ require_once __DIR__ . '/translations.php';
             <!-- Logo and Brand -->
             <div class="flex items-center space-x-4 rtl:space-x-reverse">
                 <div class="flex-shrink-0">
-                    <a href="index.php" class="flex items-center space-x-2 rtl:space-x-reverse">
+                    <a href="<?php echo $base_path; ?>index.php" class="flex items-center space-x-2 rtl:space-x-reverse">
                         <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-green-600 rounded-lg flex items-center justify-center">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
@@ -27,13 +39,13 @@ require_once __DIR__ . '/translations.php';
                     $current_page = basename($_SERVER['PHP_SELF']);
                     $current_section = $_GET['section'] ?? '';
                     ?>
-                    <a href="index.php" class="nav-link <?php echo ($current_page == 'index.php' && $current_section == '') ? 'active' : ''; ?>">
+                    <a href="<?php echo $base_path; ?>index.php" class="nav-link <?php echo ($current_page == 'index.php' && $current_section == '') ? 'active' : ''; ?>">
                         <?php echo t('home'); ?>
                     </a>
-                    <a href="index.php#services" class="nav-link <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'active' : ''; ?>">
+                    <a href="<?php echo $base_path; ?>index.php#services" class="nav-link <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'active' : ''; ?>">
                         <?php echo t('our_services'); ?>
                     </a>
-                    <a href="index.php#contact" class="nav-link <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
+                    <a href="<?php echo $base_path; ?>index.php#contact" class="nav-link <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
                         <?php echo t('contact'); ?>
                     </a>
                 </div>
@@ -117,13 +129,13 @@ require_once __DIR__ . '/translations.php';
         <!-- Mobile Navigation Menu -->
         <div id="mobileMenu" class="md:hidden hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200 dark:border-gray-700">
-                <a href="index.php" class="nav-link block <?php echo ($current_page == 'index.php' && $current_section == '') ? 'active' : ''; ?>">
+                <a href="<?php echo $base_path; ?>index.php" class="nav-link block <?php echo ($current_page == 'index.php' && $current_section == '') ? 'active' : ''; ?>">
                     <?php echo t('home'); ?>
                 </a>
-                <a href="index.php#services" class="nav-link block <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'active' : ''; ?>">
+                <a href="<?php echo $base_path; ?>index.php#services" class="nav-link block <?php echo ($current_section == 'services' || (isset($_GET['section']) && $_GET['section'] == 'services')) ? 'active' : ''; ?>">
                     <?php echo t('our_services'); ?>
                 </a>
-                <a href="index.php#contact" class="nav-link block <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
+                <a href="<?php echo $base_path; ?>index.php#contact" class="nav-link block <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
                     <?php echo t('contact'); ?>
                 </a>
             </div>

@@ -135,19 +135,11 @@ try {
     <meta property="og:type" content="website">
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Include Navbar -->
+    <?php include '../../includes/navbar.php'; ?>
+    
     <!-- Include Floating Contact -->
     <?php include '../../includes/floating-contact.php'; ?>
-    <!-- Back to Home Button -->
-    <a href="../../index.php" class="back-to-home-btn">
-        <i class="fas fa-arrow-<?php echo $page_dir === 'rtl' ? 'right' : 'left'; ?>"></i>
-        <span><?php echo t('back_to_home'); ?></span>
-    </a>
-    
-    <!-- Dark Mode Toggle Button -->
-    <button onclick="toggleDarkMode()" class="dark-mode-toggle-btn">
-        <i id="lightModeIcon" class="fas fa-sun"></i>
-        <i id="darkModeIcon" class="fas fa-moon hidden"></i>
-    </button>
     
     <!-- Main Content -->
     <div class="main-content-full">
@@ -515,45 +507,6 @@ try {
         }
     </script>
     
-    <!-- Dark Mode Toggle Script -->
-    <script>
-        // Dark mode toggle function
-        function toggleDarkMode() {
-            const body = document.body;
-            const lightIcon = document.getElementById('lightModeIcon');
-            const darkIcon = document.getElementById('darkModeIcon');
-            
-            if (body.classList.contains('dark-mode')) {
-                body.classList.remove('dark-mode');
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
-                localStorage.setItem('darkMode', 'false');
-            } else {
-                body.classList.add('dark-mode');
-                lightIcon.classList.add('hidden');
-                darkIcon.classList.remove('hidden');
-                localStorage.setItem('darkMode', 'true');
-            }
-        }
-        
-        // Initialize dark mode from localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            const darkMode = localStorage.getItem('darkMode');
-            const body = document.body;
-            const lightIcon = document.getElementById('lightModeIcon');
-            const darkIcon = document.getElementById('darkModeIcon');
-            
-            if (darkMode === 'true') {
-                body.classList.add('dark-mode');
-                lightIcon.classList.add('hidden');
-                darkIcon.classList.remove('hidden');
-            } else {
-                body.classList.remove('dark-mode');
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
-            }
-        });
-    </script>
 </body>
 </html>
 
