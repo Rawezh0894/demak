@@ -22,8 +22,7 @@ $translations = [
         'dark_mode' => 'دارک مۆد',
         'light_mode' => 'ڕووناکی مۆد',
        
-        'welcome' => 'بەخێربێن',
-        'crafting_quality_spaces' => 'دروستکردنی بۆشایی باکۆالێتی',
+        'welcome' => 'بەخێر بێن بۆ دیمەک',
         'management' => 'بەڕێوەبردن',
         'tools' => 'ئامێرەکان',
         'quick_links' => 'بەستەرە خێراکان',
@@ -288,8 +287,7 @@ $translations = [
         'dark_mode' => 'الوضع المظلم',
         'light_mode' => 'الوضع المضيء',
      
-        'welcome' => 'مرحباً',
-        'crafting_quality_spaces' => 'نصنع مساحات عالية الجودة',
+        'welcome' => 'مرحباً بكم في ديمەك',
         'management' => 'الإدارة',
         'tools' => 'الأدوات',
         'quick_links' => 'روابط سريعة',
@@ -554,8 +552,7 @@ $translations = [
         'dark_mode' => 'Dark Mode',
         'light_mode' => 'Light Mode',
      
-        'welcome' => 'Welcome',
-        'crafting_quality_spaces' => 'Crafting Quality Spaces',
+        'welcome' => 'Welcome to Demak',
         'management' => 'Management',
         'tools' => 'Tools',
         'quick_links' => 'Quick Links',

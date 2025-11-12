@@ -49,11 +49,8 @@ $badge_alignment = $is_rtl ? 'justify-center md:justify-end' : 'justify-center m
     <div class="slide-content relative z-10 px-4 sm:px-6 lg:px-8 py-24">
         <div class="max-w-5xl mx-auto rounded-3xl">
             <div class="px-8 py-12 md:px-14 md:py-16 bg-gradient-to-br from-black/45 via-black/15 to-black/0 rounded-3xl">
-                <p class="uppercase tracking-[0.35em] text-sm sm:text-base text-white/85 mb-4 <?php echo $heading_alignment; ?> drop-shadow-md">
-                    <?php echo t('crafting_quality_spaces'); ?>
-                </p>
                 <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight <?php echo $heading_alignment; ?> drop-shadow-xl">
-                    <?php echo t('welcome'); ?> <span class="text-yellow-400"><?php echo t('construction_company'); ?></span>
+                    <?php echo t('welcome'); ?>
                 </h1>
                 <p class="text-lg md:text-xl text-white/85 mb-10 max-w-3xl mx-auto <?php echo $body_alignment; ?> drop-shadow-lg <?php echo $is_rtl ? 'md:mr-0 md:ml-auto' : 'md:ml-0 md:mr-auto'; ?>">
                     <?php echo t('excellence_in_construction'); ?> · <?php echo t('we_build_dreams'); ?>
