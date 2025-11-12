@@ -9,10 +9,10 @@ $languages = [
 
 $translations = [
     'ku' => [
-        'home' => 'ماڵەوە',
+        'home' => 'سەرەکی',
         'projects' => 'پڕۆژەکان',
         'about' => 'دەربارە',
-        'contact' => 'سەرەکی',
+        'contact' => 'پەیوەندی',
         'login' => 'چوونەژوورەوە',
         'logout' => 'دەرچوون',
         'dashboard' => 'داشبۆرد',
