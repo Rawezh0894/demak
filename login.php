@@ -1,4 +1,9 @@
 <?php
+// Disable caching for this page
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 session_start();
 require_once 'config/db_conected.php';
 require_once 'includes/translations.php';
