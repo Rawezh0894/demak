@@ -1,8 +1,13 @@
 <?php
 // Hero Section
+global $languages, $current_lang;
+$is_rtl = ($languages[$current_lang]['dir'] ?? 'ltr') === 'rtl';
+$heading_alignment = $is_rtl ? 'text-center md:text-right' : 'text-center md:text-left';
+$body_alignment = $is_rtl ? 'text-center md:text-right' : 'text-center md:text-left';
+$badge_alignment = $is_rtl ? 'justify-center md:justify-end' : 'justify-center md:justify-start';
 ?>
 <!-- Hero Section -->
-<section class="construction-hero">
+<section class="construction-hero" dir="<?php echo $is_rtl ? 'rtl' : 'ltr'; ?>">
     <!-- Image Slider -->
     <div class="hero-slider">
         <div class="slider-container">
@@ -44,20 +49,20 @@
     <div class="slide-content relative z-10 px-4 sm:px-6 lg:px-8 py-24">
         <div class="max-w-5xl mx-auto rounded-3xl">
             <div class="px-8 py-12 md:px-14 md:py-16 bg-gradient-to-br from-black/45 via-black/15 to-black/0 rounded-3xl">
-                <p class="uppercase tracking-[0.35em] text-sm sm:text-base text-white/85 mb-4 text-center md:text-left drop-shadow-md">
+                <p class="uppercase tracking-[0.35em] text-sm sm:text-base text-white/85 mb-4 <?php echo $heading_alignment; ?> drop-shadow-md">
                     <?php echo t('crafting_quality_spaces'); ?>
                 </p>
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight text-center md:text-left drop-shadow-xl">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight <?php echo $heading_alignment; ?> drop-shadow-xl">
                     <?php echo t('welcome'); ?> <span class="text-yellow-400"><?php echo t('construction_company'); ?></span>
                 </h1>
-                <p class="text-lg md:text-xl text-white/85 mb-10 max-w-3xl text-center md:text-left drop-shadow-lg">
+                <p class="text-lg md:text-xl text-white/85 mb-10 max-w-3xl mx-auto <?php echo $body_alignment; ?> drop-shadow-lg <?php echo $is_rtl ? 'md:mr-0 md:ml-auto' : 'md:ml-0 md:mr-auto'; ?>">
                     <?php echo t('excellence_in_construction'); ?> · <?php echo t('we_build_dreams'); ?>
                 </p>
-                <div class="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
-                    <a href="#services" class="inline-flex items-center justify-center rounded-full border border-yellow-400/70 text-yellow-200 text-sm sm:text-base font-semibold tracking-wide py-3 px-10 hover:bg-yellow-400/15 transition-all duration-300 shadow-lg shadow-yellow-500/10">
+                <div class="flex flex-col md:flex-row <?php echo $is_rtl ? 'md:items-center' : 'md:items-center'; ?> gap-6 md:gap-10 <?php echo $is_rtl ? 'md:flex-row-reverse' : ''; ?>">
+                    <a href="#services" class="inline-flex items-center justify-center rounded-full border border-yellow-400/70 text-yellow-200 text-sm sm:text-base font-semibold tracking-wide py-3 px-10 hover:bg-yellow-400/15 transition-all duration-300 shadow-lg shadow-yellow-500/10 <?php echo $is_rtl ? 'self-center md:self-end' : 'self-center md:self-start'; ?>">
                         <?php echo t('our_services'); ?>
                     </a>
-                    <div class="flex flex-wrap justify-center md:justify-start gap-3 text-white/85 text-sm sm:text-base">
+                    <div class="flex flex-wrap <?php echo $badge_alignment; ?> gap-3 text-white/85 text-sm sm:text-base">
                         <span class="px-4 py-2 rounded-full bg-black/30 border border-white/10 shadow-md shadow-black/30">
                             <?php echo t('innovative_design'); ?>
                         </span>
