@@ -1,9 +1,4 @@
 <?php
-// Disable caching for this page
-header("Cache-Control: no-cache, no-store, must-revalidate");
-header("Pragma: no-cache");
-header("Expires: 0");
-
 session_start();
 require_once 'config/db_conected.php';
 require_once 'includes/translations.php';
@@ -114,20 +109,36 @@ $page_dir = $languages[$current_lang]['dir'];
                         <i class="fas fa-lock mr-2"></i>
                         <?php echo t('password'); ?>
                     </label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        class="form-input" 
-                        placeholder="<?php echo t('password'); ?>"
-                        required
-                    >
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input pr-10" 
+                            placeholder="<?php echo t('password'); ?>"
+                            required
+                        >
+                        <button 
+                            type="button" 
+                            onclick="togglePassword()" 
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        >
+                            <i id="passwordIcon" class="fas fa-eye text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end">
+                    <a href="#" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500">
+                        <?php echo t('forgot_password'); ?>
+                    </a>
                 </div>
 
                 <button 
                     type="submit" 
                     class="w-full btn btn-primary text-lg py-3"
                 >
+                    <i class="fas fa-eye mr-2"></i>
                     <i class="fas fa-sign-in-alt mr-2"></i>
                     <?php echo t('sign_in'); ?>
                 </button>
@@ -190,6 +201,22 @@ $page_dir = $languages[$current_lang]['dir'];
                 darkIcon.classList.remove('hidden');
                 toggle.title = '<?php echo t('dark_mode'); ?>';
                 localStorage.setItem('darkMode', 'true');
+            }
+        }
+
+        // Password visibility toggle
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('passwordIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
             }
         }
 
