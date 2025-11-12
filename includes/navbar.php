@@ -199,6 +199,7 @@ function toggleSidebar() {
 // Dark mode toggle - Universal function for navbar toggle button
 function toggleDarkMode() {
     const body = document.body;
+    const root = document.documentElement;
     
     // Get navbar icon elements
     const lightIcon = document.getElementById('lightModeIcon');
@@ -210,9 +211,11 @@ function toggleDarkMode() {
     // Toggle body class
     if (isDarkMode) {
         body.classList.remove('dark-mode');
+        root.classList.remove('dark');
         localStorage.setItem('darkMode', 'false');
     } else {
         body.classList.add('dark-mode');
+        root.classList.add('dark');
         localStorage.setItem('darkMode', 'true');
     }
     
@@ -238,16 +241,21 @@ function toggleDarkMode() {
 
 // Initialize dark mode from localStorage
 document.addEventListener('DOMContentLoaded', function() {
-    const darkMode = localStorage.getItem('darkMode');
+    const darkModeSetting = localStorage.getItem('darkMode');
+    const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const shouldEnableDark = darkModeSetting === 'true' || (darkModeSetting === null && systemPrefersDark);
     const body = document.body;
+    const root = document.documentElement;
     
     // Get navbar icon elements
     const lightIcon = document.getElementById('lightModeIcon');
     const darkIcon = document.getElementById('darkModeIcon');
     const toggle = document.getElementById('darkModeToggle');
     
-    if (darkMode === 'true') {
+    if (shouldEnableDark) {
         body.classList.add('dark-mode');
+        root.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
         
         // Update navbar icons
         if (lightIcon && darkIcon && toggle) {
@@ -259,6 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     } else {
         body.classList.remove('dark-mode');
+        root.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
         
         // Update navbar icons
         if (lightIcon && darkIcon && toggle) {
@@ -276,6 +286,36 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize sidebar for desktop/mobile
     initializeSidebar();
+    
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+            const stored = localStorage.getItem('darkMode');
+            if (stored === 'true' || stored === 'false') {
+                return;
+            }
+            if (event.matches) {
+                body.classList.add('dark-mode');
+                root.classList.add('dark');
+                if (lightIcon && darkIcon && toggle) {
+                    lightIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
+                    lightIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
+                    darkIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
+                    darkIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
+                    toggle.title = '<?php echo t('dark_mode'); ?>';
+                }
+            } else {
+                body.classList.remove('dark-mode');
+                root.classList.remove('dark');
+                if (lightIcon && darkIcon && toggle) {
+                    lightIcon.classList.remove('opacity-0', 'rotate-90', 'scale-0');
+                    lightIcon.classList.add('opacity-100', 'rotate-0', 'scale-100');
+                    darkIcon.classList.remove('opacity-100', 'rotate-0', 'scale-100');
+                    darkIcon.classList.add('opacity-0', 'rotate-90', 'scale-0');
+                    toggle.title = '<?php echo t('light_mode'); ?>';
+                }
+            }
+        });
+    }
 });
 
 // Initialize sidebar based on screen size
