@@ -27,23 +27,17 @@ if (file_exists(__DIR__ . '/../' . str_replace('../', '', $tailwindLocal))) {
 ?>
 <link rel="stylesheet" href="<?php echo $tailwindLocal; ?>">
 <?php } else { ?>
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
-    tailwind = {
-        config: {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'rabar': ['Rabar', 'sans-serif'],
-                        'display': ['Lalezar', 'Rabar', 'sans-serif'],
-                    }
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    'rabar': ['Rabar', 'sans-serif'],
                 }
             }
         }
-    };
-</script>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
+    }
     // Note: Using CDN in development; build tailwind.min.css for production
 </script>
 <?php } ?>

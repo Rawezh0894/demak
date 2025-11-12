@@ -87,21 +87,6 @@ $page_dir = $languages[$current_lang]['dir'];
     <title><?php echo t('construction_company'); ?> - <?php echo t('excellence_in_construction'); ?></title>
     
     <!-- Tailwind CSS -->
-    <script>
-        tailwind = {
-            config: {
-                darkMode: 'class',
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            'rabar': ['Rabar', 'sans-serif'],
-                            'display': ['Lalezar', 'Rabar', 'sans-serif'],
-                        }
-                    }
-                }
-            }
-        };
-    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Custom CSS -->
