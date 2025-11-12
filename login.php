@@ -109,40 +109,14 @@ $page_dir = $languages[$current_lang]['dir'];
                         <i class="fas fa-lock mr-2"></i>
                         <?php echo t('password'); ?>
                     </label>
-                    <div class="relative">
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            class="form-input pr-10" 
-                            placeholder="<?php echo t('password'); ?>"
-                            required
-                        >
-                        <button 
-                            type="button" 
-                            onclick="togglePassword()" 
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
-                        >
-                            <i id="passwordIcon" class="fas fa-eye text-gray-400"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input 
-                            id="remember" 
-                            name="remember" 
-                            type="checkbox" 
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        >
-                        <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                            <?php echo t('remember_me'); ?>
-                        </label>
-                    </div>
-                    <a href="#" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500">
-                        <?php echo t('forgot_password'); ?>
-                    </a>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="<?php echo t('password'); ?>"
+                        required
+                    >
                 </div>
 
                 <button 
@@ -211,22 +185,6 @@ $page_dir = $languages[$current_lang]['dir'];
                 darkIcon.classList.remove('hidden');
                 toggle.title = '<?php echo t('dark_mode'); ?>';
                 localStorage.setItem('darkMode', 'true');
-            }
-        }
-
-        // Password visibility toggle
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const passwordIcon = document.getElementById('passwordIcon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                passwordIcon.classList.remove('fa-eye');
-                passwordIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                passwordIcon.classList.remove('fa-eye-slash');
-                passwordIcon.classList.add('fa-eye');
             }
         }
 
