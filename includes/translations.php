@@ -23,6 +23,7 @@ $translations = [
         'light_mode' => 'ڕووناکی مۆد',
        
         'welcome' => 'بەخێر بێن بۆ دیمەک',
+        'welcome_prefix' => 'بەخێر بێن بۆ',
         'management' => 'بەڕێوەبردن',
         'tools' => 'ئامێرەکان',
         'quick_links' => 'بەستەرە خێراکان',
@@ -288,6 +289,7 @@ $translations = [
         'light_mode' => 'الوضع المضيء',
      
         'welcome' => 'مرحباً بكم في ديمەك',
+        'welcome_prefix' => 'مرحباً بكم في',
         'management' => 'الإدارة',
         'tools' => 'الأدوات',
         'quick_links' => 'روابط سريعة',
@@ -553,6 +555,7 @@ $translations = [
         'light_mode' => 'Light Mode',
      
         'welcome' => 'Welcome to Demak',
+        'welcome_prefix' => 'Welcome to',
         'management' => 'Management',
         'tools' => 'Tools',
         'quick_links' => 'Quick Links',
