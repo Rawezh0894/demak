@@ -41,22 +41,34 @@
     </div>
     
     <!-- Hero Content -->
-    <div class="slide-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 fade-in">
-                <?php echo t('welcome'); ?> <br>
-                <span class="text-yellow-400"><?php echo t('construction_company'); ?></span>
-            </h1>
-            <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-                <?php echo t('excellence_in_construction'); ?> - <?php echo t('we_build_dreams'); ?>
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#projects" class="btn btn-primary text-lg px-8 py-3">
-                    <?php echo t('our_projects'); ?>
-                </a>
-                <a href="#contact" class="btn bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3">
-                    <?php echo t('get_quote'); ?>
-                </a>
+    <div class="slide-content relative z-10 px-4 sm:px-6 lg:px-8 py-24">
+        <div class="max-w-5xl mx-auto bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl shadow-xl">
+            <div class="px-8 py-12 md:px-14 md:py-16">
+                <p class="uppercase tracking-[0.35em] text-sm sm:text-base text-white/80 mb-4 text-center md:text-left">
+                    <?php echo t('crafting_quality_spaces'); ?>
+                </p>
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight text-center md:text-left">
+                    <?php echo t('welcome'); ?> <span class="text-yellow-400"><?php echo t('construction_company'); ?></span>
+                </h1>
+                <p class="text-lg md:text-xl text-white/80 mb-10 max-w-3xl text-center md:text-left">
+                    <?php echo t('excellence_in_construction'); ?> · <?php echo t('we_build_dreams'); ?>
+                </p>
+                <div class="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+                    <a href="#services" class="inline-flex items-center justify-center rounded-full border border-yellow-400/80 text-yellow-300 text-sm sm:text-base font-semibold tracking-wide py-3 px-10 hover:bg-yellow-400/20 transition-all duration-300 shadow-lg shadow-yellow-500/10">
+                        <?php echo t('our_services'); ?>
+                    </a>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-3 text-white/80 text-sm sm:text-base">
+                        <span class="px-4 py-2 rounded-full bg-white/10 border border-white/15 shadow-md shadow-black/20">
+                            <?php echo t('innovative_design'); ?>
+                        </span>
+                        <span class="px-4 py-2 rounded-full bg-white/10 border border-white/15 shadow-md shadow-black/20">
+                            <?php echo t('precision_engineering'); ?>
+                        </span>
+                        <span class="px-4 py-2 rounded-full bg-white/10 border border-white/15 shadow-md shadow-black/20">
+                            <?php echo t('timely_delivery'); ?>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
