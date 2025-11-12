@@ -2,6 +2,22 @@
 // Include shared translations
 require_once __DIR__ . '/translations.php';
 
+// Calculate base path to index.php based on where sidebar is included from
+$current_file = $_SERVER['PHP_SELF'];
+$base_path = '';
+$pages_path = 'pages/public/';
+if (strpos($current_file, '/pages/public/') !== false) {
+    // If we're in pages/public/, go up two levels for index.php
+    $base_path = '../../';
+    // For pages in the same directory, use relative path
+    $pages_path = './';
+} elseif (strpos($current_file, '/pages/') !== false) {
+    // If we're in pages/, go up one level
+    $base_path = '../';
+    $pages_path = 'public/';
+}
+// If we're in root, base_path stays empty and pages_path stays 'pages/public/'
+
 // Get current page for active state
 $current_page = basename($_SERVER['PHP_SELF']);
 $current_section = $_GET['section'] ?? '';
@@ -54,7 +70,7 @@ $sidebar_top_radius = 'rounded-t-lg';
         <!-- Navigation Menu -->
         <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
             <!-- Home -->
-            <a href="index.php" class="sidebar-nav-link <?php echo ($current_page == 'index.php' && $current_section == '') ? 'active' : ''; ?>">
+            <a href="<?php echo $base_path; ?>index.php" class="sidebar-nav-link <?php echo ($current_page == 'index.php' && $current_section == '') ? 'active' : ''; ?>">
                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
@@ -80,23 +96,23 @@ $sidebar_top_radius = 'rounded-t-lg';
                     </svg>
                 </button>
                 <div id="servicesSidebarDropdown" class="sidebar-submenu mt-2 space-y-3 pl-4 pr-2 border-l border-gray-200 dark:border-gray-700 <?php echo $is_services_active ? '' : 'hidden'; ?>">
-                    <a href="pages/public/commercial-residential-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'commercial-residential-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                    <a href="<?php echo $pages_path; ?>commercial-residential-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'commercial-residential-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="flex-1 leading-snug text-left rtl:text-right"><?php echo t('commercial_design_management'); ?></span>
                     </a>
-                    <a href="pages/public/infrastructure.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'infrastructure.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                    <a href="<?php echo $pages_path; ?>infrastructure.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'infrastructure.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="flex-1 leading-snug text-left rtl:text-right"><?php echo t('infrastructure_construction'); ?></span>
                     </a>
-                    <a href="pages/public/design-reconstruction.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'design-reconstruction.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                    <a href="<?php echo $pages_path; ?>design-reconstruction.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'design-reconstruction.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-purple-500 dark:bg-purple-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="flex-1 leading-snug text-left rtl:text-right"><?php echo t('design_reconstruction'); ?></span>
                     </a>
-                    <a href="pages/public/exterior-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'exterior-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                    <a href="<?php echo $pages_path; ?>exterior-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'exterior-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-orange-500 dark:bg-orange-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="flex-1 leading-snug text-left rtl:text-right"><?php echo t('exterior_design_implementation'); ?></span>
                     </a>
-                    <a href="pages/public/interior-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'interior-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
+                    <a href="<?php echo $pages_path; ?>interior-design.php" class="flex items-center text-sm px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <?php echo ($current_page == 'interior-design.php') ? 'text-blue-600 dark:text-blue-300 font-semibold bg-gray-100 dark:bg-gray-700' : ''; ?>">
                         <span class="inline-block w-1.5 h-1.5 rounded-full bg-pink-500 dark:bg-pink-300 mr-3 rtl:ml-3 rtl:mr-0"></span>
                         <span class="flex-1 leading-snug text-left rtl:text-right"><?php echo t('interior_design_implementation'); ?></span>
                     </a>
@@ -104,7 +120,7 @@ $sidebar_top_radius = 'rounded-t-lg';
             </div>
 
             <!-- Contact -->
-            <a href="index.php#contact" class="sidebar-nav-link <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
+            <a href="<?php echo $base_path; ?>index.php#contact" class="sidebar-nav-link <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>

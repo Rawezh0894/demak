@@ -53,6 +53,9 @@ $infrastructure_categories = loadInfrastructureData($pdo);
     <!-- Include Navbar -->
     <?php include '../../includes/navbar.php'; ?>
     
+    <!-- Include Sidebar -->
+    <?php include '../../includes/sidebar.php'; ?>
+    
     <!-- Include Floating Contact -->
     <?php include '../../includes/floating-contact.php'; ?>
     

@@ -53,6 +53,9 @@ $interior_design_projects = loadInteriorDesignData($pdo);
     <!-- Include Navbar -->
     <?php include '../../includes/navbar.php'; ?>
     
+    <!-- Include Sidebar -->
+    <?php include '../../includes/sidebar.php'; ?>
+    
     <!-- Main Content -->
     <div class="main-content-full">
         <!-- Hero Section -->
