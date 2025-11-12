@@ -55,9 +55,9 @@ $brand_highlight_alignment = $is_rtl ? 'md:ml-auto md:mr-0' : 'md:mr-auto md:ml-
                 </p>
                 <h1 class="mb-6 leading-tight <?php echo $heading_alignment; ?>">
                     <span class="relative flex w-fit mx-auto md:mx-0 px-6 py-3 md:px-10 md:py-4 rounded-full <?php echo $brand_highlight_alignment; ?> overflow-visible">
-                        <span class="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-white/20 via-white/5 to-white/20 opacity-25"></span>
-                        <span class="pointer-events-none absolute inset-0 rounded-full border border-white/30 opacity-40"></span>
-                        <span class="relative text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-r from-yellow-200 via-amber-400 to-orange-500 text-transparent bg-clip-text drop-shadow-2xl leading-none" style="font-family: 'Lalezar', 'Rabar', sans-serif;">
+                        <span class="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 via-sky-400/20 to-blue-600/20 opacity-50"></span>
+                        <span class="pointer-events-none absolute inset-0 rounded-full border border-sky-200/60 opacity-70"></span>
+                        <span class="relative text-5xl md:text-7xl font-black tracking-tight bg-gradient-to-r from-blue-200 via-blue-400 to-cyan-300 text-transparent bg-clip-text drop-shadow-2xl leading-none" style="font-family: 'Lalezar', 'Rabar', sans-serif;">
                             <?php echo t('construction_company'); ?>
                         </span>
                     </span>
@@ -66,17 +66,17 @@ $brand_highlight_alignment = $is_rtl ? 'md:ml-auto md:mr-0' : 'md:mr-auto md:ml-
                     <?php echo t('excellence_in_construction'); ?> · <?php echo t('we_build_dreams'); ?>
                 </p>
                 <div class="flex flex-col md:flex-row <?php echo $is_rtl ? 'md:items-center' : 'md:items-center'; ?> gap-6 md:gap-10 <?php echo $is_rtl ? 'md:flex-row-reverse' : ''; ?>">
-                    <a href="#services" class="inline-flex items-center justify-center rounded-full border border-yellow-400/70 text-yellow-200 text-sm sm:text-base font-semibold tracking-wide py-3 px-10 hover:bg-yellow-400/15 transition-all duration-300 shadow-lg shadow-yellow-500/10 <?php echo $is_rtl ? 'self-center md:self-end' : 'self-center md:self-start'; ?>">
+                    <a href="#services" class="inline-flex items-center justify-center rounded-full border border-blue-400/60 text-white text-sm sm:text-base font-semibold tracking-wide py-3 px-10 bg-gradient-to-r from-blue-600/90 via-blue-500/90 to-sky-500/90 hover:from-blue-500/90 hover:via-blue-400/90 hover:to-sky-400/90 transition-all duration-300 shadow-lg shadow-blue-500/25 <?php echo $is_rtl ? 'self-center md:self-end' : 'self-center md:self-start'; ?>">
                         <?php echo t('our_services'); ?>
                     </a>
                     <div class="flex flex-wrap <?php echo $badge_alignment; ?> gap-3 text-white/85 text-sm sm:text-base">
-                        <span class="px-4 py-2 rounded-full bg-black/30 border border-white/10 shadow-md shadow-black/30">
+                        <span class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-300/40 text-sky-100 shadow-md shadow-blue-900/20">
                             <?php echo t('innovative_design'); ?>
                         </span>
-                        <span class="px-4 py-2 rounded-full bg-black/30 border border-white/10 shadow-md shadow-black/30">
+                        <span class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-300/40 text-sky-100 shadow-md shadow-blue-900/20">
                             <?php echo t('precision_engineering'); ?>
                         </span>
-                        <span class="px-4 py-2 rounded-full bg-black/30 border border-white/10 shadow-md shadow-black/30">
+                        <span class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-300/40 text-sky-100 shadow-md shadow-blue-900/20">
                             <?php echo t('timely_delivery'); ?>
                         </span>
                     </div>
