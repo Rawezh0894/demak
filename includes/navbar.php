@@ -36,9 +36,7 @@ require_once __DIR__ . '/translations.php';
                     <a href="index.php#contact" class="nav-link <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
                         <?php echo t('contact'); ?>
                     </a>
-                    <a href="index.php#contact" class="nav-link <?php echo ($current_section == 'contact' || (isset($_GET['section']) && $_GET['section'] == 'contact')) ? 'active' : ''; ?>">
-                        <?php echo t('contact'); ?>
-                    </a>
+                    
                 </div>
             </div>
 
