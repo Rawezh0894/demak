@@ -92,7 +92,7 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
     </button>
     
     <!-- Contact Panel -->
-    <div id="floatingContactPanel" class="fixed max-w-[calc(100vw-20px)] bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hidden transform transition-all duration-500 ease-out" style="z-index: 39; width: 288px; max-width: calc(100vw - 20px);">
+    <div id="floatingContactPanel" class="fixed max-w-[calc(100vw-20px)] bg-white/95 dark:bg-gray-900/95 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 hidden transform transition-all duration-500 ease-out" style="z-index: 39; width: 288px; max-width: calc(100vw - 20px); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);">
         <!-- Gradient Background -->
         <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-green-50/50 dark:from-blue-900/10 dark:via-transparent dark:to-green-900/10 rounded-2xl pointer-events-none"></div>
         
@@ -204,6 +204,23 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
 </div>
 
 <script>
+// Cross-browser helper functions
+function setTransform(element, value) {
+    if (!element) return;
+    element.style.webkitTransform = value;
+    element.style.mozTransform = value;
+    element.style.msTransform = value;
+    element.style.transform = value;
+}
+
+function setTransition(element, value) {
+    if (!element) return;
+    element.style.webkitTransition = value;
+    element.style.mozTransition = value;
+    element.style.msTransition = value;
+    element.style.transition = value;
+}
+
 // Draggable Floating Contact Variables
 let isDragging = false;
 let dragStartX = 0;
@@ -393,7 +410,7 @@ function handleDragStart(e) {
     let dragTimer = setTimeout(() => {
         if (!hasMoved) {
             isDragging = true;
-            floatingContact.style.transition = 'none';
+            setTransition(floatingContact, 'none');
             document.body.style.userSelect = 'none';
             document.body.style.overflow = 'hidden'; // Prevent scrolling while dragging
             document.body.style.cursor = 'ns-resize'; // Vertical resize cursor
@@ -428,7 +445,7 @@ function handleDragStart(e) {
                 moveEvent.preventDefault(); // Prevent scrolling
             }
             
-            floatingContact.style.transition = 'none';
+            setTransition(floatingContact, 'none');
             document.body.style.userSelect = 'none';
             document.body.style.overflow = 'hidden'; // Prevent scrolling while dragging
             document.body.style.cursor = 'ns-resize'; // Vertical resize cursor
@@ -498,7 +515,7 @@ function handleDragStart(e) {
         isDragging = false;
         hasMoved = false;
         userActuallyDragged = false;
-        floatingContact.style.transition = '';
+        setTransition(floatingContact, '');
         document.body.style.userSelect = '';
         document.body.style.overflow = '';
         document.body.style.cursor = '';
@@ -700,6 +717,9 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Floating Contact Mobile Optimizations */
 #floatingContact.dragging {
     opacity: 0.9;
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
     transform: scale(1.1);
     z-index: 9999 !important;
 }
@@ -730,6 +750,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Smooth transitions when not dragging */
 #floatingContact:not(.dragging) {
+    -webkit-transition: -webkit-transform 0.2s ease-out;
+    -moz-transition: -moz-transform 0.2s ease-out;
+    -ms-transition: -ms-transform 0.2s ease-out;
     transition: transform 0.2s ease-out;
 }
 
@@ -741,7 +764,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 
-/* Icon colors for better visibility in dark mode */
+/* Icon colors for better visibility in dark mode - Cross browser support */
 .icon-container-call i,
 .icon-container-gmail i,
 .icon-container-facebook i,
@@ -750,11 +773,17 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #ffffff !important;
 }
 
+/* Dark mode support for all browsers */
 .dark .icon-container-call i,
 .dark .icon-container-gmail i,
 .dark .icon-container-facebook i,
 .dark .icon-container-whatsapp i,
-.dark .icon-container-viber i {
+.dark .icon-container-viber i,
+[data-theme="dark"] .icon-container-call i,
+[data-theme="dark"] .icon-container-gmail i,
+[data-theme="dark"] .icon-container-facebook i,
+[data-theme="dark"] .icon-container-whatsapp i,
+[data-theme="dark"] .icon-container-viber i {
     color: #e5e7eb !important;
 }
 
@@ -765,7 +794,55 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .dark #callDropdownMenu .fas,
-.dark #callDropdownMenu .fab {
+.dark #callDropdownMenu .fab,
+[data-theme="dark"] #callDropdownMenu .fas,
+[data-theme="dark"] #callDropdownMenu .fab {
     color: #e5e7eb !important;
+}
+
+/* Chrome-specific fixes */
+@supports (-webkit-backdrop-filter: blur(1px)) {
+    #floatingContactPanel {
+        -webkit-backdrop-filter: blur(24px);
+        backdrop-filter: blur(24px);
+    }
+}
+
+/* Firefox fallback for backdrop-filter */
+@-moz-document url-prefix() {
+    #floatingContactPanel {
+        background-color: rgba(255, 255, 255, 0.98) !important;
+    }
+    
+    .dark #floatingContactPanel,
+    [data-theme="dark"] #floatingContactPanel {
+        background-color: rgba(17, 24, 39, 0.98) !important;
+    }
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-touch-callout: none) {
+    #floatingContact {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+}
+
+/* Cross-browser transform support */
+#floatingContact,
+#floatingContactPanel,
+#floatingContactToggle {
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    -moz-perspective: 1000px;
+    -ms-perspective: 1000px;
+    perspective: 1000px;
 }
 </style>
