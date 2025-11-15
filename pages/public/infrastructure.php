@@ -2,6 +2,7 @@
 session_start();
 require_once '../../config/db_conected.php';
 require_once '../../includes/translations.php';
+require_once '../../includes/project-showcase.php';
 require_once '../../config/infrastructure_loader.php';
 
 // Set page direction based on language
@@ -36,6 +37,7 @@ $infrastructure_categories = loadInfrastructureData($pdo);
     <link rel="stylesheet" href="../../assets/css/main.css">
     <link rel="stylesheet" href="../../assets/css/infrastructure.css">
     <link rel="stylesheet" href="../../assets/css/responsive-slider.css">
+    <link rel="stylesheet" href="../../assets/css/project-showcase.css">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -115,86 +117,21 @@ $infrastructure_categories = loadInfrastructureData($pdo);
                     </div>
                 </div>
 
-                <!-- Projects Grid -->
-                <?php if (empty($category['projects'])): ?>
-                <!-- No Projects Message -->
-                <div class="no-projects-message">
-                    <div class="no-projects-icon">
-                        <i class="<?php echo $category['icon']; ?>" style="color: <?php echo $category['color']; ?>"></i>
-                    </div>
-                    <h3 class="no-projects-title"><?php echo t('no_projects_available'); ?></h3>
-                    <p class="no-projects-description"><?php echo t('no_projects_description'); ?></p>
-                    <div class="no-projects-cta">
-                        <a href="#contact-section" class="btn btn-primary">
-                            <i class="fas fa-envelope"></i>
-                            <?php echo t('contact_us_for_custom_project'); ?>
-                        </a>
-                    </div>
-                </div>
-                <?php else: ?>
-                <!-- Professional Projects Grid -->
-                <div class="projects-grid-container">
-                    <div class="projects-grid" id="projects-grid-<?php echo $key; ?>">
-                        <?php foreach ($category['projects'] as $index => $project): ?>
-                        <div class="project-card-modern" data-project-id="<?php echo $project['id']; ?>">
-                            <!-- Project Image -->
-                            <div class="project-card-image-wrapper">
-                                <img src="<?php echo $project['image']; ?>" 
-                                     alt="<?php echo $project['name_' . $current_lang] ?? $project['name']; ?>"
-                                     loading="lazy"
-                                     decoding="async"
-                                     class="project-card-image">
-                                <div class="project-card-overlay">
-                                    <div class="project-card-actions">
-                                        <button class="project-action-btn" onclick="showProjectDetails(<?php echo $project['id']; ?>)" title="<?php echo t('view_details'); ?>">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <?php if (isset($project['images']) && count($project['images']) > 0): ?>
-                                        <span class="project-images-count">
-                                            <i class="fas fa-images"></i>
-                                            <?php echo (isset($project['images']) ? count($project['images']) : 0) + 1; ?>
-                                        </span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <div class="project-card-category-badge" style="background: <?php echo $category['color']; ?>">
-                                    <i class="<?php echo $category['icon']; ?>"></i>
-                                </div>
-                            </div>
-                            
-                            <!-- Project Content -->
-                            <div class="project-card-content">
-                                <h3 class="project-card-title"><?php echo $project['name_' . $current_lang] ?? $project['name']; ?></h3>
-                                
-                                <div class="project-card-meta">
-                                    <div class="project-meta-item">
-                                        <i class="fas fa-dollar-sign"></i>
-                                        <span><?php echo $project['price']; ?></span>
-                                    </div>
-                                    <div class="project-meta-item">
-                                        <i class="fas fa-clock"></i>
-                                        <span><?php echo $project['duration']; ?></span>
-                                    </div>
-                                </div>
-                                
-                                <p class="project-card-description">
-                                    <?php if (isset($project['features']) && is_array($project['features']) && count($project['features'])): ?>
-                                        <?php echo mb_substr(implode('. ', array_slice($project['features'], 0, 3)) . '.', 0, 120); ?><?php echo mb_strlen(implode('. ', array_slice($project['features'], 0, 3)) . '.') > 120 ? '...' : ''; ?>
-                                    <?php else: ?>
-                                        <?php echo mb_substr($project['description_' . $current_lang] ?? $project['description'], 0, 120); ?><?php echo mb_strlen($project['description_' . $current_lang] ?? $project['description']) > 120 ? '...' : ''; ?>
-                                    <?php endif; ?>
-                                </p>
-                                
-                                <button class="project-card-btn" onclick="showProjectDetails(<?php echo $project['id']; ?>)">
-                                    <span><?php echo t('view_details'); ?></span>
-                                    <i class="fas fa-arrow-<?php echo $page_dir === 'rtl' ? 'left' : 'right'; ?>"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <?php endif; ?>
+                <?php
+                renderProjectShowcase([
+                    'id' => $key,
+                    'projects' => $category['projects'],
+                    'title' => $category['title_' . $current_lang] ?? $category['title'],
+                    'description' => $category['description_' . $current_lang] ?? $category['description'],
+                    'color' => $category['color'],
+                    'icon' => $category['icon'],
+                    'page_dir' => $page_dir,
+                    'current_lang' => $current_lang,
+                    'category_key' => $key,
+                    'empty_icon' => $category['icon'],
+                    'empty_color' => $category['color']
+                ]);
+                ?>
         </section>
         <?php endforeach; ?>
 

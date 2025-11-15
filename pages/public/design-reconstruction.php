@@ -2,6 +2,7 @@
 session_start();
 require_once '../../config/db_conected.php';
 require_once '../../includes/translations.php';
+require_once '../../includes/project-showcase.php';
 
 // Set page direction based on language
 $page_dir = $languages[$current_lang]['dir'];
@@ -121,6 +122,7 @@ try {
     <link rel="stylesheet" href="../../assets/css/main.css">
     <link rel="stylesheet" href="../../assets/css/design-reconstruction.css">
     <link rel="stylesheet" href="../../assets/css/responsive-slider.css">
+    <link rel="stylesheet" href="../../assets/css/project-showcase.css">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -200,108 +202,21 @@ try {
                     </div>
                 </div>
 
-                <!-- Projects Grid -->
-                <?php if (isset($category['projects']) && is_array($category['projects']) && !empty($category['projects'])): ?>
-                <!-- Professional Projects Grid -->
-                <div class="projects-grid-container">
-                    <div class="projects-grid" id="projects-grid-<?php echo $key; ?>">
-                        <?php foreach ($category['projects'] as $index => $project): ?>
-                        <?php
-                            $projectName = $project['name_' . $current_lang] ?? $project['name'] ?? '';
-                            $projectDescription = $project['description_' . $current_lang] ?? $project['description'] ?? '';
-                            $projectPrice = $project['price'] ?? '-';
-                            $projectDuration = $project['duration'] ?? '-';
-
-                            $galleryImages = [];
-                            if (!empty($project['image'])) {
-                                $galleryImages[] = $project['image'];
-                            }
-                            if (isset($project['images']) && is_array($project['images'])) {
-                                foreach ($project['images'] as $imgPath) {
-                                    if (!empty($imgPath) && $imgPath !== $project['image']) {
-                                        $galleryImages[] = $imgPath;
-                                    }
-                                }
-                            }
-                            if (empty($galleryImages)) {
-                                $galleryImages[] = 'https://via.placeholder.com/1200x800?text=No+Image';
-                            }
-                            $totalGalleryImages = count($galleryImages);
-                        ?>
-                        <div class="project-card-modern" data-project-id="<?php echo $project['id']; ?>">
-                            <!-- Project Image -->
-                            <div class="project-card-image-wrapper">
-                                <img src="<?php echo htmlspecialchars($galleryImages[0], ENT_QUOTES, 'UTF-8'); ?>"
-                                     alt="<?php echo htmlspecialchars($projectName, ENT_QUOTES, 'UTF-8'); ?>"
-                                     loading="lazy"
-                                     decoding="async"
-                                     class="project-card-image">
-                                <div class="project-card-overlay">
-                                    <div class="project-card-actions">
-                                        <button class="project-action-btn" onclick="showProjectDetails(<?php echo $project['id']; ?>)" title="<?php echo t('view_details'); ?>">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <?php if ($totalGalleryImages > 1): ?>
-                                        <span class="project-images-count">
-                                            <i class="fas fa-images"></i>
-                                            <?php echo $totalGalleryImages; ?>
-                                        </span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <div class="project-card-category-badge" style="background: <?php echo $category['color']; ?>">
-                                    <i class="<?php echo $category['icon']; ?>"></i>
-                                </div>
-                            </div>
-                            
-                            <!-- Project Content -->
-                            <div class="project-card-content">
-                                <h3 class="project-card-title"><?php echo htmlspecialchars($projectName, ENT_QUOTES, 'UTF-8'); ?></h3>
-                                
-                                <div class="project-card-meta">
-                                    <div class="project-meta-item">
-                                        <i class="fas fa-dollar-sign"></i>
-                                        <span><?php echo htmlspecialchars($projectPrice, ENT_QUOTES, 'UTF-8'); ?></span>
-                                    </div>
-                                    <div class="project-meta-item">
-                                        <i class="fas fa-clock"></i>
-                                        <span><?php echo htmlspecialchars($projectDuration, ENT_QUOTES, 'UTF-8'); ?></span>
-                                    </div>
-                                </div>
-                                
-                                <p class="project-card-description">
-                                    <?php if (isset($project['features']) && is_array($project['features']) && count($project['features']) > 0): ?>
-                                        <?php echo mb_substr(htmlspecialchars(implode('. ', array_slice($project['features'], 0, 3)) . '.', ENT_QUOTES, 'UTF-8'), 0, 120); ?><?php echo mb_strlen(implode('. ', array_slice($project['features'], 0, 3)) . '.') > 120 ? '...' : ''; ?>
-                                    <?php else: ?>
-                                        <?php echo mb_substr(htmlspecialchars($projectDescription, ENT_QUOTES, 'UTF-8'), 0, 120); ?><?php echo mb_strlen($projectDescription) > 120 ? '...' : ''; ?>
-                                    <?php endif; ?>
-                                </p>
-                                
-                                <button class="project-card-btn" onclick="showProjectDetails(<?php echo $project['id']; ?>)">
-                                    <span><?php echo t('view_details'); ?></span>
-                                    <i class="fas fa-arrow-<?php echo $page_dir === 'rtl' ? 'left' : 'right'; ?>"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <?php else: ?>
-                <!-- No Projects Message -->
-                <div class="no-projects-message">
-                    <div class="no-projects-icon">
-                        <i class="<?php echo $category['icon']; ?>" style="color: <?php echo $category['color']; ?>"></i>
-                    </div>
-                    <h3 class="no-projects-title"><?php echo t('no_projects_available'); ?></h3>
-                    <p class="no-projects-description"><?php echo t('no_projects_description'); ?></p>
-                    <div class="no-projects-cta">
-                        <a href="#contact-section" class="btn btn-primary">
-                            <i class="fas fa-envelope"></i>
-                            <?php echo t('contact_us_for_custom_project'); ?>
-                        </a>
-                    </div>
-                </div>
-                <?php endif; ?>
+                <?php
+                renderProjectShowcase([
+                    'id' => $key,
+                    'projects' => $category['projects'] ?? [],
+                    'title' => $category['title_' . $current_lang] ?? $category['title'],
+                    'description' => $category['description_' . $current_lang] ?? $category['description'],
+                    'color' => $category['color'],
+                    'icon' => $category['icon'],
+                    'page_dir' => $page_dir,
+                    'current_lang' => $current_lang,
+                    'category_key' => $key,
+                    'empty_icon' => $category['icon'],
+                    'empty_color' => $category['color']
+                ]);
+                ?>
             </div>
         </section>
         <?php endforeach; ?>

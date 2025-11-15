@@ -105,6 +105,7 @@ function initializeCategorySlider(categoryKey, projects) {
     
     // Ensure counter starts at slide 1
     counter.querySelector('.current-slide').textContent = 1;
+    updateSlideProgressElement(counter, 0);
     
     // Initialize dots
     dots.innerHTML = '';
@@ -195,11 +196,27 @@ function goToSlide(categoryKey, slideIndex) {
     
     // Update counter
     counter.querySelector('.current-slide').textContent = slideIndex + 1;
+    updateSlideProgressElement(counter, slideIndex);
     
     // Update dots
     dots.querySelectorAll('.slider-dot').forEach((dot, index) => {
         dot.classList.toggle('active', index === slideIndex);
     });
+}
+
+function updateSlideProgressElement(counter, slideIndex) {
+    if (!counter) return;
+
+    const totalEl = counter.querySelector('.total-slides');
+    const fillEl = counter.querySelector('.slide-progress-fill');
+
+    if (!totalEl || !fillEl) return;
+
+    const totalSlides = parseInt(totalEl.textContent || '1', 10);
+    const safeTotal = Math.max(totalSlides, 1);
+    const progress = ((slideIndex + 1) / safeTotal) * 100;
+
+    fillEl.style.width = `${Math.min(Math.max(progress, 0), 100)}%`;
 }
 
 // Image gallery functions
