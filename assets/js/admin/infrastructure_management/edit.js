@@ -160,9 +160,55 @@ function showErrorMessage(message) {
     }, 5000);
 }
 
-// Override global functions
+// Store the edit function for modal.js to use
+window.editProjectFromEdit = editProject;
+
+// Override global functions - this ensures editProject always works
 window.editProject = editProject;
 window.loadProjectData = loadProjectData;
 window.populateForm = populateForm;
 window.loadProjectFeatures = loadProjectFeatures;
 window.loadProjectImages = loadProjectImages;
+
+// Ensure editProject is always available, even after dynamic updates
+(function ensureEditProject() {
+    // Store the original function
+    const originalEditProject = editProject;
+    
+    // Create a wrapper that always works
+    const editProjectWrapper = function(projectId) {
+        console.log('🔧 editProject called with ID:', projectId);
+        try {
+            return originalEditProject(projectId);
+        } catch (error) {
+            console.error('❌ Error in editProject:', error);
+            // Fallback: try to open modal manually
+            const projectModal = document.getElementById('projectModal');
+            const projectIdInput = document.getElementById('projectId');
+            const formAction = document.getElementById('formAction');
+            if (projectModal && projectIdInput && formAction) {
+                projectIdInput.value = projectId;
+                formAction.value = 'edit_project';
+                projectModal.classList.remove('hidden');
+                // Try to load data
+                if (typeof loadProjectData === 'function') {
+                    loadProjectData(projectId);
+                }
+            }
+        }
+    };
+    
+    // Always set it on window
+    window.editProject = editProjectWrapper;
+    
+    // Also store the original for restoration if needed
+    window.editProjectOriginal = originalEditProject;
+    
+    // Re-bind after a short delay to ensure it's available
+    setTimeout(() => {
+        if (typeof window.editProject === 'undefined' || window.editProject !== editProjectWrapper) {
+            window.editProject = editProjectWrapper;
+            console.log('✅ editProject re-bound after delay');
+        }
+    }, 100);
+})();

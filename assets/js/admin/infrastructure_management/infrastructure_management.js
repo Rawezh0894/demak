@@ -426,6 +426,35 @@ function renderProjectsList(projects) {
     
     projectsGrid.innerHTML = newHTML;
     console.log('✅ Projects rendered successfully');
+    
+    // Ensure editProject function is available after rendering
+    // This is important because the buttons use onclick="editProject(id)"
+    // Re-bind the function to ensure it's always available
+    if (typeof window.editProjectOriginal !== 'undefined') {
+        // Use the original function if available
+        window.editProject = window.editProjectOriginal;
+        console.log('✅ editProject restored from original');
+    } else if (typeof window.editProjectFromEdit !== 'undefined') {
+        window.editProject = window.editProjectFromEdit;
+        console.log('✅ editProject restored from editProjectFromEdit');
+    } else if (typeof window.editProject === 'undefined' || typeof window.editProject !== 'function') {
+        console.warn('⚠️ editProject function not found, attempting to restore...');
+    }
+    
+    // Ensure the function is always callable
+    if (typeof window.editProject !== 'function') {
+        console.error('❌ editProject is not a function after rendering!');
+        // Create a fallback function
+        window.editProject = function(projectId) {
+            console.error('❌ editProject fallback called for project:', projectId);
+            alert('هەڵەیەک ڕوویدا لە کردنەوەی دەستکاری. تکایە پەیجەکە دووبارە بار بکەرەوە.');
+        };
+    }
+    
+    // Also ensure deleteProject is available
+    if (typeof window.deleteProject === 'undefined' || typeof window.deleteProject !== 'function') {
+        console.warn('⚠️ deleteProject function not found');
+    }
 }
 
 // Render pagination controls

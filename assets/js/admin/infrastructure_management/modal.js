@@ -20,6 +20,13 @@ function openAddProjectModal() {
 }
 
 function editProject(projectId) {
+    // Use the editProject function from edit.js if available
+    // Otherwise, use the basic modal opening
+    if (typeof window.editProjectFromEdit !== 'undefined') {
+        window.editProjectFromEdit(projectId);
+        return;
+    }
+    
     const modalTitle = document.getElementById('modalTitle');
     const formAction = document.getElementById('formAction');
     const projectIdInput = document.getElementById('projectId');
