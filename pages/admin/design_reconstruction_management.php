@@ -8,7 +8,7 @@ require_once '../../process/design-reconstruction/design-reconstruction.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo t('design_reconstruction_management'); ?> - <?php echo t('admin_panel'); ?></title>
+    <title>بەڕێوەبردن و دیزاین و دووبارە درووستکردنەوە - <?php echo t('admin_panel'); ?></title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -345,7 +345,7 @@ require_once '../../process/design-reconstruction/design-reconstruction.php';
                             <i class="fas fa-paint-brush text-white text-3xl"></i>
                         </div>
                         <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                            <?php echo t('design_reconstruction_management'); ?>
+                            بەڕێوەبردن و دیزاین و دووبارە درووستکردنەوە
                         </h1>
                         <p class="text-xl text-gray-600 dark:text-gray-400 mb-6">
                             <?php echo t('manage_design_reconstruction'); ?>
