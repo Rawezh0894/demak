@@ -187,9 +187,10 @@
         const isRTL = direction.toLowerCase() === 'rtl';
         
         // Calculate translateX based on direction
-        // For LTR: negative values move left (show next slide)
-        // For RTL: positive values move right (show next slide)
-        const translateX = isRTL ? slideIndex * 100 : -slideIndex * 100;
+        // For LTR: negative values move left (show next slide) - translateX(-100%) shows slide 1
+        // For RTL: negative values move right (show next slide) - translateX(-100%) shows slide 1
+        // Both should use negative values for proper sliding
+        const translateX = -slideIndex * 100;
         
         console.log(`Direction: ${direction}, isRTL: ${isRTL}, slideIndex: ${slideIndex}, translateX: ${translateX}%`);
         
