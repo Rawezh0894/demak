@@ -189,6 +189,95 @@ $page_dir = 'rtl';
             border-color: rgba(248, 113, 113, 0.4);
         }
 
+        /* Professional Pagination Styles */
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            color: #3b82f6;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+        }
+        
+        .pagination-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .pagination-btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.15);
+        }
+        
+        .pagination-btn-number {
+            min-width: 2.5rem;
+            height: 2.5rem;
+        }
+        
+        .pagination-btn-active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            font-weight: 600;
+        }
+        
+        .pagination-btn-active:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+        
+        .pagination-btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(156, 163, 175, 0.1);
+            border-color: rgba(156, 163, 175, 0.2);
+            color: rgba(107, 114, 128, 0.5);
+        }
+        
+        .pagination-btn-prev,
+        .pagination-btn-next {
+            padding: 0.625rem 1.25rem;
+        }
+        
+        .dark-mode .pagination-btn {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(96, 165, 250, 0.3);
+            color: #60a5fa;
+        }
+        
+        .dark-mode .pagination-btn:hover:not(:disabled) {
+            background: rgba(96, 165, 250, 0.15);
+            border-color: rgba(96, 165, 250, 0.4);
+        }
+        
+        .dark-mode .pagination-btn-active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .dark-mode .pagination-btn-active:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+        
+        .dark-mode .pagination-btn-disabled {
+            background: rgba(55, 65, 81, 0.3);
+            border-color: rgba(75, 85, 99, 0.3);
+            color: rgba(156, 163, 175, 0.5);
+        }
+
         /* Modal Action Buttons */
         .modal-btn {
             display: inline-flex;
@@ -372,9 +461,25 @@ $page_dir = 'rtl';
                         <select id="categoryFilter"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg">
                             <option value="">هەموو پۆلەکان</option>
-                            <?php foreach ($commercial_residential_categories as $key => $category): ?>
-                            <option value="<?php echo $key; ?>"><?php echo $category['title_ku'] ?? $category['title']; ?></option>
-                            <?php endforeach; ?>
+                            <?php 
+                            if (!empty($commercial_residential_categories)): 
+                                foreach ($commercial_residential_categories as $key => $category): 
+                                    $categoryTitle = isset($category['title_ku']) && !empty($category['title_ku']) 
+                                        ? $category['title_ku'] 
+                                        : (isset($category['title']) ? $category['title'] : 'Unknown');
+                            ?>
+                            <option value="<?php echo htmlspecialchars($key, ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php echo htmlspecialchars($categoryTitle, ENT_QUOTES, 'UTF-8'); ?>
+                            </option>
+                            <?php 
+                                endforeach; 
+                            else: 
+                            ?>
+                            <!-- Fallback options if categories are not loaded -->
+                            <option value="commercial">بینای بازرگانی</option>
+                            <option value="villa">باڵەخانە</option>
+                            <option value="house">خانوو</option>
+                            <?php endif; ?>
                         </select>
                     </div>
                     
@@ -512,6 +617,81 @@ $page_dir = 'rtl';
                     </div>
                 <?php endif; ?>
                 </div>
+                
+                <!-- Pagination Container -->
+                <div id="paginationContainer" class="mt-8">
+                    <?php if (isset($total_pages) && $total_pages > 1): ?>
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-medium"><?php echo isset($total_projects) ? $total_projects : 0; ?></span> پڕۆژە لە کۆی 
+                            <span class="font-medium"><?php echo isset($total_pages) ? $total_pages : 0; ?></span> پەڕە
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <?php $current_page = isset($current_page) ? $current_page : 1; ?>
+                            <?php if ($current_page > 1): ?>
+                            <button onclick="updateProjectsList(<?php echo $current_page - 1; ?>)" 
+                                    class="pagination-btn pagination-btn-prev">
+                                <i class="fas fa-chevron-right"></i>
+                                <span>پێشوو</span>
+                            </button>
+                            <?php else: ?>
+                            <button disabled class="pagination-btn pagination-btn-disabled">
+                                <i class="fas fa-chevron-right"></i>
+                                <span>پێشوو</span>
+                            </button>
+                            <?php endif; ?>
+                            
+                            <?php
+                            $maxVisiblePages = 5;
+                            $startPage = max(1, $current_page - floor($maxVisiblePages / 2));
+                            $endPage = min($total_pages, $startPage + $maxVisiblePages - 1);
+                            if ($endPage - $startPage < $maxVisiblePages - 1) {
+                                $startPage = max(1, $endPage - $maxVisiblePages + 1);
+                            }
+                            
+                            if ($startPage > 1): ?>
+                                <button onclick="updateProjectsList(1)" 
+                                        class="pagination-btn pagination-btn-number <?php echo $current_page == 1 ? 'pagination-btn-active' : ''; ?>">
+                                    1
+                                </button>
+                                <?php if ($startPage > 2): ?>
+                                    <span class="px-2 text-gray-400">...</span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            
+                            <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                <button onclick="updateProjectsList(<?php echo $i; ?>)" 
+                                        class="pagination-btn pagination-btn-number <?php echo $current_page == $i ? 'pagination-btn-active' : ''; ?>">
+                                    <?php echo $i; ?>
+                                </button>
+                            <?php endfor; ?>
+                            
+                            <?php if ($endPage < $total_pages): ?>
+                                <?php if ($endPage < $total_pages - 1): ?>
+                                    <span class="px-2 text-gray-400">...</span>
+                                <?php endif; ?>
+                                <button onclick="updateProjectsList(<?php echo $total_pages; ?>)" 
+                                        class="pagination-btn pagination-btn-number <?php echo $current_page == $total_pages ? 'pagination-btn-active' : ''; ?>">
+                                    <?php echo $total_pages; ?>
+                                </button>
+                            <?php endif; ?>
+                            
+                            <?php if ($current_page < $total_pages): ?>
+                            <button onclick="updateProjectsList(<?php echo $current_page + 1; ?>)" 
+                                    class="pagination-btn pagination-btn-next">
+                                <span>دواتر</span>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <?php else: ?>
+                            <button disabled class="pagination-btn pagination-btn-disabled">
+                                <span>دواتر</span>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <!-- No Projects Found -->
@@ -576,9 +756,32 @@ $page_dir = 'rtl';
                                         required
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                                     <option value="">پۆلێک هەڵبژێرە</option>
-                                    <?php foreach ($commercial_residential_categories as $key => $category): ?>
-                                    <option value="<?php echo $key; ?>"><?php echo $category['title_ku'] ?? $category['title']; ?></option>
-                                    <?php endforeach; ?>
+                                    <?php 
+                                    // Debug: Log categories
+                                    if (empty($commercial_residential_categories)) {
+                                        error_log("⚠️ commercial_residential_categories is empty in commercial_residential_design_management.php");
+                                    } else {
+                                        error_log("✅ Found " . count($commercial_residential_categories) . " categories in commercial_residential_design_management.php");
+                                    }
+                                    
+                                    if (!empty($commercial_residential_categories)): 
+                                        foreach ($commercial_residential_categories as $key => $category): 
+                                            $categoryTitle = isset($category['title_ku']) && !empty($category['title_ku']) 
+                                                ? $category['title_ku'] 
+                                                : (isset($category['title']) ? $category['title'] : 'Unknown');
+                                    ?>
+                                    <option value="<?php echo htmlspecialchars($key, ENT_QUOTES, 'UTF-8'); ?>">
+                                        <?php echo htmlspecialchars($categoryTitle, ENT_QUOTES, 'UTF-8'); ?>
+                                    </option>
+                                    <?php 
+                                        endforeach; 
+                                    else: 
+                                    ?>
+                                    <!-- Fallback options if categories are not loaded -->
+                                    <option value="commercial">بینای بازرگانی</option>
+                                    <option value="villa">باڵەخانە</option>
+                                    <option value="house">خانوو</option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                             

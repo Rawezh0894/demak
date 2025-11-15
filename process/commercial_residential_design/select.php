@@ -2,7 +2,7 @@
 // Select and Load Data Functionality for Commercial & Residential Design
 
 // Pagination settings
-$items_per_page = 12;
+$items_per_page = 10; // 10 projects per page
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $items_per_page;
 
@@ -53,12 +53,100 @@ try {
     $stmt = $pdo->query("SELECT * FROM commercial_residential_design_categories WHERE is_active = 1 ORDER BY sort_order ASC");
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    foreach ($categories as $category) {
-        $commercial_residential_categories[$category['category_key']] = $category;
+    if (!empty($categories)) {
+        foreach ($categories as $category) {
+            $commercial_residential_categories[$category['category_key']] = $category;
+        }
+        error_log("✅ Loaded " . count($commercial_residential_categories) . " categories from database");
+    } else {
+        error_log("⚠️ No categories found in database, using default categories");
+        // If no categories in database, use default categories
+        $commercial_residential_categories = [
+            'commercial' => [
+                'category_key' => 'commercial',
+                'title' => 'Commercial Buildings',
+                'title_ku' => 'بینای بازرگانی',
+                'title_ar' => 'المباني التجارية',
+                'icon' => 'fas fa-building',
+                'color' => '#3b82f6',
+                'description' => 'Commercial building design and management services',
+                'description_ku' => 'خزمەتگوزاری دیزاین و سەرپەرشتی کردنی بینای بازرگانی',
+                'description_ar' => 'خدمات التصميم والإدارة للمباني التجارية',
+                'sort_order' => 1,
+                'is_active' => 1
+            ],
+            'villa' => [
+                'category_key' => 'villa',
+                'title' => 'Villas',
+                'title_ku' => 'باڵەخانە',
+                'title_ar' => 'الفيلات',
+                'icon' => 'fas fa-home',
+                'color' => '#10b981',
+                'description' => 'Luxury villa design and management services',
+                'description_ku' => 'خزمەتگوزاری دیزاین و سەرپەرشتی کردنی باڵەخانە لۆکس',
+                'description_ar' => 'خدمات التصميم والإدارة للفيلات الفاخرة',
+                'sort_order' => 2,
+                'is_active' => 1
+            ],
+            'house' => [
+                'category_key' => 'house',
+                'title' => 'Houses',
+                'title_ku' => 'خانوو',
+                'title_ar' => 'المنازل',
+                'icon' => 'fas fa-house-user',
+                'color' => '#f59e0b',
+                'description' => 'Residential house design and management services',
+                'description_ku' => 'خزمەتگوزاری دیزاین و سەرپەرشتی کردنی خانوو',
+                'description_ar' => 'خدمات التصميم والإدارة للمنازل السكنية',
+                'sort_order' => 3,
+                'is_active' => 1
+            ]
+        ];
     }
 } catch (Exception $e) {
-    // Table might not exist yet, set empty array
-    $commercial_residential_categories = [];
+    error_log("Error loading commercial residential design categories: " . $e->getMessage());
+    // Table might not exist yet, use default categories
+    $commercial_residential_categories = [
+        'commercial' => [
+            'category_key' => 'commercial',
+            'title' => 'Commercial Buildings',
+            'title_ku' => 'بینای بازرگانی',
+            'title_ar' => 'المباني التجارية',
+            'icon' => 'fas fa-building',
+            'color' => '#3b82f6',
+            'description' => 'Commercial building design and management services',
+            'description_ku' => 'خزمەتگوزاری دیزاین و سەرپەرشتی کردنی بینای بازرگانی',
+            'description_ar' => 'خدمات التصميم والإدارة للمباني التجارية',
+            'sort_order' => 1,
+            'is_active' => 1
+        ],
+        'villa' => [
+            'category_key' => 'villa',
+            'title' => 'Villas',
+            'title_ku' => 'باڵەخانە',
+            'title_ar' => 'الفيلات',
+            'icon' => 'fas fa-home',
+            'color' => '#10b981',
+            'description' => 'Luxury villa design and management services',
+            'description_ku' => 'خزمەتگوزاری دیزاین و سەرپەرشتی کردنی باڵەخانە لۆکس',
+            'description_ar' => 'خدمات التصميم والإدارة للفيلات الفاخرة',
+            'sort_order' => 2,
+            'is_active' => 1
+        ],
+        'house' => [
+            'category_key' => 'house',
+            'title' => 'Houses',
+            'title_ku' => 'خانوو',
+            'title_ar' => 'المنازل',
+            'icon' => 'fas fa-house-user',
+            'color' => '#f59e0b',
+            'description' => 'Residential house design and management services',
+            'description_ku' => 'خزمەتگوزاری دیزاین و سەرپەرشتی کردنی خانوو',
+            'description_ar' => 'خدمات التصميم والإدارة للمنازل السكنية',
+            'sort_order' => 3,
+            'is_active' => 1
+        ]
+    ];
 }
 
 // Function to get project by ID
