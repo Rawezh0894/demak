@@ -1310,6 +1310,7 @@ body {
     scrollbar-width: none;
     -ms-overflow-style: none;
     position: relative;
+    flex-wrap: wrap;
 }
 
 .tabs-nav-container::-webkit-scrollbar {
@@ -1474,6 +1475,12 @@ body.dark-mode .tab-button.active .tab-button-icon {
     
     .tab-button-icon {
         font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .tabs-nav-container {
+        flex-wrap: nowrap;
     }
 }
 

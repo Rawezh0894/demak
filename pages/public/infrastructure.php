@@ -150,12 +150,12 @@ $infrastructure_categories = loadInfrastructureData($pdo);
                 </div>
 
                 <!-- Projects Slider Container -->
-                <div class="slider-container">
+                <div class="projects-slider-wrapper">
                     <button class="slider-arrow slider-prev" onclick="prevSlide('<?php echo $key; ?>')">
                         <i class="fas fa-chevron-<?php echo $page_dir === 'rtl' ? 'right' : 'left'; ?>"></i>
                     </button>
                     
-                    <div class="projects-slider" id="slider-<?php echo $key; ?>">
+                    <div class="projects-slider" id="slider-<?php echo $key; ?>" data-direction="<?php echo $page_dir; ?>">
                         <?php foreach ($category['projects'] as $index => $project): ?>
                         <div class="project-slide" data-project-id="<?php echo $project['id']; ?>">
                             <div class="project-slide-image">

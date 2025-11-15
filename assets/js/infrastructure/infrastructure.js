@@ -65,6 +65,10 @@
         }
     });
 
+    function getDocumentDirection() {
+        return (document.documentElement.getAttribute('dir') || document.body.getAttribute('dir') || 'ltr').toLowerCase();
+    }
+
     // Initialize sliders for each category
     function initializeSliders() {
         Object.keys(projectsData).forEach(categoryKey => {
@@ -96,6 +100,11 @@
             return;
         }
         
+        const direction = (slider.dataset.direction || getDocumentDirection()).toLowerCase();
+        slider.dataset.direction = direction;
+        slider.style.transform = 'translate3d(0, 0, 0)';
+        slider.dataset.currentSlide = '0';
+
         // Set total slides
         const totalSlides = projects.length;
         counter.querySelector('.total-slides').textContent = totalSlides;
@@ -114,8 +123,8 @@
         
         // Ensure slider starts at first slide with a small delay to override any CSS
         setTimeout(() => {
-            slider.style.transform = 'translateX(0%)';
-            console.log('Slider initial transform set to translateX(0%) with delay');
+            slider.style.transform = 'translate3d(0, 0, 0)';
+            console.log('Slider initial transform set to translate3d(0,0,0) with delay');
         }, 10);
         
         // Debug slider positioning
@@ -155,7 +164,7 @@
         goToSlide(categoryKey, prevSlide);
     }
 
-    function goToSlide(categoryKey, slideIndex) {
+    function goToSlide(categoryKey, slideIndex, syncTabs = true) {
         const slider = document.getElementById(`slider-${categoryKey}`);
         const counter = document.getElementById(`counter-${categoryKey}`);
         const dots = document.getElementById(`dots-${categoryKey}`);
@@ -173,8 +182,10 @@
         }
         
         // Update slider position
-        const translateX = -slideIndex * 100;
-        slider.style.transform = `translateX(${translateX}%)`;
+        const direction = (slider.dataset.direction || getDocumentDirection()).toLowerCase();
+        const translateX = direction === 'rtl' ? slideIndex * 100 : -slideIndex * 100;
+        slider.style.transform = `translate3d(${translateX}%, 0, 0)`;
+        slider.dataset.currentSlide = slideIndex.toString();
         
         // Force reload images in the target slide
         const targetSlide = slider.children[slideIndex];
@@ -197,6 +208,21 @@
         dots.querySelectorAll('.slider-dot').forEach((dot, index) => {
             dot.classList.toggle('active', index === slideIndex);
         });
+
+        if (syncTabs) {
+            const tabsContainer = document.getElementById(`tabs-${categoryKey}`);
+            if (tabsContainer) {
+                const tabButtons = tabsContainer.querySelectorAll('.tab-button');
+                tabButtons.forEach((btn, index) => {
+                    btn.classList.toggle('active', index === slideIndex);
+                });
+                // Ensure active tab is visible
+                const activeBtn = tabButtons[slideIndex];
+                if (activeBtn && typeof activeBtn.scrollIntoView === 'function') {
+                    activeBtn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+                }
+            }
+        }
     }
 
     // Image gallery functions
@@ -519,32 +545,14 @@
     // Tab switching function
     function showTab(categoryKey, tabIndex) {
         const tabsContainer = document.getElementById(`tabs-${categoryKey}`);
-        const contentContainer = document.getElementById(`content-${categoryKey}`);
-        
-        if (!tabsContainer || !contentContainer) {
-            console.error('Missing tab elements for category:', categoryKey);
-            return;
+        if (tabsContainer) {
+            const tabButtons = tabsContainer.querySelectorAll('.tab-button');
+            tabButtons.forEach((btn, index) => {
+                btn.classList.toggle('active', index === tabIndex);
+            });
         }
-        
-        // Update tab buttons
-        const tabButtons = tabsContainer.querySelectorAll('.tab-button');
-        tabButtons.forEach((btn, index) => {
-            if (index === tabIndex) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-        
-        // Update tab content
-        const tabContents = contentContainer.querySelectorAll('.tab-content');
-        tabContents.forEach((content, index) => {
-            if (index === tabIndex) {
-                content.classList.add('active');
-            } else {
-                content.classList.remove('active');
-            }
-        });
+
+        goToSlide(categoryKey, tabIndex, false);
     }
 
     // Make functions globally available
