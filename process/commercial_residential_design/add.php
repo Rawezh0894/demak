@@ -40,10 +40,8 @@ try {
         throw new Exception('نهۆمەکە پێویستە لە نێوان 0-100 بێت');
     }
     
-    // Validate price format
-    if (!preg_match('/^[0-9,.\s]+$/', $project_price)) {
-        throw new Exception('نرخەکە پێویستە تەنها ژمارە بێت');
-    }
+    // Price and duration can contain both text and numbers - no strict validation needed
+    // Just ensure they are not empty (already checked above)
     
     
     // Handle file uploads

@@ -825,6 +825,7 @@ $page_dir = 'rtl';
                                        name="project_price" 
                                        id="projectPrice"
                                        required
+                                       placeholder="مثال: 100,000 دینار"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                             </div>
                             
@@ -837,6 +838,7 @@ $page_dir = 'rtl';
                                        name="project_duration" 
                                        id="projectDuration"
                                        required
+                                       placeholder="مثال: 30 ڕۆژ یان 1 مانگ"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                             </div>
                             
