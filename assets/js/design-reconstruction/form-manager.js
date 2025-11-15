@@ -148,9 +148,9 @@ class DesignReconstructionFormManager {
                 break;
                 
             case 'project_price':
-                if (value && !/^\d+(\.\d{1,2})?$/.test(value)) {
-                    this.showFieldError(field, 'Please enter a valid price');
-                }
+                // Allow text and numbers (for prices like "100,000 دینار" or "100000")
+                // No strict validation - just check if field is not empty
+                // The required attribute will handle empty field validation
                 break;
                 
             case 'project_description':

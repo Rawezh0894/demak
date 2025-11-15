@@ -28,10 +28,9 @@ class DesignReconstructionValidator {
             }
         }
         
-        // Price validation
-        if (!empty($data['project_price']) && !is_numeric($data['project_price'])) {
-            $errors[] = "Price must be a valid number";
-        }
+        // Price validation - allow text and numbers (e.g., "100,000 دینار")
+        // Only check if field is not empty (required validation is handled elsewhere)
+        // No strict numeric validation to allow text like "100,000 دینار"
         
         // Category validation
         $validCategories = ['commercial', 'villa', 'house', 'school'];
