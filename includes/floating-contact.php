@@ -119,8 +119,8 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
                 <!-- Call with Dropdown -->
                 <div class="relative">
                     <button onclick="toggleCallDropdown(event)" class="floating-contact-item floating-contact-call w-full flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
-                        <div class="relative w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 rounded-xl flex items-center justify-center text-white dark:text-gray-100 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-green-500/30 dark:shadow-green-600/40 icon-container-call">
-                            <i class="fas fa-phone-alt text-lg relative z-10"></i>
+                        <div class="relative w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-green-500/30 dark:shadow-green-600/40 icon-container-call">
+                            <i class="fas fa-phone-alt text-lg relative z-10 text-white dark:text-gray-200"></i>
                             <span class="absolute inset-0 rounded-xl bg-white dark:bg-gray-200 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                         </div>
                         <div class="flex-1 min-w-0">
@@ -136,8 +136,8 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
                     <div id="callDropdownMenu" class="hidden mt-2 space-y-2 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                         <!-- Phone Call -->
                         <a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>" class="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors duration-200 group">
-                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 rounded-lg flex items-center justify-center text-white dark:text-gray-100 group-hover:scale-110 transition-transform duration-200">
-                                <i class="fas fa-phone-alt text-sm"></i>
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200 icon-container-call">
+                                <i class="fas fa-phone-alt text-sm text-white dark:text-gray-200"></i>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide"><?php echo t('phone'); ?></p>
@@ -147,8 +147,8 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
                         
                         <!-- WhatsApp -->
                         <a href="<?php echo $whatsapp_url; ?>" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors duration-200 group">
-                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 rounded-lg flex items-center justify-center text-white dark:text-gray-100 group-hover:scale-110 transition-transform duration-200">
-                                <i class="fab fa-whatsapp text-sm"></i>
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200 icon-container-whatsapp">
+                                <i class="fab fa-whatsapp text-sm text-white dark:text-gray-200"></i>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide">WhatsApp</p>
@@ -158,8 +158,8 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
                         
                         <!-- Viber -->
                         <a href="<?php echo $viber_url; ?>" class="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors duration-200 group">
-                            <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-700 dark:from-purple-700 dark:to-indigo-800 rounded-lg flex items-center justify-center text-white dark:text-gray-100 group-hover:scale-110 transition-transform duration-200">
-                                <i class="fab fa-viber text-sm"></i>
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-700 dark:from-purple-700 dark:to-indigo-800 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200 icon-container-viber">
+                                <i class="fab fa-viber text-sm text-white dark:text-gray-200"></i>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">Viber</p>
@@ -171,8 +171,8 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
                 
                 <!-- Gmail -->
                 <a href="mailto:<?php echo $contact_email; ?>" class="floating-contact-item floating-contact-gmail flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
-                    <div class="relative w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 dark:from-red-600 dark:to-pink-700 rounded-xl flex items-center justify-center text-white dark:text-gray-100 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-red-500/30 dark:shadow-red-600/40 icon-container-gmail">
-                        <i class="fab fa-google text-lg relative z-10"></i>
+                    <div class="relative w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 dark:from-red-600 dark:to-pink-700 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-red-500/30 dark:shadow-red-600/40 icon-container-gmail">
+                        <i class="fab fa-google text-lg relative z-10 text-white dark:text-gray-200"></i>
                         <span class="absolute inset-0 rounded-xl bg-white dark:bg-gray-200 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -186,8 +186,8 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
                 
                 <!-- Facebook -->
                 <a href="<?php echo $contact_facebook; ?>" target="_blank" rel="noopener noreferrer" class="floating-contact-item floating-contact-facebook flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
-                    <div class="relative w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-700 dark:from-blue-700 dark:to-indigo-800 rounded-xl flex items-center justify-center text-white dark:text-gray-100 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-blue-500/30 dark:shadow-blue-600/40 icon-container-facebook">
-                        <i class="fab fa-facebook-f text-lg relative z-10"></i>
+                    <div class="relative w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-700 dark:from-blue-700 dark:to-indigo-800 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-blue-500/30 dark:shadow-blue-600/40 icon-container-facebook">
+                        <i class="fab fa-facebook-f text-lg relative z-10 text-white dark:text-gray-200"></i>
                         <span class="absolute inset-0 rounded-xl bg-white dark:bg-gray-200 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -739,5 +739,33 @@ document.addEventListener('DOMContentLoaded', function() {
         -webkit-touch-callout: none;
         -webkit-user-select: none;
     }
+}
+
+/* Icon colors for better visibility in dark mode */
+.icon-container-call i,
+.icon-container-gmail i,
+.icon-container-facebook i,
+.icon-container-whatsapp i,
+.icon-container-viber i {
+    color: #ffffff !important;
+}
+
+.dark .icon-container-call i,
+.dark .icon-container-gmail i,
+.dark .icon-container-facebook i,
+.dark .icon-container-whatsapp i,
+.dark .icon-container-viber i {
+    color: #e5e7eb !important;
+}
+
+/* Dropdown menu icons */
+#callDropdownMenu .fas,
+#callDropdownMenu .fab {
+    color: #ffffff !important;
+}
+
+.dark #callDropdownMenu .fas,
+.dark #callDropdownMenu .fab {
+    color: #e5e7eb !important;
 }
 </style>
