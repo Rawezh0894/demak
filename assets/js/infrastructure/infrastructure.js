@@ -169,22 +169,40 @@
         const counter = document.getElementById(`counter-${categoryKey}`);
         const dots = document.getElementById(`dots-${categoryKey}`);
         
-        if (!slider || !counter || !dots) {
-            console.error('Missing elements in goToSlide');
+        if (!slider) {
+            console.error(`Slider not found for category: ${categoryKey}`);
             return;
         }
         
-        const totalSlides = parseInt(counter.querySelector('.total-slides').textContent);
+        // Get total slides from actual slider children, not counter
+        const totalSlides = slider.children.length;
         
         if (slideIndex < 0 || slideIndex >= totalSlides) {
             console.error(`Invalid slide index: ${slideIndex}, total slides: ${totalSlides}`);
             return;
         }
         
-        // Update slider position
-        const translateX = -slideIndex * 100;
-        slider.style.transform = `translate3d(${translateX}%, 0, 0)`;
+        // Get direction from slider or document
+        const direction = slider.dataset.direction || (document.documentElement.dir || 'ltr');
+        const isRTL = direction.toLowerCase() === 'rtl';
+        
+        // Calculate translateX based on direction
+        const translateX = isRTL ? slideIndex * 100 : -slideIndex * 100;
+        
+        // Update slider position with !important override to ensure it works
+        slider.style.setProperty('transform', `translate3d(${translateX}%, 0, 0)`, 'important');
+        slider.style.setProperty('-webkit-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
+        slider.style.setProperty('-moz-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
+        slider.style.setProperty('-ms-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
         slider.dataset.currentSlide = slideIndex.toString();
+        
+        // Ensure all slides are visible (remove any display:none or visibility:hidden)
+        Array.from(slider.children).forEach((slide, index) => {
+            slide.style.display = '';
+            slide.style.visibility = 'visible';
+            slide.style.opacity = '1';
+            slide.style.position = 'relative';
+        });
         
         // Force reload images in the target slide
         const targetSlide = slider.children[slideIndex];
@@ -200,14 +218,24 @@
             });
         }
         
-        // Update counter
-        counter.querySelector('.current-slide').textContent = slideIndex + 1;
+        // Update counter if it exists
+        if (counter) {
+            if (counter.querySelector('.total-slides')) {
+                counter.querySelector('.total-slides').textContent = totalSlides;
+            }
+            if (counter.querySelector('.current-slide')) {
+                counter.querySelector('.current-slide').textContent = slideIndex + 1;
+            }
+        }
         
-        // Update dots
-        dots.querySelectorAll('.slider-dot').forEach((dot, index) => {
-            dot.classList.toggle('active', index === slideIndex);
-        });
+        // Update dots if they exist
+        if (dots) {
+            dots.querySelectorAll('.slider-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === slideIndex);
+            });
+        }
 
+        // Sync tabs if needed
         if (syncTabs) {
             const tabsContainer = document.getElementById(`tabs-${categoryKey}`);
             if (tabsContainer) {
@@ -222,6 +250,8 @@
                 }
             }
         }
+        
+        console.log(`Slide changed to index ${slideIndex} for category ${categoryKey}, translateX: ${translateX}%, totalSlides: ${totalSlides}`);
     }
 
     // Image gallery functions
@@ -543,7 +573,17 @@
 
     // Tab switching function
     function showTab(categoryKey, tabIndex) {
+        console.log(`showTab called: category=${categoryKey}, tabIndex=${tabIndex}`);
+        
         const tabsContainer = document.getElementById(`tabs-${categoryKey}`);
+        const slider = document.getElementById(`slider-${categoryKey}`);
+        
+        if (!slider) {
+            console.error(`Slider not found for category: ${categoryKey}`);
+            return;
+        }
+        
+        // Update tab buttons
         if (tabsContainer) {
             const tabButtons = tabsContainer.querySelectorAll('.tab-button');
             tabButtons.forEach((btn, index) => {
@@ -551,6 +591,7 @@
             });
         }
 
+        // Go to slide and sync tabs (set to false to avoid infinite loop)
         goToSlide(categoryKey, tabIndex, false);
     }
 
