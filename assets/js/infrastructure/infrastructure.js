@@ -158,39 +158,91 @@
 
     // Project details modal functions
     function showProjectDetails(projectId) {
+        console.log('showProjectDetails called with projectId:', projectId);
         const project = findProjectById(projectId);
-        if (!project) return;
+        console.log('Found project:', project);
+        
+        if (!project) {
+            console.error('Project not found for ID:', projectId);
+            return;
+        }
 
         currentProjectId = projectId;
-        currentProjectImages = project.images || [];
+        
+        // Get all images (main image + gallery images)
+        currentProjectImages = [project.image];
+        if (project.images && project.images.length > 0) {
+            currentProjectImages.push(...project.images);
+        }
         currentImageIndex = 0;
         
-        // Update modal content
-        document.getElementById('modalTitle').textContent = project.name;
-        document.getElementById('modalPrice').textContent = project.price;
-        document.getElementById('modalDuration').textContent = project.duration;
-        document.getElementById('modalDescription').textContent = project.description;
+        // Get current language
+        const currentLang = document.documentElement.lang || 'en';
+        
+        // Update modal content with language-specific fields
+        const modalTitle = document.getElementById('modalTitle');
+        const modalPrice = document.getElementById('modalPrice');
+        const modalDuration = document.getElementById('modalDuration');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalEngineer = document.getElementById('modalEngineer');
+        const modalMaterials = document.getElementById('modalMaterials');
+        
+        if (modalTitle) {
+            modalTitle.textContent = project[`name_${currentLang}`] || project.name || 'Project';
+        }
+        
+        if (modalPrice) {
+            modalPrice.textContent = project.price || '-';
+        }
+        
+        if (modalDuration) {
+            modalDuration.textContent = project.duration || '-';
+        }
+        
+        if (modalDescription) {
+            modalDescription.textContent = project[`description_${currentLang}`] || project.description || '-';
+        }
+        
+        if (modalEngineer) {
+            modalEngineer.textContent = project.engineer || '-';
+        }
+        
+        if (modalMaterials) {
+            modalMaterials.textContent = project.materials || '-';
+        }
 
         // Update features
         const featuresList = document.getElementById('modalFeatures');
-        featuresList.innerHTML = '';
-        if (project.features && project.features.length > 0) {
-            project.features.forEach(feature => {
-                const li = document.createElement('li');
-                li.textContent = feature;
-                featuresList.appendChild(li);
-            });
+        if (featuresList) {
+            featuresList.innerHTML = '';
+            if (project.features && project.features.length > 0) {
+                project.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.textContent = feature;
+                    featuresList.appendChild(li);
+                });
+            }
         }
         
         // Update images
         updateModalImages();
 
-        // Show modal
-        document.getElementById('projectModal').classList.remove('hidden');
+        // Show modal - use 'active' class instead of removing 'hidden'
+        const projectModal = document.getElementById('projectModal');
+        if (projectModal) {
+            projectModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            console.log('Modal shown');
+        } else {
+            console.error('Project modal element not found');
+        }
     }
 
     function updateModalImages() {
-        if (!currentProjectImages || currentProjectImages.length === 0) return;
+        if (!currentProjectImages || currentProjectImages.length === 0) {
+            console.log('No images to display');
+            return;
+        }
         
         const modalImage = document.getElementById('modalImage');
         const imageCounter = document.querySelector('.modal-image-counter');
@@ -198,11 +250,19 @@
         
         if (modalImage) {
             modalImage.src = currentProjectImages[currentImageIndex];
+            modalImage.alt = `Project image ${currentImageIndex + 1}`;
+            optimizeImage(modalImage);
         }
         
         if (imageCounter) {
-            imageCounter.querySelector('.modal-current-image').textContent = currentImageIndex + 1;
-            imageCounter.querySelector('.modal-total-images').textContent = currentProjectImages.length;
+            const currentImageSpan = imageCounter.querySelector('.modal-current-image');
+            const totalImagesSpan = imageCounter.querySelector('.modal-total-images');
+            if (currentImageSpan) {
+                currentImageSpan.textContent = currentImageIndex + 1;
+            }
+            if (totalImagesSpan) {
+                totalImagesSpan.textContent = currentProjectImages.length;
+            }
         }
         
         if (thumbnails) {
@@ -218,6 +278,8 @@
                 const img = document.createElement('img');
                 img.src = image;
                 img.className = 'thumbnail-image';
+                img.alt = `Thumbnail ${index + 1}`;
+                img.loading = 'lazy';
                 thumb.appendChild(img);
                 
                 thumbnails.appendChild(thumb);
@@ -245,7 +307,11 @@
     }
 
     function closeProjectModal() {
-        document.getElementById('projectModal').classList.add('hidden');
+        const projectModal = document.getElementById('projectModal');
+        if (projectModal) {
+            projectModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     }
 
     // Utility functions
