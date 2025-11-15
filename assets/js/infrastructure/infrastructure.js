@@ -182,8 +182,7 @@
         }
         
         // Update slider position
-        const direction = (slider.dataset.direction || getDocumentDirection()).toLowerCase();
-        const translateX = direction === 'rtl' ? slideIndex * 100 : -slideIndex * 100;
+        const translateX = -slideIndex * 100;
         slider.style.transform = `translate3d(${translateX}%, 0, 0)`;
         slider.dataset.currentSlide = slideIndex.toString();
         
