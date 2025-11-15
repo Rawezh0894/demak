@@ -116,20 +116,58 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
             
             <!-- Contact Options -->
             <div class="space-y-3">
-                <!-- Call -->
-                <a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>" class="floating-contact-item floating-contact-call flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
-                    <div class="relative w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-green-500/30 icon-container-call">
-                        <i class="fas fa-phone-alt text-lg relative z-10"></i>
-                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                <!-- Call with Dropdown -->
+                <div class="relative">
+                    <button onclick="toggleCallDropdown(event)" class="floating-contact-item floating-contact-call w-full flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
+                        <div class="relative w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-green-500/30 icon-container-call">
+                            <i class="fas fa-phone-alt text-lg relative z-10"></i>
+                            <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide mb-1"><?php echo t('phone'); ?></p>
+                            <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $contact_phone; ?></p>
+                        </div>
+                        <svg id="callDropdownArrow" class="w-5 h-5 text-green-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Call Dropdown Menu -->
+                    <div id="callDropdownMenu" class="hidden mt-2 space-y-2 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                        <!-- Phone Call -->
+                        <a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>" class="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors duration-200 group">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                <i class="fas fa-phone-alt text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide"><?php echo t('phone'); ?></p>
+                                <p class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate"><?php echo $contact_phone; ?></p>
+                            </div>
+                        </a>
+                        
+                        <!-- WhatsApp -->
+                        <a href="<?php echo $whatsapp_url; ?>" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors duration-200 group">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                <i class="fab fa-whatsapp text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide">WhatsApp</p>
+                                <p class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate"><?php echo $whatsapp_number; ?></p>
+                            </div>
+                        </a>
+                        
+                        <!-- Viber -->
+                        <a href="<?php echo $viber_url; ?>" class="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors duration-200 group">
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                <i class="fab fa-viber text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">Viber</p>
+                                <p class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate"><?php echo $viber_number; ?></p>
+                            </div>
+                        </a>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide mb-1"><?php echo t('phone'); ?></p>
-                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $contact_phone; ?></p>
-                    </div>
-                    <svg class="w-5 h-5 text-green-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
+                </div>
                 
                 <!-- Gmail -->
                 <a href="mailto:<?php echo $contact_email; ?>" class="floating-contact-item floating-contact-gmail flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
@@ -142,36 +180,6 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
                         <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $contact_email; ?></p>
                     </div>
                     <svg class="w-5 h-5 text-red-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-                
-                <!-- WhatsApp -->
-                <a href="<?php echo $whatsapp_url; ?>" target="_blank" rel="noopener noreferrer" class="floating-contact-item floating-contact-whatsapp flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
-                    <div class="relative w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-green-500/30 icon-container-whatsapp">
-                        <i class="fab fa-whatsapp text-lg relative z-10"></i>
-                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide mb-1">WhatsApp</p>
-                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $whatsapp_number; ?></p>
-                    </div>
-                    <svg class="w-5 h-5 text-green-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-                
-                <!-- Viber -->
-                <a href="<?php echo $viber_url; ?>" class="floating-contact-item floating-contact-viber flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
-                    <div class="relative w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-purple-500/30 icon-container-viber">
-                        <i class="fab fa-viber text-lg relative z-10"></i>
-                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">Viber</p>
-                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $viber_number; ?></p>
-                    </div>
-                    <svg class="w-5 h-5 text-purple-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </a>
@@ -552,6 +560,9 @@ function toggleFloatingContact(e) {
         e.stopPropagation();
     }
     
+    // Close call dropdown if open
+    closeCallDropdown();
+    
     // Get direction from data attribute
     const direction = floatingContact.getAttribute('data-direction') || 'ltr';
     const isRTL = direction === 'rtl';
@@ -587,18 +598,67 @@ function toggleFloatingContact(e) {
     }
 }
 
+// Toggle Call Dropdown Menu
+function toggleCallDropdown(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    const dropdownMenu = document.getElementById('callDropdownMenu');
+    const dropdownArrow = document.getElementById('callDropdownArrow');
+    
+    if (!dropdownMenu || !dropdownArrow) return;
+    
+    const isHidden = dropdownMenu.classList.contains('hidden');
+    
+    if (isHidden) {
+        // Show dropdown
+        dropdownMenu.classList.remove('hidden');
+        dropdownArrow.classList.add('rotate-180');
+    } else {
+        // Hide dropdown
+        dropdownMenu.classList.add('hidden');
+        dropdownArrow.classList.remove('rotate-180');
+    }
+}
+
+// Close Call Dropdown Menu
+function closeCallDropdown() {
+    const dropdownMenu = document.getElementById('callDropdownMenu');
+    const dropdownArrow = document.getElementById('callDropdownArrow');
+    
+    if (dropdownMenu && !dropdownMenu.classList.contains('hidden')) {
+        dropdownMenu.classList.add('hidden');
+    }
+    if (dropdownArrow) {
+        dropdownArrow.classList.remove('rotate-180');
+    }
+}
+
 // Close panel when clicking outside
 document.addEventListener('click', function(event) {
     const floatingContact = document.getElementById('floatingContact');
     const panel = document.getElementById('floatingContactPanel');
     const toggle = document.getElementById('floatingContactToggle');
     const closeBtn = document.getElementById('closeContactPanelBtn');
+    const dropdownMenu = document.getElementById('callDropdownMenu');
+    const callButton = document.querySelector('.floating-contact-call');
     
     if (!floatingContact || !panel || !toggle) return;
     
+    // Check if click is inside dropdown menu or call button
+    const isClickInDropdown = dropdownMenu && dropdownMenu.contains(event.target);
+    const isClickInCallButton = callButton && callButton.contains(event.target);
+    
     // Don't close if clicking on toggle button, close button, or inside panel
-    if (toggle.contains(event.target) || panel.contains(event.target) || (closeBtn && closeBtn.contains(event.target))) {
+    if (toggle.contains(event.target) || panel.contains(event.target) || (closeBtn && closeBtn.contains(event.target)) || isClickInDropdown || isClickInCallButton) {
         return;
+    }
+    
+    // Close dropdown if clicking outside
+    if (dropdownMenu && !dropdownMenu.classList.contains('hidden')) {
+        closeCallDropdown();
     }
     
     // Don't close if currently dragging
