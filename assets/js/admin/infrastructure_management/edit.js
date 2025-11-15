@@ -14,8 +14,21 @@ function editProject(projectId) {
     if (formAction) formAction.value = 'edit_project';
     if (projectIdInput) projectIdInput.value = projectId;
     if (projectForm) projectForm.reset();
+    
+    // Clear deleted images container
+    const deletedImagesContainer = document.getElementById('deleted_additional_images_container');
+    if (deletedImagesContainer) {
+        deletedImagesContainer.innerHTML = '';
+    }
+    
+    // Reset existing images array
+    window.existingAdditionalImages = [];
+    
     if (mainImagePreview) mainImagePreview.classList.add('hidden');
-    if (additionalImagesPreview) additionalImagesPreview.classList.add('hidden');
+    if (additionalImagesPreview) {
+        additionalImagesPreview.innerHTML = '';
+        additionalImagesPreview.classList.add('hidden');
+    }
     if (projectModal) projectModal.classList.remove('hidden');
     
     // Load project data via AJAX
@@ -76,11 +89,6 @@ function populateForm(data) {
         loadProjectFeatures(data.features);
     }
     
-    // Load images
-    if (data.images && data.images.length > 0) {
-        loadProjectImages(data.images);
-    }
-    
     // Show main image if exists
     if (project.main_image) {
         const mainImagePreview = document.getElementById('mainImagePreview');
@@ -88,6 +96,22 @@ function populateForm(data) {
         if (mainImagePreview && mainImagePreviewImg) {
             mainImagePreviewImg.src = '../../' + project.main_image;
             mainImagePreview.classList.remove('hidden');
+        }
+    }
+    
+    // Load additional images (exclude main image)
+    if (data.images && data.images.length > 0) {
+        // Filter out main image from additional images
+        const additionalImages = data.images.filter(img => {
+            // Check if this image is the main image by comparing paths
+            if (project.main_image) {
+                return img.path !== project.main_image;
+            }
+            return true;
+        });
+        
+        if (additionalImages.length > 0) {
+            loadProjectImages(additionalImages);
         }
     }
 }
@@ -119,6 +143,9 @@ function loadProjectFeatures(features) {
     });
 }
 
+// Store images to track which ones to delete
+window.existingAdditionalImages = [];
+
 // Load project images
 function loadProjectImages(images) {
     const additionalImagesPreview = document.getElementById('additionalImagesPreview');
@@ -127,18 +154,85 @@ function loadProjectImages(images) {
     // Clear existing preview
     additionalImagesPreview.innerHTML = '';
     
+    // Store images for tracking
+    window.existingAdditionalImages = images.map(img => ({
+        id: img.id || null,
+        path: img.path
+    }));
+    
     if (images.length > 0) {
         additionalImagesPreview.classList.remove('hidden');
         
-        images.forEach(image => {
-            const img = document.createElement('img');
-            img.src = '../../' + image.path;
-            img.className = 'w-full h-20 object-cover rounded-lg';
-            img.alt = 'Project image';
-            additionalImagesPreview.appendChild(img);
+        images.forEach((image, index) => {
+            const thumbItem = document.createElement('div');
+            thumbItem.className = 'thumb-item relative';
+            thumbItem.setAttribute('data-image-id', image.id || '');
+            thumbItem.setAttribute('data-image-index', index);
+            thumbItem.innerHTML = `
+                <img src="../../${image.path}" class="w-full h-20 object-cover rounded-lg" alt="Project image">
+                <button type="button" onclick="removeExistingAdditionalImage(${index})" class="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-colors duration-200 z-10">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            additionalImagesPreview.appendChild(thumbItem);
         });
     } else {
         additionalImagesPreview.classList.add('hidden');
+    }
+}
+
+// Remove existing additional image (from database)
+function removeExistingAdditionalImage(index) {
+    const additionalImagesPreview = document.getElementById('additionalImagesPreview');
+    if (!additionalImagesPreview) return;
+    
+    const thumbItem = additionalImagesPreview.querySelector(`[data-image-index="${index}"]`);
+    if (thumbItem) {
+        // Mark image for deletion by adding to hidden input
+        const imageId = thumbItem.getAttribute('data-image-id');
+        if (imageId) {
+            // Get or create container for deleted image IDs
+            let deletedImagesContainer = document.getElementById('deleted_additional_images_container');
+            if (!deletedImagesContainer) {
+                deletedImagesContainer = document.createElement('div');
+                deletedImagesContainer.id = 'deleted_additional_images_container';
+                deletedImagesContainer.style.display = 'none';
+                document.getElementById('projectForm').appendChild(deletedImagesContainer);
+            }
+            
+            // Check if this image ID is already marked for deletion
+            const existingInput = deletedImagesContainer.querySelector(`input[value="${imageId}"]`);
+            if (!existingInput) {
+                // Create hidden input for this deleted image
+                const deletedImageInput = document.createElement('input');
+                deletedImageInput.type = 'hidden';
+                deletedImageInput.name = 'deleted_additional_images[]';
+                deletedImageInput.value = imageId;
+                deletedImagesContainer.appendChild(deletedImageInput);
+            }
+        }
+        
+        // Remove from preview
+        thumbItem.remove();
+        
+        // Remove from stored array
+        if (window.existingAdditionalImages && window.existingAdditionalImages[index]) {
+            window.existingAdditionalImages.splice(index, 1);
+            // Update indices for remaining items
+            const allThumbItems = additionalImagesPreview.querySelectorAll('.thumb-item');
+            allThumbItems.forEach((item, newIndex) => {
+                item.setAttribute('data-image-index', newIndex);
+                const button = item.querySelector('button');
+                if (button) {
+                    button.setAttribute('onclick', `removeExistingAdditionalImage(${newIndex})`);
+                }
+            });
+        }
+        
+        // If no more images, hide the preview container
+        if (additionalImagesPreview.children.length === 0) {
+            additionalImagesPreview.classList.add('hidden');
+        }
     }
 }
 
@@ -169,6 +263,7 @@ window.loadProjectData = loadProjectData;
 window.populateForm = populateForm;
 window.loadProjectFeatures = loadProjectFeatures;
 window.loadProjectImages = loadProjectImages;
+window.removeExistingAdditionalImage = removeExistingAdditionalImage;
 
 // Ensure editProject is always available, even after dynamic updates
 (function ensureEditProject() {
