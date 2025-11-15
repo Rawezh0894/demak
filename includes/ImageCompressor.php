@@ -211,6 +211,24 @@ class ImageCompressor {
     }
     
     /**
+     * Format file size in human readable format
+     * 
+     * @param int $bytes File size in bytes
+     * @return string Formatted size (e.g., "2.5 MB")
+     */
+    private static function formatFileSize($bytes) {
+        if ($bytes >= 1073741824) {
+            return number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . ' KB';
+        } else {
+            return $bytes . ' bytes';
+        }
+    }
+    
+    /**
      * Compress image (auto-detect best method)
      * 
      * @param string $source Source image path
@@ -218,13 +236,20 @@ class ImageCompressor {
      * @param int $quality Quality (0-100, 85-90 recommended)
      * @param int $maxWidth Maximum width (0 = no resize, recommended: 1920 for main, 1200 for gallery)
      * @param int $maxHeight Maximum height (0 = no resize, recommended: 1080 for main, 800 for gallery)
-     * @return bool Success status
+     * @return array|bool Returns array with compression info on success, false on failure
+     *                    Array contains: ['success' => true, 'original_size' => bytes, 'compressed_size' => bytes, 
+     *                                    'original_size_formatted' => string, 'compressed_size_formatted' => string,
+     *                                    'savings_percent' => float, 'savings_formatted' => string]
      */
     public static function compress($source, $destination = null, $quality = 85, $maxWidth = 0, $maxHeight = 0) {
         if (!file_exists($source)) {
             error_log("ImageCompressor: Source file not found: " . $source);
             return false;
         }
+        
+        // Get original file size
+        $original_size = filesize($source);
+        $original_size_formatted = self::formatFileSize($original_size);
         
         // If no destination specified, overwrite source
         if ($destination === null) {
@@ -237,21 +262,52 @@ class ImageCompressor {
             mkdir($destDir, 0755, true);
         }
         
+        $compression_success = false;
+        
         // Try ImageMagick first (best quality)
         if (self::hasImageMagick()) {
             if (self::compressWithImageMagick($source, $destination, $quality, $maxWidth, $maxHeight)) {
-                return true;
+                $compression_success = true;
             }
         }
         
         // Fallback to GD
-        if (self::hasGD()) {
-            return self::compressWithGD($source, $destination, $quality, $maxWidth, $maxHeight);
+        if (!$compression_success && self::hasGD()) {
+            if (self::compressWithGD($source, $destination, $quality, $maxWidth, $maxHeight)) {
+                $compression_success = true;
+            }
         }
         
         // If neither is available, just copy the file
-        error_log("ImageCompressor: Neither ImageMagick nor GD is available. Copying file without compression.");
-        return copy($source, $destination);
+        if (!$compression_success) {
+            error_log("ImageCompressor: Neither ImageMagick nor GD is available. Copying file without compression.");
+            $compression_success = copy($source, $destination);
+        }
+        
+        if (!$compression_success) {
+            return false;
+        }
+        
+        // Get compressed file size
+        $compressed_size = filesize($destination);
+        $compressed_size_formatted = self::formatFileSize($compressed_size);
+        
+        // Calculate savings
+        $savings = $original_size - $compressed_size;
+        $savings_percent = $original_size > 0 ? round(($savings / $original_size) * 100, 2) : 0;
+        $savings_formatted = self::formatFileSize($savings);
+        
+        return [
+            'success' => true,
+            'original_size' => $original_size,
+            'compressed_size' => $compressed_size,
+            'original_size_formatted' => $original_size_formatted,
+            'compressed_size_formatted' => $compressed_size_formatted,
+            'savings_percent' => $savings_percent,
+            'savings_formatted' => $savings_formatted,
+            'source_path' => $source,
+            'destination_path' => $destination
+        ];
     }
     
     /**

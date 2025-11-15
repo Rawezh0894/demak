@@ -71,7 +71,13 @@ try {
         
         if (move_uploaded_file($_FILES['main_image']['tmp_name'], $file_path)) {
             // Compress main image (max 1920x1080, quality 85)
-            ImageCompressor::compress($file_path, null, 85, 1920, 1080);
+            $compression_result = ImageCompressor::compress($file_path, null, 85, 1920, 1080);
+            
+            if ($compression_result && isset($compression_result['success']) && $compression_result['success']) {
+                error_log("📊 وێنەی سەرەکی - پێش کۆمپرێس: " . $compression_result['original_size_formatted'] . 
+                         " | دوای کۆمپرێس: " . $compression_result['compressed_size_formatted'] . 
+                         " | کەمبوونەوە: " . $compression_result['savings_percent'] . "% (" . $compression_result['savings_formatted'] . ")");
+            }
             
             // Insert main image record
             $image_stmt = $pdo->prepare("
@@ -124,7 +130,13 @@ try {
                     error_log("✅ File $i moved successfully");
                     
                     // Compress additional image (max 1200x800, quality 85)
-                    ImageCompressor::compress($file_path, null, 85, 1200, 800);
+                    $compression_result = ImageCompressor::compress($file_path, null, 85, 1200, 800);
+                    
+                    if ($compression_result && isset($compression_result['success']) && $compression_result['success']) {
+                        error_log("📊 وێنەی زیادە #" . ($i + 1) . " - پێش کۆمپرێس: " . $compression_result['original_size_formatted'] . 
+                                 " | دوای کۆمپرێس: " . $compression_result['compressed_size_formatted'] . 
+                                 " | کەمبوونەوە: " . $compression_result['savings_percent'] . "% (" . $compression_result['savings_formatted'] . ")");
+                    }
                     
                     // Insert additional image record
                     $image_stmt = $pdo->prepare("
