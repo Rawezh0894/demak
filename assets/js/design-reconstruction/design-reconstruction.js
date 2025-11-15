@@ -7,11 +7,16 @@
 // Global variables
 let currentProjectId = null;
 let projectsData = [];
+let currentPage = 1;
+let totalPages = 1;
+let currentCategory = '';
+let currentSearch = '';
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     initializeImageUploads();
+    initializePagination();
     
     // Ensure "no projects found" message is hidden if projects exist
     const projectsContainer = document.getElementById('projectsContainer');
@@ -205,6 +210,283 @@ function showNotification(message, type = 'info') {
         notification.remove();
     }, 5000);
 }
+
+// Update projects list dynamically with pagination
+function updateProjectsList(page = 1, category = '', search = '') {
+    currentPage = page;
+    currentCategory = category || '';
+    currentSearch = search || '';
+    
+    // Build query string
+    const params = new URLSearchParams();
+    if (page > 1) params.append('page', page);
+    if (category) params.append('category', category);
+    if (search) params.append('search', search);
+    
+    const url = '../../process/design-reconstruction/get_projects_list.php' + 
+                (params.toString() ? '?' + params.toString() : '');
+    
+    // Show loading state
+    const projectsContainer = document.getElementById('projectsContainer');
+    if (projectsContainer) {
+        projectsContainer.innerHTML = '<div class="col-span-full text-center py-16"><div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div></div>';
+    }
+    
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                return response.text().then(text => {
+                    throw new Error('Server returned HTML instead of JSON.');
+                });
+            }
+        })
+        .then(data => {
+            if (data.success) {
+                renderProjectsList(data.projects);
+                if (data.pagination) {
+                    totalPages = data.pagination.total_pages;
+                    renderPagination(data.pagination);
+                }
+                // Update URL without reload
+                const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+                window.history.pushState({ page: page }, '', newUrl);
+            } else {
+                console.error('API Error:', data.message);
+                showNotification('هەڵەیەک ڕوویدا لە بارکردنی پڕۆژەکان', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            showNotification('هەڵەیەک ڕوویدا لە بارکردنی پڕۆژەکان', 'error');
+            // Fallback to page reload if dynamic update fails
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        });
+}
+
+// Render projects list
+function renderProjectsList(projects) {
+    const projectsContainer = document.getElementById('projectsContainer');
+    const noProjectsFound = document.getElementById('noProjectsFound');
+    
+    if (!projectsContainer) {
+        console.error('Projects container not found');
+        return;
+    }
+    
+    if (!projects || projects.length === 0) {
+        projectsContainer.innerHTML = '';
+        if (noProjectsFound) {
+            noProjectsFound.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    if (noProjectsFound) {
+        noProjectsFound.classList.add('hidden');
+    }
+    
+    // Generate HTML for projects
+    let projectsHTML = '';
+    projects.forEach(project => {
+        const categoryName = project.category_title_ku || project.category_title || 'Unknown';
+        const mainImage = project.main_image ? `../../${project.main_image}` : null;
+        
+        projectsHTML += `
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden project-card transition-all duration-300 hover:shadow-2xl hover:-translate-y-2" 
+                 data-project-id="${project.id}"
+                 data-category="${project.category_key || ''}" 
+                 data-name="${(project.name || '').toLowerCase()}"
+                 data-price="${project.price || '0'}">
+                <!-- Project Image -->
+                <div class="relative h-56 bg-gray-200 dark:bg-gray-700">
+                    ${mainImage ? 
+                        `<img src="${mainImage}" alt="${project.name}" class="w-full h-full object-cover">` :
+                        `<div class="w-full h-full flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400 text-5xl"></i>
+                        </div>`
+                    }
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-purple-600 text-white px-3 py-2 rounded-xl text-sm font-medium shadow-lg">
+                            ${categoryName}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Project Content -->
+                <div class="p-8">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                        ${project.name || 'No Name'}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-base mb-6 line-clamp-2">
+                        ${project.description || ''}
+                    </p>
+                    
+                    <!-- Project Info -->
+                    <div class="flex items-center justify-between text-base text-gray-500 dark:text-gray-400 mb-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-dollar-sign mr-2 text-green-600"></i>
+                            <span class="font-semibold">${project.price || 'N/A'}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock mr-2 text-blue-600"></i>
+                            <span class="font-semibold">${project.duration || 'N/A'}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex gap-3">
+                        <button onclick="editProject(${project.id})" 
+                                class="flex-1 action-btn action-btn-edit">
+                            <i class="fas fa-edit"></i>
+                            <span>دەستکاری</span>
+                        </button>
+                        <button onclick="deleteProject(${project.id})" 
+                                class="action-btn action-btn-delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    projectsContainer.innerHTML = projectsHTML;
+}
+
+// Render pagination controls
+function renderPagination(pagination) {
+    const paginationContainer = document.getElementById('paginationContainer');
+    if (!paginationContainer) {
+        console.warn('⚠️ Pagination container not found');
+        return;
+    }
+    
+    if (pagination.total_pages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+    }
+    
+    const { current_page, total_pages, total_projects, has_prev, has_next } = pagination;
+    
+    let paginationHTML = `
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div class="text-sm text-gray-600 dark:text-gray-400">
+                <span class="font-medium">${total_projects}</span> پڕۆژە لە کۆی 
+                <span class="font-medium">${total_pages}</span> پەڕە
+            </div>
+            <div class="flex items-center gap-2">
+    `;
+    
+    // Previous button
+    if (has_prev) {
+        paginationHTML += `
+            <button onclick="updateProjectsList(${current_page - 1}, '${currentCategory}', '${currentSearch}')" 
+                    class="pagination-btn pagination-btn-prev">
+                <i class="fas fa-chevron-right"></i>
+                <span>پێشوو</span>
+            </button>
+        `;
+    } else {
+        paginationHTML += `
+            <button disabled class="pagination-btn pagination-btn-disabled">
+                <i class="fas fa-chevron-right"></i>
+                <span>پێشوو</span>
+            </button>
+        `;
+    }
+    
+    // Page numbers
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, current_page - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(total_pages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    if (startPage > 1) {
+        paginationHTML += `
+            <button onclick="updateProjectsList(1, '${currentCategory}', '${currentSearch}')" 
+                    class="pagination-btn pagination-btn-number ${current_page == 1 ? 'pagination-btn-active' : ''}">
+                1
+            </button>
+        `;
+        if (startPage > 2) {
+            paginationHTML += `<span class="px-2 text-gray-400">...</span>`;
+        }
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+            <button onclick="updateProjectsList(${i}, '${currentCategory}', '${currentSearch}')" 
+                    class="pagination-btn pagination-btn-number ${current_page == i ? 'pagination-btn-active' : ''}">
+                ${i}
+            </button>
+        `;
+    }
+    
+    if (endPage < total_pages) {
+        if (endPage < total_pages - 1) {
+            paginationHTML += `<span class="px-2 text-gray-400">...</span>`;
+        }
+        paginationHTML += `
+            <button onclick="updateProjectsList(${total_pages}, '${currentCategory}', '${currentSearch}')" 
+                    class="pagination-btn pagination-btn-number ${current_page == total_pages ? 'pagination-btn-active' : ''}">
+                ${total_pages}
+            </button>
+        `;
+    }
+    
+    // Next button
+    if (has_next) {
+        paginationHTML += `
+            <button onclick="updateProjectsList(${current_page + 1}, '${currentCategory}', '${currentSearch}')" 
+                    class="pagination-btn pagination-btn-next">
+                <span>دواتر</span>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        `;
+    } else {
+        paginationHTML += `
+            <button disabled class="pagination-btn pagination-btn-disabled">
+                <span>دواتر</span>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        `;
+    }
+    
+    paginationHTML += `
+            </div>
+        </div>
+    `;
+    
+    paginationContainer.innerHTML = paginationHTML;
+}
+
+// Initialize pagination from URL
+function initializePagination() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = parseInt(urlParams.get('page')) || 1;
+    const category = urlParams.get('category') || '';
+    const search = urlParams.get('search') || '';
+    
+    if (page > 1 || category || search) {
+        updateProjectsList(page, category, search);
+    }
+}
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', function(event) {
+    initializePagination();
+});
 
 // Open add project modal
 function openAddProjectModal() {
@@ -579,3 +861,4 @@ window.removeFeature = removeFeature;
 window.removeMainImage = removeMainImage;
 window.removeAdditionalImage = removeAdditionalImage;
 window.removeExistingAdditionalImage = removeExistingAdditionalImage;
+window.updateProjectsList = updateProjectsList;

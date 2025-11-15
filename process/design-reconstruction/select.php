@@ -6,7 +6,7 @@
  */
 
 // Pagination settings
-$items_per_page = 12;
+$items_per_page = 10; // 10 projects per page
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $items_per_page;
 
