@@ -115,6 +115,11 @@ const AddProjectManager = {
             const data = await response.json();
             
              if (data.success) {
+                 // Show compression info if available
+                 if (data.compression_info) {
+                     this.showCompressionInfo(data.compression_info);
+                 }
+                 
                  this.showSuccess(data.message);
                  setTimeout(() => {
                      ModalManager.closeModal('projectModal');
@@ -127,7 +132,7 @@ const AddProjectManager = {
                      } else {
                          this.addProjectToList(data.project);
                      }
-                 }, 1500);
+                 }, 3000); // Increased timeout to show compression info
              } else {
                  this.showError(data.message);
              }
@@ -248,6 +253,84 @@ const AddProjectManager = {
          setTimeout(() => {
              notification.remove();
          }, 5000);
+     },
+     
+     // Show compression info
+     showCompressionInfo(compressionInfo) {
+         let infoHTML = '<div class="fixed top-20 right-4 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 max-w-md">';
+         infoHTML += '<div class="flex items-center justify-between mb-3">';
+         infoHTML += '<h3 class="text-lg font-semibold text-gray-900 dark:text-white">زانیاری کۆمپرێسکردنی وێنە</h3>';
+         infoHTML += '<button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">';
+         infoHTML += '<i class="fas fa-times"></i>';
+         infoHTML += '</button>';
+         infoHTML += '</div>';
+         
+         // Main image compression info
+         if (compressionInfo.main_image && compressionInfo.main_image.success) {
+             const main = compressionInfo.main_image;
+             infoHTML += '<div class="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">';
+             infoHTML += '<h4 class="font-medium text-gray-900 dark:text-white mb-2">وێنەی سەرەکی:</h4>';
+             infoHTML += `<div class="text-sm text-gray-600 dark:text-gray-300">`;
+             infoHTML += `<div>سایزی پێش کۆمپرێس: <span class="font-semibold">${main.original_size_formatted}</span></div>`;
+             infoHTML += `<div>سایزی دوای کۆمپرێس: <span class="font-semibold text-green-600 dark:text-green-400">${main.compressed_size_formatted}</span></div>`;
+             infoHTML += `<div>کەمبوونەوە: <span class="font-semibold text-purple-600 dark:text-purple-400">${main.savings_formatted} (${main.savings_percent}%)</span></div>`;
+             infoHTML += `</div>`;
+             infoHTML += `</div>`;
+         }
+         
+         // Additional images compression info
+         if (compressionInfo.additional_images && compressionInfo.additional_images.length > 0) {
+             infoHTML += '<div class="mb-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">';
+             infoHTML += `<h4 class="font-medium text-gray-900 dark:text-white mb-2">وێنە زیادەکان (${compressionInfo.additional_images.length}):</h4>`;
+             
+             let totalOriginal = 0;
+             let totalCompressed = 0;
+             
+             compressionInfo.additional_images.forEach((img, index) => {
+                 if (img && img.success) {
+                     totalOriginal += img.original_size || 0;
+                     totalCompressed += img.compressed_size || 0;
+                     
+                     infoHTML += `<div class="text-sm text-gray-600 dark:text-gray-300 mb-2 pb-2 border-b border-gray-200 dark:border-gray-700 last:border-0">`;
+                     infoHTML += `<div class="font-medium mb-1">وێنەی ${index + 1}:</div>`;
+                     infoHTML += `<div>پێش: <span class="font-semibold">${img.original_size_formatted}</span> → دوای: <span class="font-semibold text-green-600 dark:text-green-400">${img.compressed_size_formatted}</span></div>`;
+                     infoHTML += `<div>کەمبوونەوە: <span class="text-purple-600 dark:text-purple-400">${img.savings_formatted} (${img.savings_percent}%)</span></div>`;
+                     infoHTML += `</div>`;
+                 }
+             });
+             
+             if (totalOriginal > 0) {
+                 const totalSavings = totalOriginal - totalCompressed;
+                 const totalSavingsPercent = totalOriginal > 0 ? Math.round((totalSavings / totalOriginal) * 100 * 100) / 100 : 0;
+                 const formatSize = (bytes) => {
+                     if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(2) + ' GB';
+                     if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
+                     if (bytes >= 1024) return (bytes / 1024).toFixed(2) + ' KB';
+                     return bytes + ' bytes';
+                 };
+                 
+                 infoHTML += `<div class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">`;
+                 infoHTML += `<div class="font-semibold text-gray-900 dark:text-white">کۆی گشتی:</div>`;
+                 infoHTML += `<div class="text-sm">پێش: <span class="font-semibold">${formatSize(totalOriginal)}</span> → دوای: <span class="font-semibold text-green-600 dark:text-green-400">${formatSize(totalCompressed)}</span></div>`;
+                 infoHTML += `<div class="text-sm">کەمبوونەوەی گشتی: <span class="font-semibold text-purple-600 dark:text-purple-400">${formatSize(totalSavings)} (${totalSavingsPercent}%)</span></div>`;
+                 infoHTML += `</div>`;
+             }
+             
+             infoHTML += `</div>`;
+         }
+         
+         infoHTML += '</div>';
+         
+         const infoDiv = document.createElement('div');
+         infoDiv.innerHTML = infoHTML;
+         document.body.appendChild(infoDiv);
+         
+         // Auto remove after 8 seconds
+         setTimeout(() => {
+             if (infoDiv.parentElement) {
+                 infoDiv.remove();
+             }
+         }, 8000);
      },
      
     // Add new project to the list dynamically

@@ -53,13 +53,7 @@ try {
         
         // Compress main image (max 1920x1080, quality 85)
         require_once '../../includes/ImageCompressor.php';
-        $compression_result = ImageCompressor::compress($main_image_path, null, 85, 1920, 1080);
-        
-        if ($compression_result && isset($compression_result['success']) && $compression_result['success']) {
-            error_log("📊 وێنەی سەرەکی - پێش کۆمپرێس: " . $compression_result['original_size_formatted'] . 
-                     " | دوای کۆمپرێس: " . $compression_result['compressed_size_formatted'] . 
-                     " | کەمبوونەوە: " . $compression_result['savings_percent'] . "% (" . $compression_result['savings_formatted'] . ")");
-        }
+        ImageCompressor::compress($main_image_path, null, 85, 1920, 1080);
         
         $main_image_path = 'assets/images/projects/interior_design/' . $main_image_name;
     } else {
@@ -85,13 +79,7 @@ try {
                     if (!class_exists('ImageCompressor')) {
                         require_once '../../includes/ImageCompressor.php';
                     }
-                    $compression_result = ImageCompressor::compress($image_path, null, 85, 1200, 800);
-                    
-                    if ($compression_result && isset($compression_result['success']) && $compression_result['success']) {
-                        error_log("📊 وێنەی زیادە #" . ($i + 1) . " - پێش کۆمپرێس: " . $compression_result['original_size_formatted'] . 
-                                 " | دوای کۆمپرێس: " . $compression_result['compressed_size_formatted'] . 
-                                 " | کەمبوونەوە: " . $compression_result['savings_percent'] . "% (" . $compression_result['savings_formatted'] . ")");
-                    }
+                    ImageCompressor::compress($image_path, null, 85, 1200, 800);
                     
                     $additional_images[] = 'assets/images/projects/interior_design/gallery/' . $image_name;
                 }

@@ -50,6 +50,11 @@ const UpdateProjectManager = {
             const data = await response.json();
             
             if (data.success) {
+                // Show compression info if available
+                if (data.compression_info && window.AddProjectManager && window.AddProjectManager.showCompressionInfo) {
+                    window.AddProjectManager.showCompressionInfo(data.compression_info);
+                }
+                
                 this.showSuccess(data.message);
                 setTimeout(() => {
                     ModalManager.closeModal('projectModal');
@@ -57,7 +62,7 @@ const UpdateProjectManager = {
                     if (window.AddProjectManager && window.AddProjectManager.updateProjectInList) {
                         window.AddProjectManager.updateProjectInList(data.project);
                     }
-                }, 1500);
+                }, 3000); // Increased timeout to show compression info
             } else {
                 this.showError(data.message);
             }

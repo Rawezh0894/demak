@@ -171,7 +171,7 @@ const ModalManager = {
         }
         
         // Clear existing preview
-        previewContainer.innerHTML = '';
+            previewContainer.innerHTML = '';
         
         if (images && images.length > 0) {
             console.log('✅ Showing', images.length, 'additional images');

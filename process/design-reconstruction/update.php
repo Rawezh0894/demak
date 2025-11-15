@@ -45,6 +45,7 @@ try {
     ]);
     
     // Handle main image upload (if new image provided)
+    $main_image_compression_info = null;
     if (isset($_FILES['main_image']) && $_FILES['main_image']['error'] === UPLOAD_ERR_OK) {
         // Delete old main image
         $old_image_stmt = $pdo->prepare("SELECT image_path FROM design_reconstruction_images WHERE project_id = ? AND is_main = 1");
@@ -71,13 +72,7 @@ try {
         
         if (move_uploaded_file($_FILES['main_image']['tmp_name'], $file_path)) {
             // Compress main image (max 1920x1080, quality 85)
-            $compression_result = ImageCompressor::compress($file_path, null, 85, 1920, 1080);
-            
-            if ($compression_result && isset($compression_result['success']) && $compression_result['success']) {
-                error_log("📊 وێنەی سەرەکی - پێش کۆمپرێس: " . $compression_result['original_size_formatted'] . 
-                         " | دوای کۆمپرێس: " . $compression_result['compressed_size_formatted'] . 
-                         " | کەمبوونەوە: " . $compression_result['savings_percent'] . "% (" . $compression_result['savings_formatted'] . ")");
-            }
+            $main_image_compression_info = ImageCompressor::compress($file_path, null, 85, 1920, 1080);
             
             // Insert new main image record
             $image_stmt = $pdo->prepare("
@@ -89,6 +84,7 @@ try {
     }
     
     // Handle additional images (if new images provided)
+    $additional_images_compression_info = [];
     if (isset($_FILES['additional_images']) && !empty($_FILES['additional_images']['name'][0])) {
         // Delete old additional images
         $old_images_stmt = $pdo->prepare("SELECT image_path FROM design_reconstruction_images WHERE project_id = ? AND is_main = 0");
@@ -120,12 +116,9 @@ try {
                 
                 if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $file_path)) {
                     // Compress additional image (max 1200x800, quality 85)
-                    $compression_result = ImageCompressor::compress($file_path, null, 85, 1200, 800);
-                    
-                    if ($compression_result && isset($compression_result['success']) && $compression_result['success']) {
-                        error_log("📊 وێنەی زیادە #" . ($i + 1) . " - پێش کۆمپرێس: " . $compression_result['original_size_formatted'] . 
-                                 " | دوای کۆمپرێس: " . $compression_result['compressed_size_formatted'] . 
-                                 " | کەمبوونەوە: " . $compression_result['savings_percent'] . "% (" . $compression_result['savings_formatted'] . ")");
+                    $compression_info = ImageCompressor::compress($file_path, null, 85, 1200, 800);
+                    if ($compression_info) {
+                        $additional_images_compression_info[] = $compression_info;
                     }
                     
                     // Insert new additional image record
@@ -201,7 +194,11 @@ try {
         'success' => true, 
         'message' => 'Project updated successfully',
         'project_id' => $project_id,
-        'project' => $project
+        'project' => $project,
+        'compression_info' => [
+            'main_image' => $main_image_compression_info,
+            'additional_images' => $additional_images_compression_info
+        ]
     ]);
     exit; // Important: Stop execution after sending JSON response
     
