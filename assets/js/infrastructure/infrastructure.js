@@ -187,21 +187,38 @@
         const isRTL = direction.toLowerCase() === 'rtl';
         
         // Calculate translateX based on direction
+        // For LTR: negative values move left (show next slide)
+        // For RTL: positive values move right (show next slide)
         const translateX = isRTL ? slideIndex * 100 : -slideIndex * 100;
         
-        // Update slider position with !important override to ensure it works
-        slider.style.setProperty('transform', `translate3d(${translateX}%, 0, 0)`, 'important');
-        slider.style.setProperty('-webkit-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
-        slider.style.setProperty('-moz-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
-        slider.style.setProperty('-ms-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
-        slider.dataset.currentSlide = slideIndex.toString();
+        console.log(`Direction: ${direction}, isRTL: ${isRTL}, slideIndex: ${slideIndex}, translateX: ${translateX}%`);
         
-        // Ensure all slides are visible (remove any display:none or visibility:hidden)
-        Array.from(slider.children).forEach((slide, index) => {
-            slide.style.display = '';
-            slide.style.visibility = 'visible';
-            slide.style.opacity = '1';
-            slide.style.position = 'relative';
+        // Update slider position with !important override to ensure it works
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+            slider.style.setProperty('transform', `translate3d(${translateX}%, 0, 0)`, 'important');
+            slider.style.setProperty('-webkit-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
+            slider.style.setProperty('-moz-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
+            slider.style.setProperty('-ms-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
+            slider.style.setProperty('transition', 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)', 'important');
+            slider.dataset.currentSlide = slideIndex.toString();
+            
+            // Ensure all slides are visible (remove any display:none or visibility:hidden)
+            Array.from(slider.children).forEach((slide, index) => {
+                slide.style.display = 'grid';
+                slide.style.visibility = 'visible';
+                slide.style.opacity = '1';
+                slide.style.position = 'relative';
+                slide.style.flex = '0 0 100%';
+                slide.style.flexShrink = '0';
+                slide.style.flexGrow = '0';
+                slide.style.minWidth = '100%';
+                slide.style.maxWidth = '100%';
+                slide.style.width = '100%';
+            });
+            
+            // Force reflow to ensure changes are applied
+            void slider.offsetHeight;
         });
         
         // Force reload images in the target slide
