@@ -2,7 +2,7 @@
 // Language detection and switching
 $current_lang = $_SESSION['language'] ?? 'ku';
 $languages = [
-    'ku' => ['name' => 'کوردی', 'flag' => '🇮🇶', 'dir' => 'rtl'],
+    'ku' => ['name' => 'کوردی', 'flag' => '🟥🟨🟩', 'dir' => 'rtl'], // Kurdistan Flag (Red, Yellow, Green)
     'ar' => ['name' => 'العربية', 'flag' => '🇮🇶', 'dir' => 'rtl'],
     'en' => ['name' => 'English', 'flag' => '🇺🇸', 'dir' => 'ltr']
 ];
