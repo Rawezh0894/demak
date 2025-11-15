@@ -79,12 +79,34 @@ try {
     }
     
     // Handle additional images
+    error_log("🔍 Checking for additional images...");
+    error_log("🔍 _FILES['additional_images'] exists: " . (isset($_FILES['additional_images']) ? 'yes' : 'no'));
+    
+    if (isset($_FILES['additional_images'])) {
+        error_log("🔍 _FILES['additional_images'] structure: " . json_encode($_FILES['additional_images']));
+        error_log("🔍 _FILES['additional_images']['name'] exists: " . (isset($_FILES['additional_images']['name']) ? 'yes' : 'no'));
+        if (isset($_FILES['additional_images']['name'])) {
+            error_log("🔍 _FILES['additional_images']['name']: " . json_encode($_FILES['additional_images']['name']));
+            error_log("🔍 _FILES['additional_images']['name'][0] exists: " . (isset($_FILES['additional_images']['name'][0]) ? 'yes' : 'no'));
+            if (isset($_FILES['additional_images']['name'][0])) {
+                error_log("🔍 _FILES['additional_images']['name'][0]: " . $_FILES['additional_images']['name'][0]);
+                error_log("🔍 _FILES['additional_images']['name'][0] is empty: " . (empty($_FILES['additional_images']['name'][0]) ? 'yes' : 'no'));
+            }
+        }
+    }
+    
     if (isset($_FILES['additional_images']) && !empty($_FILES['additional_images']['name'][0])) {
+        error_log("✅ Processing additional images...");
         $upload_dir = '../../assets/images/projects/design_reconstruction/gallery/';
         DesignReconstructionValidator::ensureDirectoryExists($upload_dir);
         
         $file_count = count($_FILES['additional_images']['name']);
+        error_log("🔍 File count: " . $file_count);
+        
         for ($i = 0; $i < $file_count; $i++) {
+            error_log("🔍 Processing file $i: " . $_FILES['additional_images']['name'][$i]);
+            error_log("🔍 File $i error code: " . $_FILES['additional_images']['error'][$i]);
+            
             if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
                 $filename = DesignReconstructionValidator::generateUniqueFilename(
                     $_FILES['additional_images']['name'][$i], 
@@ -92,16 +114,27 @@ try {
                 );
                 $file_path = $upload_dir . $filename;
                 
+                error_log("🔍 Moving file $i to: " . $file_path);
+                
                 if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $file_path)) {
+                    error_log("✅ File $i moved successfully");
                     // Insert additional image record
                     $image_stmt = $pdo->prepare("
                         INSERT INTO design_reconstruction_images (project_id, image_path, is_main, created_at) 
                         VALUES (?, ?, 0, NOW())
                     ");
-                    $image_stmt->execute([$project_id, 'assets/images/projects/design_reconstruction/gallery/' . $filename]);
+                    $image_path = 'assets/images/projects/design_reconstruction/gallery/' . $filename;
+                    $image_stmt->execute([$project_id, $image_path]);
+                    error_log("✅ Image record inserted: " . $image_path);
+                } else {
+                    error_log("❌ Failed to move file $i");
                 }
+            } else {
+                error_log("❌ File $i upload error: " . $_FILES['additional_images']['error'][$i]);
             }
         }
+    } else {
+        error_log("⚠️ No additional images found or first file is empty");
     }
     
     // Handle project features
