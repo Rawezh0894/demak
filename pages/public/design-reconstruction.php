@@ -200,142 +200,91 @@ try {
                     </div>
                 </div>
 
-                <!-- Projects Slider -->
+                <!-- Projects Grid -->
                 <?php if (isset($category['projects']) && is_array($category['projects']) && !empty($category['projects'])): ?>
+                <!-- Professional Projects Grid -->
+                <div class="projects-grid-container">
+                    <div class="projects-grid" id="projects-grid-<?php echo $key; ?>">
+                        <?php foreach ($category['projects'] as $index => $project): ?>
+                        <?php
+                            $projectName = $project['name_' . $current_lang] ?? $project['name'] ?? '';
+                            $projectDescription = $project['description_' . $current_lang] ?? $project['description'] ?? '';
+                            $projectPrice = $project['price'] ?? '-';
+                            $projectDuration = $project['duration'] ?? '-';
 
-                <!-- Tab Navigation -->
-                <div class="tabs-nav-container" id="tabs-<?php echo $key; ?>">
-                    <?php foreach ($category['projects'] as $index => $project): ?>
-                        <?php 
-                            $projectTitle = $project['name_' . $current_lang] ?? $project['name'] ?? '';
-                        ?>
-                        <button class="tab-button <?php echo $index === 0 ? 'active' : ''; ?>"
-                                onclick="showTab('<?php echo $key; ?>', <?php echo $index; ?>)"
-                                data-tab-index="<?php echo $index; ?>">
-                            <span class="tab-button-icon">
-                                <i class="fas fa-building"></i>
-                            </span>
-                            <span class="tab-button-text"><?php echo mb_substr($projectTitle, 0, 30); ?></span>
-                            <?php if (mb_strlen($projectTitle) > 30): ?>
-                                <span class="tab-button-ellipsis">...</span>
-                            <?php endif; ?>
-                        </button>
-                    <?php endforeach; ?>
-                </div>
-
-                <!-- Projects Slider -->
-                <div class="projects-slider-container">
-                    <div class="projects-slider-wrapper">
-                        <div class="slide-counter" id="counter-<?php echo $key; ?>">
-                            <span class="current-slide">1</span>
-                            <span class="slide-separator">/</span>
-                            <span class="total-slides"><?php echo count($category['projects']); ?></span>
-                        </div>
-
-                        <div class="projects-slider" id="slider-<?php echo $key; ?>">
-                            <?php foreach ($category['projects'] as $index => $project): ?>
-                            <?php
-                                $projectName = $project['name_' . $current_lang] ?? $project['name'] ?? '';
-                                $projectDescription = $project['description_' . $current_lang] ?? $project['description'] ?? '';
-                                $projectPrice = $project['price'] ?? '-';
-                                $projectDuration = $project['duration'] ?? '-';
-
-                                $galleryImages = [];
-                                if (!empty($project['image'])) {
-                                    $galleryImages[] = $project['image'];
-                                }
-                                if (isset($project['images']) && is_array($project['images'])) {
-                                    foreach ($project['images'] as $imgPath) {
-                                        if (!empty($imgPath) && $imgPath !== $project['image']) {
-                                            $galleryImages[] = $imgPath;
-                                        }
+                            $galleryImages = [];
+                            if (!empty($project['image'])) {
+                                $galleryImages[] = $project['image'];
+                            }
+                            if (isset($project['images']) && is_array($project['images'])) {
+                                foreach ($project['images'] as $imgPath) {
+                                    if (!empty($imgPath) && $imgPath !== $project['image']) {
+                                        $galleryImages[] = $imgPath;
                                     }
                                 }
-                                if (empty($galleryImages)) {
-                                    $galleryImages[] = 'https://via.placeholder.com/1200x800?text=No+Image';
-                                }
-                                $totalGalleryImages = count($galleryImages);
-                            ?>
-                            <div class="project-slide" data-project-id="<?php echo $project['id']; ?>">
-                                <div class="project-slide-image">
-                                    <div class="project-image-gallery">
-                                        <div class="main-image-container">
-                                            <img src="<?php echo htmlspecialchars($galleryImages[0], ENT_QUOTES, 'UTF-8'); ?>"
-                                                 alt="<?php echo htmlspecialchars($projectName, ENT_QUOTES, 'UTF-8'); ?>"
-                                                 loading="lazy"
-                                                 decoding="async"
-                                                 class="project-image main-image">
-                                            <div class="image-counter">
-                                                <span class="current-image">1</span>
-                                                <span class="image-separator">/</span>
-                                                <span class="total-images"><?php echo $totalGalleryImages; ?></span>
-                                            </div>
-                                        </div>
+                            }
+                            if (empty($galleryImages)) {
+                                $galleryImages[] = 'https://via.placeholder.com/1200x800?text=No+Image';
+                            }
+                            $totalGalleryImages = count($galleryImages);
+                        ?>
+                        <div class="project-card-modern" data-project-id="<?php echo $project['id']; ?>">
+                            <!-- Project Image -->
+                            <div class="project-card-image-wrapper">
+                                <img src="<?php echo htmlspecialchars($galleryImages[0], ENT_QUOTES, 'UTF-8'); ?>"
+                                     alt="<?php echo htmlspecialchars($projectName, ENT_QUOTES, 'UTF-8'); ?>"
+                                     loading="lazy"
+                                     decoding="async"
+                                     class="project-card-image">
+                                <div class="project-card-overlay">
+                                    <div class="project-card-actions">
+                                        <button class="project-action-btn" onclick="showProjectDetails(<?php echo $project['id']; ?>)" title="<?php echo t('view_details'); ?>">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                         <?php if ($totalGalleryImages > 1): ?>
-                                            <div class="image-thumbnails" id="thumbnails-<?php echo $project['id']; ?>">
-                                                <?php foreach ($galleryImages as $imgIndex => $imagePath): ?>
-                                                    <div class="thumbnail-item <?php echo $imgIndex === 0 ? 'active' : ''; ?>"
-                                                         onclick="changeMainImage(<?php echo $project['id']; ?>, <?php echo $imgIndex; ?>)">
-                                                        <img src="<?php echo htmlspecialchars($imagePath, ENT_QUOTES, 'UTF-8'); ?>"
-                                                             alt="<?php echo htmlspecialchars($projectName, ENT_QUOTES, 'UTF-8'); ?> - <?php echo $imgIndex + 1; ?>"
-                                                             loading="lazy"
-                                                             class="thumbnail-image">
-                                                    </div>
-                                                <?php endforeach; ?>
-                                            </div>
+                                        <span class="project-images-count">
+                                            <i class="fas fa-images"></i>
+                                            <?php echo $totalGalleryImages; ?>
+                                        </span>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="project-slide-overlay">
-                                        <button class="view-details-btn" onclick="showProjectDetails(<?php echo $project['id']; ?>)">
-                                            <i class="fas fa-eye"></i>
-                                            <?php echo t('view_details'); ?>
-                                        </button>
-                                    </div>
                                 </div>
-                                <div class="project-slide-content">
-                                    <h3 class="project-slide-title"><?php echo htmlspecialchars($projectName, ENT_QUOTES, 'UTF-8'); ?></h3>
-                                    <div class="project-info-badges">
-                                        <div class="info-badge badge-price">
-                                            <div class="badge-icon"><i class="fas fa-dollar-sign"></i></div>
-                                            <div class="badge-text">
-                                                <span class="badge-label"><?php echo t('price'); ?></span>
-                                                <span class="badge-value"><?php echo htmlspecialchars($projectPrice, ENT_QUOTES, 'UTF-8'); ?></span>
-                                            </div>
-                                        </div>
-                                        <div class="info-badge badge-duration">
-                                            <div class="badge-icon"><i class="fas fa-clock"></i></div>
-                                            <div class="badge-text">
-                                                <span class="badge-label"><?php echo t('duration'); ?></span>
-                                                <span class="badge-value"><?php echo htmlspecialchars($projectDuration, ENT_QUOTES, 'UTF-8'); ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="info-badge badge-about">
-                                        <div class="badge-icon"><i class="fas fa-info-circle"></i></div>
-                                        <div class="badge-text">
-                                            <span class="badge-label"><?php echo t('about'); ?></span>
-                                            <?php if (isset($project['features']) && is_array($project['features']) && count($project['features']) > 0): ?>
-                                                <p class="badge-description"><?php echo htmlspecialchars(implode('. ', array_slice($project['features'], 0, 4)) . '.', ENT_QUOTES, 'UTF-8'); ?></p>
-                                            <?php else: ?>
-                                                <p class="badge-description"><?php echo htmlspecialchars($projectDescription, ENT_QUOTES, 'UTF-8'); ?></p>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
+                                <div class="project-card-category-badge" style="background: <?php echo $category['color']; ?>">
+                                    <i class="<?php echo $category['icon']; ?>"></i>
                                 </div>
                             </div>
-                            <?php endforeach; ?>
+                            
+                            <!-- Project Content -->
+                            <div class="project-card-content">
+                                <h3 class="project-card-title"><?php echo htmlspecialchars($projectName, ENT_QUOTES, 'UTF-8'); ?></h3>
+                                
+                                <div class="project-card-meta">
+                                    <div class="project-meta-item">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        <span><?php echo htmlspecialchars($projectPrice, ENT_QUOTES, 'UTF-8'); ?></span>
+                                    </div>
+                                    <div class="project-meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span><?php echo htmlspecialchars($projectDuration, ENT_QUOTES, 'UTF-8'); ?></span>
+                                    </div>
+                                </div>
+                                
+                                <p class="project-card-description">
+                                    <?php if (isset($project['features']) && is_array($project['features']) && count($project['features']) > 0): ?>
+                                        <?php echo mb_substr(htmlspecialchars(implode('. ', array_slice($project['features'], 0, 3)) . '.', ENT_QUOTES, 'UTF-8'), 0, 120); ?><?php echo mb_strlen(implode('. ', array_slice($project['features'], 0, 3)) . '.') > 120 ? '...' : ''; ?>
+                                    <?php else: ?>
+                                        <?php echo mb_substr(htmlspecialchars($projectDescription, ENT_QUOTES, 'UTF-8'), 0, 120); ?><?php echo mb_strlen($projectDescription) > 120 ? '...' : ''; ?>
+                                    <?php endif; ?>
+                                </p>
+                                
+                                <button class="project-card-btn" onclick="showProjectDetails(<?php echo $project['id']; ?>)">
+                                    <span><?php echo t('view_details'); ?></span>
+                                    <i class="fas fa-arrow-<?php echo $page_dir === 'rtl' ? 'left' : 'right'; ?>"></i>
+                                </button>
+                            </div>
                         </div>
+                        <?php endforeach; ?>
                     </div>
-
-                    <button class="slider-arrow slider-prev" onclick="prevSlide('<?php echo $key; ?>')">
-                        <i class="fas fa-chevron-<?php echo $page_dir === 'rtl' ? 'right' : 'left'; ?>"></i>
-                    </button>
-
-                    <button class="slider-arrow slider-next" onclick="nextSlide('<?php echo $key; ?>')">
-                        <i class="fas fa-chevron-<?php echo $page_dir === 'rtl' ? 'left' : 'right'; ?>"></i>
-                    </button>
-
-                    <div class="slider-dots" id="dots-<?php echo $key; ?>"></div>
                 </div>
                 <?php else: ?>
                 <!-- No Projects Message -->
