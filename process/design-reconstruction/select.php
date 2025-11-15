@@ -15,7 +15,7 @@ $total_projects = 0;
 $total_pages = 0;
 
 try {
-    // Get total count
+    // Get total count (all projects for admin panel, regardless of is_active)
     $count_stmt = $pdo->query("
         SELECT COUNT(*) 
         FROM design_reconstruction_projects drp
@@ -23,7 +23,7 @@ try {
     $total_projects = $count_stmt->fetchColumn();
     $total_pages = ceil($total_projects / $items_per_page);
     
-    // Get paginated projects
+    // Get paginated projects (all projects for admin panel, regardless of is_active)
     $stmt = $pdo->prepare("
         SELECT 
             drp.*,
@@ -38,48 +38,76 @@ try {
     $stmt->execute([$items_per_page, $offset]);
     $design_reconstruction_projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
+    // Debug: Log if no projects found
+    if (empty($design_reconstruction_projects) && $total_projects > 0) {
+        error_log("Warning: Total projects count is {$total_projects} but no projects returned for page {$current_page}");
+    }
+    
     // Process projects to include additional data
     foreach ($design_reconstruction_projects as &$project) {
-        // Get project images
-        $image_stmt = $pdo->prepare("
-            SELECT image_path, is_main 
-            FROM design_reconstruction_images 
-            WHERE project_id = ? 
-            ORDER BY is_main DESC, created_at ASC
-        ");
-        $image_stmt->execute([$project['id']]);
-        $images = $image_stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // Set main image
-        $project['main_image'] = null;
-        $project['images'] = [];
-        
-        foreach ($images as $image) {
-            if ($image['is_main']) {
-                $project['main_image'] = $image['image_path'];
+        try {
+            // Get project images
+            $image_stmt = $pdo->prepare("
+                SELECT image_path, is_main 
+                FROM design_reconstruction_images 
+                WHERE project_id = ? 
+                ORDER BY is_main DESC, created_at ASC
+            ");
+            $image_stmt->execute([$project['id']]);
+            $images = $image_stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Set main image
+            $project['main_image'] = null;
+            $project['images'] = [];
+            
+            foreach ($images as $image) {
+                if ($image['is_main']) {
+                    $project['main_image'] = $image['image_path'];
+                }
+                $project['images'][] = $image['image_path'];
             }
-            $project['images'][] = $image['image_path'];
+            
+            // Get project features
+            $features_stmt = $pdo->prepare("
+                SELECT feature_text 
+                FROM design_reconstruction_features 
+                WHERE project_id = ? 
+                ORDER BY created_at ASC
+            ");
+            $features_stmt->execute([$project['id']]);
+            $features = $features_stmt->fetchAll(PDO::FETCH_COLUMN);
+            $project['features'] = $features;
+            
+            // Category key is already available from the database query
+            // Ensure category_title is set even if category doesn't exist
+            if (empty($project['category_title']) && !empty($project['category_key'])) {
+                $project['category_title'] = $project['category_key'];
+            }
+        } catch (Exception $e) {
+            error_log("Error processing project {$project['id']}: " . $e->getMessage());
+            // Set default values if processing fails
+            $project['main_image'] = null;
+            $project['images'] = [];
+            $project['features'] = [];
+            if (empty($project['category_title']) && !empty($project['category_key'])) {
+                $project['category_title'] = $project['category_key'];
+            }
         }
-        
-        // Get project features
-        $features_stmt = $pdo->prepare("
-            SELECT feature_text 
-            FROM design_reconstruction_features 
-            WHERE project_id = ? 
-            ORDER BY created_at ASC
-        ");
-        $features_stmt->execute([$project['id']]);
-        $features = $features_stmt->fetchAll(PDO::FETCH_COLUMN);
-        $project['features'] = $features;
-        
-        // Category key is already available from the database query
     }
     
 } catch (Exception $e) {
     error_log("Error fetching design reconstruction projects: " . $e->getMessage());
-    $design_reconstruction_projects = [];
-    $total_projects = 0;
-    $total_pages = 0;
+    error_log("Stack trace: " . $e->getTraceAsString());
+    // Don't reset variables if they were already set - keep what we have
+    if (!isset($design_reconstruction_projects) || empty($design_reconstruction_projects)) {
+        $design_reconstruction_projects = [];
+    }
+    if (!isset($total_projects)) {
+        $total_projects = 0;
+    }
+    if (!isset($total_pages)) {
+        $total_pages = 0;
+    }
 }
 
 // Load design reconstruction categories for the form
