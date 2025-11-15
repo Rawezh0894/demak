@@ -65,57 +65,138 @@
         }
     });
 
-    function getDocumentDirection() {
-        return (document.documentElement.getAttribute('dir') || document.body.getAttribute('dir') || 'ltr').toLowerCase();
-    }
-
-    // Initialize grid layout for each category
+    // Initialize sliders for each category
     function initializeSliders() {
         Object.keys(projectsData).forEach(categoryKey => {
             const category = projectsData[categoryKey];
             if (category.projects && category.projects.length > 0) {
-                initializeCategoryGrid(categoryKey, category.projects);
+                initializeCategorySlider(categoryKey, category.projects);
             }
         });
     }
 
-    // Initialize grid for a specific category
-    function initializeCategoryGrid(categoryKey, projects) {
-        const gridContainer = document.getElementById(`projects-grid-${categoryKey}`);
+    // Initialize slider for a specific category
+    function initializeCategorySlider(categoryKey, projects) {
+        const slider = document.getElementById(`slider-${categoryKey}`);
+        const counter = document.getElementById(`counter-${categoryKey}`);
+        const dots = document.getElementById(`dots-${categoryKey}`);
         
-        console.log(`Initializing grid for category: ${categoryKey}`);
-        console.log('Grid container:', gridContainer);
+        console.log(`Initializing slider for category: ${categoryKey}`);
+        console.log('Slider element:', slider);
+        console.log('Counter element:', counter);
+        console.log('Dots element:', dots);
         console.log('Projects count:', projects.length);
         
-        if (!gridContainer) {
-            console.error(`Grid container not found for category ${categoryKey}`);
+        if (!slider || !counter || !dots) {
+            console.error(`Missing elements for category ${categoryKey}:`, {
+                slider: !!slider,
+                counter: !!counter,
+                dots: !!dots
+            });
             return;
         }
         
-        // Initialize image optimization for grid cards
-        const projectCards = gridContainer.querySelectorAll('.project-card img');
-        projectCards.forEach(img => {
-            optimizeImage(img);
-        });
+        // Set total slides
+        const totalSlides = projects.length;
+        counter.querySelector('.total-slides').textContent = totalSlides;
         
-        console.log(`Grid ${categoryKey} initialized with ${projects.length} projects`);
+        // Ensure counter starts at slide 1
+        counter.querySelector('.current-slide').textContent = 1;
+        
+        // Initialize dots
+        dots.innerHTML = '';
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('button');
+            dot.className = `slider-dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => goToSlide(categoryKey, i);
+            dots.appendChild(dot);
+        }
+        
+        // Ensure slider starts at first slide with a small delay to override any CSS
+        setTimeout(() => {
+            slider.style.transform = 'translateX(0%)';
+            console.log('Slider initial transform set to translateX(0%) with delay');
+        }, 10);
+        
+        // Debug slider positioning
+        console.log(`Slider ${categoryKey} initialized with ${totalSlides} slides`);
     }
 
-    // Open image gallery for a project
-    function openImageGallery(projectId) {
-        const project = findProjectById(projectId);
-        if (!project) return;
+    // Navigation functions
+    function nextSlide(categoryKey) {
+        const slider = document.getElementById(`slider-${categoryKey}`);
+        const counter = document.getElementById(`counter-${categoryKey}`);
+        const dots = document.getElementById(`dots-${categoryKey}`);
         
-        // Get all images (main image + gallery images)
-        const allImages = [project.image];
-        if (project.images && project.images.length > 0) {
-            allImages.push(...project.images);
+        if (!slider || !counter || !dots) {
+            return;
         }
         
-        // Open the first image in zoom modal
-        if (allImages.length > 0) {
-            openImageZoom(allImages[0]);
+        const currentSlide = parseInt(counter.querySelector('.current-slide').textContent) - 1;
+        const totalSlides = parseInt(counter.querySelector('.total-slides').textContent);
+        const nextSlide = (currentSlide + 1) % totalSlides;
+        
+        goToSlide(categoryKey, nextSlide);
+    }
+
+    function prevSlide(categoryKey) {
+        const slider = document.getElementById(`slider-${categoryKey}`);
+        const counter = document.getElementById(`counter-${categoryKey}`);
+        const dots = document.getElementById(`dots-${categoryKey}`);
+        
+        if (!slider || !counter || !dots) {
+            return;
         }
+        
+        const currentSlide = parseInt(counter.querySelector('.current-slide').textContent) - 1;
+        const totalSlides = parseInt(counter.querySelector('.total-slides').textContent);
+        const prevSlide = currentSlide === 0 ? totalSlides - 1 : currentSlide - 1;
+        
+        goToSlide(categoryKey, prevSlide);
+    }
+
+    function goToSlide(categoryKey, slideIndex) {
+        const slider = document.getElementById(`slider-${categoryKey}`);
+        const counter = document.getElementById(`counter-${categoryKey}`);
+        const dots = document.getElementById(`dots-${categoryKey}`);
+        
+        if (!slider || !counter || !dots) {
+            console.error('Missing elements in goToSlide');
+            return;
+        }
+        
+        const totalSlides = parseInt(counter.querySelector('.total-slides').textContent);
+        
+        if (slideIndex < 0 || slideIndex >= totalSlides) {
+            console.error(`Invalid slide index: ${slideIndex}, total slides: ${totalSlides}`);
+            return;
+        }
+        
+        // Update slider position
+        const translateX = -slideIndex * 100;
+        slider.style.transform = `translateX(${translateX}%)`;
+        
+        // Force reload images in the target slide
+        const targetSlide = slider.children[slideIndex];
+        if (targetSlide) {
+            const images = targetSlide.querySelectorAll('img');
+            images.forEach(img => {
+                if (!img.complete) {
+                    const src = img.src;
+                    img.src = '';
+                    img.src = src;
+                }
+                optimizeImage(img);
+            });
+        }
+        
+        // Update counter
+        counter.querySelector('.current-slide').textContent = slideIndex + 1;
+        
+        // Update dots
+        dots.querySelectorAll('.slider-dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === slideIndex);
+        });
     }
 
     // Image gallery functions
@@ -158,91 +239,39 @@
 
     // Project details modal functions
     function showProjectDetails(projectId) {
-        console.log('showProjectDetails called with projectId:', projectId);
         const project = findProjectById(projectId);
-        console.log('Found project:', project);
-        
-        if (!project) {
-            console.error('Project not found for ID:', projectId);
-            return;
-        }
+        if (!project) return;
 
         currentProjectId = projectId;
-        
-        // Get all images (main image + gallery images)
-        currentProjectImages = [project.image];
-        if (project.images && project.images.length > 0) {
-            currentProjectImages.push(...project.images);
-        }
+        currentProjectImages = project.images || [];
         currentImageIndex = 0;
         
-        // Get current language
-        const currentLang = document.documentElement.lang || 'en';
-        
-        // Update modal content with language-specific fields
-        const modalTitle = document.getElementById('modalTitle');
-        const modalPrice = document.getElementById('modalPrice');
-        const modalDuration = document.getElementById('modalDuration');
-        const modalDescription = document.getElementById('modalDescription');
-        const modalEngineer = document.getElementById('modalEngineer');
-        const modalMaterials = document.getElementById('modalMaterials');
-        
-        if (modalTitle) {
-            modalTitle.textContent = project[`name_${currentLang}`] || project.name || 'Project';
-        }
-        
-        if (modalPrice) {
-            modalPrice.textContent = project.price || '-';
-        }
-        
-        if (modalDuration) {
-            modalDuration.textContent = project.duration || '-';
-        }
-        
-        if (modalDescription) {
-            modalDescription.textContent = project[`description_${currentLang}`] || project.description || '-';
-        }
-        
-        if (modalEngineer) {
-            modalEngineer.textContent = project.engineer || '-';
-        }
-        
-        if (modalMaterials) {
-            modalMaterials.textContent = project.materials || '-';
-        }
+        // Update modal content
+        document.getElementById('modalTitle').textContent = project.name;
+        document.getElementById('modalPrice').textContent = project.price;
+        document.getElementById('modalDuration').textContent = project.duration;
+        document.getElementById('modalDescription').textContent = project.description;
 
         // Update features
         const featuresList = document.getElementById('modalFeatures');
-        if (featuresList) {
-            featuresList.innerHTML = '';
-            if (project.features && project.features.length > 0) {
-                project.features.forEach(feature => {
-                    const li = document.createElement('li');
-                    li.textContent = feature;
-                    featuresList.appendChild(li);
-                });
-            }
+        featuresList.innerHTML = '';
+        if (project.features && project.features.length > 0) {
+            project.features.forEach(feature => {
+                const li = document.createElement('li');
+                li.textContent = feature;
+                featuresList.appendChild(li);
+            });
         }
         
         // Update images
         updateModalImages();
 
-        // Show modal - use 'active' class instead of removing 'hidden'
-        const projectModal = document.getElementById('projectModal');
-        if (projectModal) {
-            projectModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            console.log('Modal shown');
-        } else {
-            console.error('Project modal element not found');
-        }
+        // Show modal
+        document.getElementById('projectModal').classList.remove('hidden');
     }
 
     function updateModalImages() {
-        if (!currentProjectImages || currentProjectImages.length === 0) {
-            console.log('No images to display');
-            return;
-        }
+        if (!currentProjectImages || currentProjectImages.length === 0) return;
         
         const modalImage = document.getElementById('modalImage');
         const imageCounter = document.querySelector('.modal-image-counter');
@@ -250,19 +279,11 @@
         
         if (modalImage) {
             modalImage.src = currentProjectImages[currentImageIndex];
-            modalImage.alt = `Project image ${currentImageIndex + 1}`;
-            optimizeImage(modalImage);
         }
         
         if (imageCounter) {
-            const currentImageSpan = imageCounter.querySelector('.modal-current-image');
-            const totalImagesSpan = imageCounter.querySelector('.modal-total-images');
-            if (currentImageSpan) {
-                currentImageSpan.textContent = currentImageIndex + 1;
-            }
-            if (totalImagesSpan) {
-                totalImagesSpan.textContent = currentProjectImages.length;
-            }
+            imageCounter.querySelector('.modal-current-image').textContent = currentImageIndex + 1;
+            imageCounter.querySelector('.modal-total-images').textContent = currentProjectImages.length;
         }
         
         if (thumbnails) {
@@ -278,8 +299,6 @@
                 const img = document.createElement('img');
                 img.src = image;
                 img.className = 'thumbnail-image';
-                img.alt = `Thumbnail ${index + 1}`;
-                img.loading = 'lazy';
                 thumb.appendChild(img);
                 
                 thumbnails.appendChild(thumb);
@@ -307,11 +326,7 @@
     }
 
     function closeProjectModal() {
-        const projectModal = document.getElementById('projectModal');
-        if (projectModal) {
-            projectModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+        document.getElementById('projectModal').classList.add('hidden');
     }
 
     // Utility functions
@@ -501,8 +516,42 @@
         }
     }
 
+    // Tab switching function
+    function showTab(categoryKey, tabIndex) {
+        const tabsContainer = document.getElementById(`tabs-${categoryKey}`);
+        const contentContainer = document.getElementById(`content-${categoryKey}`);
+        
+        if (!tabsContainer || !contentContainer) {
+            console.error('Missing tab elements for category:', categoryKey);
+            return;
+        }
+        
+        // Update tab buttons
+        const tabButtons = tabsContainer.querySelectorAll('.tab-button');
+        tabButtons.forEach((btn, index) => {
+            if (index === tabIndex) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        
+        // Update tab content
+        const tabContents = contentContainer.querySelectorAll('.tab-content');
+        tabContents.forEach((content, index) => {
+            if (index === tabIndex) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
+    }
+
     // Make functions globally available
-    window.openImageGallery = openImageGallery;
+    window.nextSlide = nextSlide;
+    window.prevSlide = prevSlide;
+    window.goToSlide = goToSlide;
+    window.showTab = showTab;
     window.openImageZoom = openImageZoom;
     window.closeImageZoom = closeImageZoom;
     window.zoomIn = zoomIn;
