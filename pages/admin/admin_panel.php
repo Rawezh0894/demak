@@ -401,7 +401,7 @@ $page_dir = 'rtl';
     <!-- Management Sections -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         
-        <!-- Section 1: Infrastructure Management -->
+        <!-- Section 1: Map Set Creation -->
         <a href="infrastructure_management.php" class="management-section p-8 text-center cursor-pointer">
             <div class="decorative-dots">
                 <div class="dot"></div>
@@ -411,11 +411,11 @@ $page_dir = 'rtl';
                 </div>
             
             <div class="section-icon bg-gradient-to-br from-blue-500 to-blue-600 mx-auto">
-                <i class="fas fa-building"></i>
+                <i class="fas fa-map"></i>
             </div>
             
-            <h3 class="section-title">بەڕێوەبردنی تەلارسازی</h3>
-            <p class="section-subtitle">بەڕێوەبردنی تەلارسازی و بیناسازی</p>
+            <h3 class="section-title">دروستکردنی سێتی نەخشە</h3>
+            <p class="section-subtitle">دروستکردن و بەڕێوەبردنی سێتی نەخشە</p>
         </a>
         
         <!-- Section 2: Design Reconstruction Management -->
