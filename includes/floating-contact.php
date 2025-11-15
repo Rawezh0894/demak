@@ -26,22 +26,46 @@ if (file_exists($select_path) && isset($pdo)) {
 $contact_phone = '+964 750 123 4567';
 $contact_email = 'info@demak.com';
 $contact_facebook = 'https://www.facebook.com/demak';
+$whatsapp_number = '';
+$viber_number = '';
 
 if (isset($pdo) && function_exists('getSettingValue')) {
     try {
         $contact_phone = getSettingValue($pdo, 'contact_phone', '+964 750 123 4567');
         $contact_email = getSettingValue($pdo, 'contact_email', 'info@demak.com');
         $contact_facebook = getSettingValue($pdo, 'facebook_url', 'https://www.facebook.com/demak');
+        $whatsapp_number = getSettingValue($pdo, 'whatsapp_number', '');
+        $viber_number = getSettingValue($pdo, 'viber_number', '');
         
         // If Facebook URL is empty, use default
         if (empty($contact_facebook) || $contact_facebook === '#') {
             $contact_facebook = 'https://www.facebook.com/demak';
+        }
+        
+        // If WhatsApp number is empty, use contact phone
+        if (empty($whatsapp_number)) {
+            $whatsapp_number = $contact_phone;
+        }
+        
+        // If Viber number is empty, use contact phone
+        if (empty($viber_number)) {
+            $viber_number = $contact_phone;
         }
     } catch (Exception $e) {
         // Use default values if there's an error
         error_log("Error loading floating contact settings: " . $e->getMessage());
     }
 }
+
+// Prepare phone numbers for WhatsApp and Viber (remove spaces and special characters except +)
+$whatsapp_clean = preg_replace('/[^0-9+]/', '', $whatsapp_number);
+$viber_clean = preg_replace('/[^0-9+]/', '', $viber_number);
+
+// Generate WhatsApp URL
+$whatsapp_url = 'https://wa.me/' . $whatsapp_clean;
+
+// Generate Viber URL (viber://chat?number=)
+$viber_url = 'viber://chat?number=' . $viber_clean;
 
 // Set position based on direction
 $contact_position = $is_rtl ? 'left-0' : 'right-0';
@@ -118,6 +142,36 @@ $contact_expand_transform = $is_rtl ? 'translate-x-0' : 'translate-x-0';
                         <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $contact_email; ?></p>
                     </div>
                     <svg class="w-5 h-5 text-red-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+                
+                <!-- WhatsApp -->
+                <a href="<?php echo $whatsapp_url; ?>" target="_blank" rel="noopener noreferrer" class="floating-contact-item floating-contact-whatsapp flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
+                    <div class="relative w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-green-500/30 icon-container-whatsapp">
+                        <i class="fab fa-whatsapp text-lg relative z-10"></i>
+                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide mb-1">WhatsApp</p>
+                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $whatsapp_number; ?></p>
+                    </div>
+                    <svg class="w-5 h-5 text-green-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+                
+                <!-- Viber -->
+                <a href="<?php echo $viber_url; ?>" class="floating-contact-item floating-contact-viber flex items-center space-x-4 rtl:space-x-reverse p-4 rounded-xl transition-all duration-300 group border hover:shadow-lg hover:-translate-y-0.5">
+                    <div class="relative w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-purple-500/30 icon-container-viber">
+                        <i class="fab fa-viber text-lg relative z-10"></i>
+                        <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">Viber</p>
+                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate"><?php echo $viber_number; ?></p>
+                    </div>
+                    <svg class="w-5 h-5 text-purple-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </a>

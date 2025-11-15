@@ -128,7 +128,18 @@ $page_dir = $languages[$current_lang]['dir'];
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input 
+                            id="remember" 
+                            name="remember" 
+                            type="checkbox" 
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        >
+                        <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                            <?php echo t('remember_me'); ?>
+                        </label>
+                    </div>
                     <a href="#" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500">
                         <?php echo t('forgot_password'); ?>
                     </a>
@@ -138,7 +149,6 @@ $page_dir = $languages[$current_lang]['dir'];
                     type="submit" 
                     class="w-full btn btn-primary text-lg py-3"
                 >
-                    <i class="fas fa-eye mr-2"></i>
                     <i class="fas fa-sign-in-alt mr-2"></i>
                     <?php echo t('sign_in'); ?>
                 </button>
