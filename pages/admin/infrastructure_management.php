@@ -540,7 +540,7 @@ require_once '../../process/infrastructure_management/infrastructure_management.
                                 <button onclick="editProject(<?php echo $project['id']; ?>)" 
                                         class="flex-1 action-btn action-btn-edit">
                                     <i class="fas fa-edit"></i>
-                                    <span><?php echo t('edit_project'); ?></span>
+                                    <span>دەستکاری</span>
                                 </button>
                                 <button onclick="deleteProject(<?php echo $project['id']; ?>)" 
                                         class="action-btn action-btn-delete">
