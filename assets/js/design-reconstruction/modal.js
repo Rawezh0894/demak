@@ -43,6 +43,15 @@ const ModalManager = {
         if (form) {
             form.reset();
             
+            // Clear deleted images container
+            const deletedImagesContainer = document.getElementById('deleted_additional_images_container');
+            if (deletedImagesContainer) {
+                deletedImagesContainer.innerHTML = '';
+            }
+            
+            // Reset existing images array
+            window.existingAdditionalImages = [];
+            
             // Reset image previews
             const mainImagePreview = document.getElementById('mainImagePreview');
             const additionalImagesPreview = document.getElementById('additionalImagesPreview');
@@ -150,22 +159,44 @@ const ModalManager = {
     showAdditionalImagesPreview(images) {
         const previewContainer = document.getElementById('additionalImagesPreview');
         
-        if (previewContainer && images.length > 0) {
-            previewContainer.innerHTML = '';
+        if (!previewContainer) return;
+        
+        // Clear existing preview
+        previewContainer.innerHTML = '';
+        
+        if (images && images.length > 0) {
             previewContainer.classList.remove('hidden');
             
+            // Store images for tracking
+            if (!window.existingAdditionalImages) {
+                window.existingAdditionalImages = [];
+            }
+            window.existingAdditionalImages = images.map(img => ({
+                id: typeof img === 'object' ? img.id : null,
+                path: typeof img === 'object' ? img.path : img
+            }));
+            
             images.forEach((image, index) => {
+                // Handle both string paths and object with id/path
+                const imagePath = typeof image === 'object' ? image.path : image;
+                const imageId = typeof image === 'object' ? image.id : null;
+                
                 const thumbItem = document.createElement('div');
-                thumbItem.className = 'thumb-item';
+                thumbItem.className = 'thumb-item relative';
+                thumbItem.setAttribute('data-image-id', imageId || '');
+                thumbItem.setAttribute('data-image-index', index);
                 thumbItem.innerHTML = `
-                    <img src="../../${image}" alt="Preview ${index + 1}" class="w-full h-20 object-cover rounded-lg">
-                    <button type="button" onclick="removeAdditionalImage(${index})" 
+                    <img src="../../${imagePath}" alt="Preview ${index + 1}" class="w-full h-20 object-cover rounded-lg">
+                    <button type="button" onclick="removeExistingAdditionalImage(${index})" 
+                            class="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-colors duration-200 z-10"
                             title="Remove image">
-                        <i class="fas fa-times text-xs"></i>
+                        <i class="fas fa-times"></i>
                     </button>
                 `;
                 previewContainer.appendChild(thumbItem);
             });
+        } else {
+            previewContainer.classList.add('hidden');
         }
     }
 };

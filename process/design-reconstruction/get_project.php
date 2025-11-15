@@ -53,7 +53,7 @@ try {
     
     // Get project images
     $images_stmt = $pdo->prepare("
-        SELECT image_path, is_main 
+        SELECT id, image_path, is_main 
         FROM design_reconstruction_images 
         WHERE project_id = ? 
         ORDER BY is_main DESC, created_at ASC
@@ -68,8 +68,13 @@ try {
     foreach ($images as $image) {
         if ($image['is_main']) {
             $project['main_image'] = $image['image_path'];
+        } else {
+            // Store additional images with id and path
+            $project['images'][] = [
+                'id' => $image['id'],
+                'path' => $image['image_path']
+            ];
         }
-        $project['images'][] = $image['image_path'];
     }
     
     // Get project features

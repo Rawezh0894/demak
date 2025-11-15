@@ -448,7 +448,7 @@ function removeMainImage() {
     }
 }
 
-// Remove additional image
+// Remove additional image (for newly uploaded images)
 function removeAdditionalImage(index) {
     const previewContainer = document.getElementById('additionalImagesPreview');
     if (!previewContainer) return;
@@ -470,6 +470,61 @@ function removeAdditionalImage(index) {
     }
 }
 
+// Remove existing additional image (from database)
+function removeExistingAdditionalImage(index) {
+    const additionalImagesPreview = document.getElementById('additionalImagesPreview');
+    if (!additionalImagesPreview) return;
+    
+    const thumbItem = additionalImagesPreview.querySelector(`[data-image-index="${index}"]`);
+    if (thumbItem) {
+        // Mark image for deletion by adding to hidden input
+        const imageId = thumbItem.getAttribute('data-image-id');
+        if (imageId) {
+            // Get or create container for deleted image IDs
+            let deletedImagesContainer = document.getElementById('deleted_additional_images_container');
+            if (!deletedImagesContainer) {
+                deletedImagesContainer = document.createElement('div');
+                deletedImagesContainer.id = 'deleted_additional_images_container';
+                deletedImagesContainer.style.display = 'none';
+                document.getElementById('projectForm').appendChild(deletedImagesContainer);
+            }
+            
+            // Check if this image ID is already marked for deletion
+            const existingInput = deletedImagesContainer.querySelector(`input[value="${imageId}"]`);
+            if (!existingInput) {
+                // Create hidden input for this deleted image
+                const deletedImageInput = document.createElement('input');
+                deletedImageInput.type = 'hidden';
+                deletedImageInput.name = 'deleted_additional_images[]';
+                deletedImageInput.value = imageId;
+                deletedImagesContainer.appendChild(deletedImageInput);
+            }
+        }
+        
+        // Remove from preview
+        thumbItem.remove();
+        
+        // Remove from stored array
+        if (window.existingAdditionalImages && window.existingAdditionalImages[index]) {
+            window.existingAdditionalImages.splice(index, 1);
+            // Update indices for remaining items
+            const allThumbItems = additionalImagesPreview.querySelectorAll('.thumb-item');
+            allThumbItems.forEach((item, newIndex) => {
+                item.setAttribute('data-image-index', newIndex);
+                const button = item.querySelector('button');
+                if (button) {
+                    button.setAttribute('onclick', `removeExistingAdditionalImage(${newIndex})`);
+                }
+            });
+        }
+        
+        // If no more images, hide the preview container
+        if (additionalImagesPreview.children.length === 0) {
+            additionalImagesPreview.classList.add('hidden');
+        }
+    }
+}
+
 // Make functions globally available
 window.openAddProjectModal = openAddProjectModal;
 window.closeProjectModal = closeProjectModal;
@@ -481,3 +536,4 @@ window.addFeature = addFeature;
 window.removeFeature = removeFeature;
 window.removeMainImage = removeMainImage;
 window.removeAdditionalImage = removeAdditionalImage;
+window.removeExistingAdditionalImage = removeExistingAdditionalImage;

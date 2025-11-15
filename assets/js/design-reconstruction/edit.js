@@ -97,9 +97,28 @@ const EditProjectManager = {
         // Handle additional images (exclude main image)
         if (projectData.images && Array.isArray(projectData.images) && projectData.images.length > 0) {
             // Filter out main image from additional images
-            const additionalImages = projectData.images.filter(img => img !== projectData.main_image);
+            // Images are now objects with id and path, or strings
+            const additionalImages = projectData.images.filter(img => {
+                const imgPath = typeof img === 'object' ? img.path : img;
+                return imgPath !== projectData.main_image;
+            });
+            
             if (additionalImages.length > 0) {
                 ModalManager.showAdditionalImagesPreview(additionalImages);
+            } else {
+                // Clear preview if no additional images
+                const previewContainer = document.getElementById('additionalImagesPreview');
+                if (previewContainer) {
+                    previewContainer.innerHTML = '';
+                    previewContainer.classList.add('hidden');
+                }
+            }
+        } else {
+            // Clear preview if no images
+            const previewContainer = document.getElementById('additionalImagesPreview');
+            if (previewContainer) {
+                previewContainer.innerHTML = '';
+                previewContainer.classList.add('hidden');
             }
         }
     },
