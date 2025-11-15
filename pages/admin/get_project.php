@@ -26,6 +26,8 @@ try {
         SELECT 
             p.*,
             c.title as category_name,
+            c.title_ku as category_name_ku,
+            c.title_ar as category_name_ar,
             c.category_key as category_key
         FROM design_reconstruction_projects p
         LEFT JOIN design_reconstruction_categories c ON p.category_key = c.category_key

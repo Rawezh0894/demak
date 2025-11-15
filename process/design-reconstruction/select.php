@@ -28,6 +28,8 @@ try {
         SELECT 
             drp.*,
             drc.title as category_title,
+            drc.title_ku as category_title_ku,
+            drc.title_ar as category_title_ar,
             drc.icon as category_icon,
             drc.color as category_color
         FROM design_reconstruction_projects drp

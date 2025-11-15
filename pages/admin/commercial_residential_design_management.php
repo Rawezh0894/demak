@@ -373,7 +373,7 @@ $page_dir = 'rtl';
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg">
                             <option value="">هەموو پۆلەکان</option>
                             <?php foreach ($commercial_residential_categories as $key => $category): ?>
-                            <option value="<?php echo $key; ?>"><?php echo $category['title']; ?></option>
+                            <option value="<?php echo $key; ?>"><?php echo $category['title_ku'] ?? $category['title']; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -436,7 +436,7 @@ $page_dir = 'rtl';
                             <?php endif; ?>
                             <div class="absolute top-4 right-4">
                                 <span class="bg-blue-600 text-white px-3 py-2 rounded-xl text-sm font-medium shadow-lg">
-                                    <?php echo $project['category_title']; ?>
+                                    <?php echo $project['category_title_ku'] ?? $project['category_title']; ?>
                                 </span>
                             </div>
                         </div>
@@ -577,7 +577,7 @@ $page_dir = 'rtl';
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                                     <option value="">پۆلێک هەڵبژێرە</option>
                                     <?php foreach ($commercial_residential_categories as $key => $category): ?>
-                                    <option value="<?php echo $key; ?>"><?php echo $category['title']; ?></option>
+                                    <option value="<?php echo $key; ?>"><?php echo $category['title_ku'] ?? $category['title']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

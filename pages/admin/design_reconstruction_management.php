@@ -408,7 +408,7 @@ require_once '../../process/design-reconstruction/design-reconstruction.php';
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg">
                             <option value=""><?php echo t('all_categories'); ?></option>
                             <?php foreach ($design_reconstruction_categories as $key => $category): ?>
-                            <option value="<?php echo $key; ?>"><?php echo $category['title']; ?></option>
+                            <option value="<?php echo $key; ?>"><?php echo $category['title_ku'] ?? $category['title']; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -458,7 +458,7 @@ require_once '../../process/design-reconstruction/design-reconstruction.php';
                             <?php endif; ?>
                             <div class="absolute top-4 right-4">
                                 <span class="bg-purple-600 text-white px-3 py-2 rounded-xl text-sm font-medium shadow-lg">
-                                    <?php echo $project['category_title']; ?>
+                                    <?php echo $project['category_title_ku'] ?? $project['category_title']; ?>
                                 </span>
                             </div>
                         </div>
@@ -585,7 +585,7 @@ require_once '../../process/design-reconstruction/design-reconstruction.php';
                                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                                     <option value=""><?php echo t('select_category'); ?></option>
                                     <?php foreach ($design_reconstruction_categories as $key => $category): ?>
-                                    <option value="<?php echo $key; ?>"><?php echo $category['title']; ?></option>
+                                    <option value="<?php echo $key; ?>"><?php echo $category['title_ku'] ?? $category['title']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
