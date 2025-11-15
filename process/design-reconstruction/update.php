@@ -5,6 +5,8 @@
  * This file handles updating existing design reconstruction projects
  */
 
+require_once '../../includes/ImageCompressor.php';
+
 try {
     // Validate required fields
     $required_fields = ['project_id', 'project_name', 'project_category', 'project_price', 'project_duration', 'project_description'];
@@ -68,6 +70,9 @@ try {
         $file_path = $upload_dir . $filename;
         
         if (move_uploaded_file($_FILES['main_image']['tmp_name'], $file_path)) {
+            // Compress main image (max 1920x1080, quality 85)
+            ImageCompressor::compress($file_path, null, 85, 1920, 1080);
+            
             // Insert new main image record
             $image_stmt = $pdo->prepare("
                 INSERT INTO design_reconstruction_images (project_id, image_path, is_main, created_at) 
@@ -108,6 +113,9 @@ try {
                 $file_path = $upload_dir . $filename;
                 
                 if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $file_path)) {
+                    // Compress additional image (max 1200x800, quality 85)
+                    ImageCompressor::compress($file_path, null, 85, 1200, 800);
+                    
                     // Insert new additional image record
                     $image_stmt = $pdo->prepare("
                         INSERT INTO design_reconstruction_images (project_id, image_path, is_main, created_at) 

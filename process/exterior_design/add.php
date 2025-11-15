@@ -51,6 +51,10 @@ try {
             throw new Exception('هەڵەیەک ڕوویدا لە بارکردنی وێنەی سەرەکی');
         }
         
+        // Compress main image (max 1920x1080, quality 85)
+        require_once '../../includes/ImageCompressor.php';
+        ImageCompressor::compress($main_image_path, null, 85, 1920, 1080);
+        
         $main_image_path = 'assets/images/projects/exterior_design/' . $main_image_name;
     } else {
         throw new Exception('وێنەی سەرەکی پێویستە');
@@ -71,6 +75,12 @@ try {
                 $image_path = $upload_dir . $image_name;
                 
                 if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $image_path)) {
+                    // Compress additional image (max 1200x800, quality 85)
+                    if (!class_exists('ImageCompressor')) {
+                        require_once '../../includes/ImageCompressor.php';
+                    }
+                    ImageCompressor::compress($image_path, null, 85, 1200, 800);
+                    
                     $additional_images[] = 'assets/images/projects/exterior_design/gallery/' . $image_name;
                 }
             }
