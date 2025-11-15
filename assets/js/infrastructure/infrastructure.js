@@ -194,9 +194,23 @@
         
         console.log(`Direction: ${direction}, isRTL: ${isRTL}, slideIndex: ${slideIndex}, translateX: ${translateX}%`);
         
+        // Get wrapper width to ensure proper calculation
+        const wrapper = slider.closest('.projects-slider-wrapper');
+        const wrapperWidth = wrapper ? wrapper.offsetWidth : slider.parentElement.offsetWidth;
+        
         // Update slider position with !important override to ensure it works
         // Use requestAnimationFrame to ensure DOM is ready
         requestAnimationFrame(() => {
+            // Ensure slider width is correct
+            slider.style.width = '100%';
+            slider.style.display = 'flex';
+            slider.style.flexDirection = 'row';
+            slider.style.flexWrap = 'nowrap';
+            
+            // Calculate translateX in pixels for more reliable positioning
+            const translateXPixels = (translateX / 100) * wrapperWidth;
+            
+            // Apply transform
             slider.style.setProperty('transform', `translate3d(${translateX}%, 0, 0)`, 'important');
             slider.style.setProperty('-webkit-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
             slider.style.setProperty('-moz-transform', `translate3d(${translateX}%, 0, 0)`, 'important');
@@ -204,7 +218,7 @@
             slider.style.setProperty('transition', 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)', 'important');
             slider.dataset.currentSlide = slideIndex.toString();
             
-            // Ensure all slides are visible (remove any display:none or visibility:hidden)
+            // Ensure all slides are visible and properly sized
             Array.from(slider.children).forEach((slide, index) => {
                 slide.style.display = 'grid';
                 slide.style.visibility = 'visible';
@@ -215,11 +229,14 @@
                 slide.style.flexGrow = '0';
                 slide.style.minWidth = '100%';
                 slide.style.maxWidth = '100%';
+                // Use percentage for width to ensure proper scaling
                 slide.style.width = '100%';
             });
             
             // Force reflow to ensure changes are applied
             void slider.offsetHeight;
+            
+            console.log(`Slider width: ${slider.offsetWidth}, Wrapper width: ${wrapperWidth}, translateX: ${translateX}%, translateXPixels: ${translateXPixels}`);
         });
         
         // Force reload images in the target slide
