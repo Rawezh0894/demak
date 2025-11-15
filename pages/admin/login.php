@@ -36,7 +36,7 @@ require_once '../../process/admin/login.php';
     <!-- Top Navigation Bar -->
     <div class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <!-- Back to Home Link -->
-        <a href="../../index.php" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700">
+        <a href="../../index.php" class="flex items-center space-x-3 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600">
             <i class="fas fa-arrow-left"></i>
             <span><?php echo t('back_to_home'); ?></span>
         </a>
