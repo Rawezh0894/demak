@@ -1,8 +1,16 @@
 <?php
 // Language detection and switching
 $current_lang = $_SESSION['language'] ?? 'ku';
+// Calculate base path for flag images
+$flag_base_path = '';
+if (strpos($_SERVER['PHP_SELF'], '/pages/public/') !== false) {
+    $flag_base_path = '../../';
+} elseif (strpos($_SERVER['PHP_SELF'], '/pages/') !== false) {
+    $flag_base_path = '../';
+}
+
 $languages = [
-    'ku' => ['name' => 'کوردی', 'flag' => '🟥🟨🟩', 'dir' => 'rtl'], // Kurdistan Flag (Red, Yellow, Green)
+    'ku' => ['name' => 'کوردی', 'flag' => 'img', 'flag_path' => $flag_base_path . 'assets/images/kurdistan-flag.svg', 'dir' => 'rtl'],
     'ar' => ['name' => 'العربية', 'flag' => '🇮🇶', 'dir' => 'rtl'],
     'en' => ['name' => 'English', 'flag' => '🇺🇸', 'dir' => 'ltr']
 ];

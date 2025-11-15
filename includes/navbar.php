@@ -68,7 +68,11 @@ if (strpos($current_file, '/pages/public/') !== false) {
                 <!-- Language Switcher -->
                 <div class="language-switcher">
                     <button onclick="toggleLanguageDropdown()" class="flex items-center space-x-1 rtl:space-x-reverse px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
-                        <span class="text-lg"><?php echo $languages[$current_lang]['flag']; ?></span>
+                        <?php if (isset($languages[$current_lang]['flag']) && $languages[$current_lang]['flag'] === 'img'): ?>
+                            <img src="<?php echo $languages[$current_lang]['flag_path']; ?>" alt="Kurdistan Flag" class="w-5 h-5 object-contain">
+                        <?php else: ?>
+                            <span class="text-lg"><?php echo $languages[$current_lang]['flag']; ?></span>
+                        <?php endif; ?>
                         <span><?php echo $languages[$current_lang]['name']; ?></span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -77,7 +81,11 @@ if (strpos($current_file, '/pages/public/') !== false) {
                     <div id="languageDropdown" class="language-dropdown hidden">
                         <?php foreach ($languages as $code => $lang): ?>
                             <a href="?lang=<?php echo $code; ?>" class="language-option flex items-center space-x-2 rtl:space-x-reverse">
-                                <span class="text-lg"><?php echo $lang['flag']; ?></span>
+                                <?php if (isset($lang['flag']) && $lang['flag'] === 'img'): ?>
+                                    <img src="<?php echo $lang['flag_path']; ?>" alt="Kurdistan Flag" class="w-5 h-5 object-contain">
+                                <?php else: ?>
+                                    <span class="text-lg"><?php echo $lang['flag']; ?></span>
+                                <?php endif; ?>
                                 <span><?php echo $lang['name']; ?></span>
                             </a>
                         <?php endforeach; ?>
