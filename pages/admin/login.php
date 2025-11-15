@@ -43,9 +43,9 @@ require_once '../../process/admin/login.php';
         <div class="w-full max-w-sm sm:max-w-md space-y-6 sm:space-y-8">
             <!-- Logo and Title -->
             <div class="text-center">
-                <div class="logo-container mx-auto w-20 h-20 flex items-center justify-center mb-6">
-                    <i class="fas fa-building text-white text-3xl"></i>
-                </div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                    <?php echo t('admin_login'); ?>
+                </h1>
             </div>
             
             <!-- Login Form -->
@@ -109,25 +109,6 @@ require_once '../../process/admin/login.php';
                         </div>
                     </div>
                     
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input 
-                                id="remember-me" 
-                                name="remember-me" 
-                                type="checkbox" 
-                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                            >
-                            <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                                <?php echo t('remember_me'); ?>
-                            </label>
-                        </div>
-                        
-                        <div class="text-sm">
-                            <a href="#" class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
-                                <?php echo t('forgot_password'); ?>
-                            </a>
-                        </div>
-                    </div>
                     
                     <div>
                         <button 
