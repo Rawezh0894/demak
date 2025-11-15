@@ -52,6 +52,7 @@ try {
     }
     
     // Get project images
+    error_log("🔍 Fetching images for project ID: " . $project_id);
     $images_stmt = $pdo->prepare("
         SELECT id, image_path, is_main 
         FROM design_reconstruction_images 
@@ -61,6 +62,9 @@ try {
     $images_stmt->execute([$project_id]);
     $images = $images_stmt->fetchAll(PDO::FETCH_ASSOC);
     
+    error_log("🔍 Found " . count($images) . " images for project ID: " . $project_id);
+    error_log("🔍 Images data: " . json_encode($images));
+    
     // Set main image and additional images
     $project['main_image'] = null;
     $project['images'] = [];
@@ -68,14 +72,20 @@ try {
     foreach ($images as $image) {
         if ($image['is_main']) {
             $project['main_image'] = $image['image_path'];
+            error_log("🔍 Set main image: " . $image['image_path']);
         } else {
             // Store additional images with id and path
             $project['images'][] = [
                 'id' => $image['id'],
                 'path' => $image['image_path']
             ];
+            error_log("🔍 Added additional image: ID=" . $image['id'] . ", Path=" . $image['image_path']);
         }
     }
+    
+    error_log("🔍 Final project main_image: " . ($project['main_image'] ?? 'null'));
+    error_log("🔍 Final project images count: " . count($project['images']));
+    error_log("🔍 Final project images: " . json_encode($project['images']));
     
     // Get project features
     $features_stmt = $pdo->prepare("
@@ -89,10 +99,18 @@ try {
     $project['features'] = $features;
     
     // Prepare response
-    echo json_encode([
+    error_log("🔍 Preparing response for project ID: " . $project_id);
+    error_log("🔍 Response project images: " . json_encode($project['images']));
+    error_log("🔍 Response main_image: " . ($project['main_image'] ?? 'null'));
+    
+    $response = [
         'success' => true,
         'project' => $project
-    ]);
+    ];
+    
+    error_log("🔍 Full response: " . json_encode($response));
+    
+    echo json_encode($response);
     
 } catch (Exception $e) {
     error_log("Error fetching design reconstruction project: " . $e->getMessage());

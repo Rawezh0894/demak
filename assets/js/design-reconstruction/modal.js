@@ -157,29 +157,47 @@ const ModalManager = {
     
     // Show additional images preview
     showAdditionalImagesPreview(images) {
-        const previewContainer = document.getElementById('additionalImagesPreview');
+        console.log('🖼️ showAdditionalImagesPreview called with:', images);
+        console.log('🖼️ images type:', typeof images);
+        console.log('🖼️ images is array:', Array.isArray(images));
+        console.log('🖼️ images length:', images ? images.length : 0);
         
-        if (!previewContainer) return;
+        const previewContainer = document.getElementById('additionalImagesPreview');
+        console.log('🖼️ previewContainer found:', !!previewContainer);
+        
+        if (!previewContainer) {
+            console.error('❌ additionalImagesPreview container not found!');
+            return;
+        }
         
         // Clear existing preview
         previewContainer.innerHTML = '';
         
         if (images && images.length > 0) {
+            console.log('✅ Showing', images.length, 'additional images');
             previewContainer.classList.remove('hidden');
             
             // Store images for tracking
             if (!window.existingAdditionalImages) {
                 window.existingAdditionalImages = [];
             }
-            window.existingAdditionalImages = images.map(img => ({
-                id: typeof img === 'object' ? img.id : null,
-                path: typeof img === 'object' ? img.path : img
-            }));
+            window.existingAdditionalImages = images.map(img => {
+                const mapped = {
+                    id: typeof img === 'object' ? img.id : null,
+                    path: typeof img === 'object' ? img.path : img
+                };
+                console.log('🖼️ Mapped image:', mapped);
+                return mapped;
+            });
+            
+            console.log('🖼️ Stored existingAdditionalImages:', window.existingAdditionalImages);
             
             images.forEach((image, index) => {
                 // Handle both string paths and object with id/path
                 const imagePath = typeof image === 'object' ? image.path : image;
                 const imageId = typeof image === 'object' ? image.id : null;
+                
+                console.log(`🖼️ Processing image ${index}:`, { image, imagePath, imageId });
                 
                 const thumbItem = document.createElement('div');
                 thumbItem.className = 'thumb-item relative';
@@ -194,8 +212,12 @@ const ModalManager = {
                     </button>
                 `;
                 previewContainer.appendChild(thumbItem);
+                console.log(`✅ Added image ${index} to preview`);
             });
+            
+            console.log('✅ Total images in preview:', previewContainer.children.length);
         } else {
+            console.log('⚠️ No images to show, hiding container');
             previewContainer.classList.add('hidden');
         }
     }

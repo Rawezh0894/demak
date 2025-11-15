@@ -30,21 +30,29 @@ const EditProjectManager = {
     
     // Open edit modal
     async openEditModal(projectId) {
+        console.log('🚀 openEditModal called with projectId:', projectId);
         try {
             // Show loading
             this.showLoading();
             
             // Fetch project data
+            console.log('📡 Fetching project data...');
             const projectData = await this.fetchProjectData(projectId);
+            console.log('📡 Received projectData:', projectData);
             
             if (projectData) {
+                console.log('✅ Project data received, populating form...');
                 this.populateEditForm(projectData);
+                console.log('✅ Form populated, opening modal...');
                 this.openModal();
+                console.log('✅ Modal opened');
             } else {
+                console.error('❌ Project data is null or undefined');
                 this.showError('Project not found');
             }
         } catch (error) {
-            console.error('Error fetching project:', error);
+            console.error('❌ Error fetching project:', error);
+            console.error('❌ Error stack:', error.stack);
             this.showError('Error loading project data');
         } finally {
             this.hideLoading();
@@ -53,23 +61,33 @@ const EditProjectManager = {
     
     // Fetch project data
     async fetchProjectData(projectId) {
+        console.log('📡 Fetching project data for ID:', projectId);
         const response = await fetch(`../../process/design-reconstruction/get_project.php?id=${projectId}`);
         
         if (!response.ok) {
+            console.error('❌ HTTP error! status:', response.status);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log('📡 Received project data:', data);
+        console.log('📡 Project images:', data.project ? data.project.images : 'N/A');
+        console.log('📡 Project main_image:', data.project ? data.project.main_image : 'N/A');
         
         if (data.success) {
             return data.project;
         } else {
+            console.error('❌ API error:', data.message);
             throw new Error(data.message);
         }
     },
     
     // Populate edit form
     populateEditForm(projectData) {
+        console.log('🔧 populateEditForm called with projectData:', projectData);
+        console.log('🔧 projectData.images:', projectData.images);
+        console.log('🔧 projectData.main_image:', projectData.main_image);
+        
         // Set form values
         document.getElementById('projectName').value = projectData.name || '';
         document.getElementById('projectCategory').value = projectData.category_key || '';
@@ -91,21 +109,36 @@ const EditProjectManager = {
         
         // Handle images
         if (projectData.main_image) {
+            console.log('🖼️ Showing main image:', projectData.main_image);
             ModalManager.showMainImagePreview(projectData.main_image);
+        } else {
+            console.log('⚠️ No main image found');
         }
         
         // Handle additional images (exclude main image)
+        console.log('🖼️ Processing additional images...');
+        console.log('🖼️ projectData.images type:', typeof projectData.images);
+        console.log('🖼️ projectData.images is array:', Array.isArray(projectData.images));
+        console.log('🖼️ projectData.images length:', projectData.images ? projectData.images.length : 0);
+        
         if (projectData.images && Array.isArray(projectData.images) && projectData.images.length > 0) {
             // Filter out main image from additional images
             // Images are now objects with id and path, or strings
             const additionalImages = projectData.images.filter(img => {
                 const imgPath = typeof img === 'object' ? img.path : img;
-                return imgPath !== projectData.main_image;
+                const isMain = imgPath === projectData.main_image;
+                console.log('🖼️ Checking image:', img, 'path:', imgPath, 'isMain:', isMain);
+                return !isMain;
             });
             
+            console.log('🖼️ Filtered additional images:', additionalImages);
+            console.log('🖼️ Additional images count:', additionalImages.length);
+            
             if (additionalImages.length > 0) {
+                console.log('✅ Calling ModalManager.showAdditionalImagesPreview with:', additionalImages);
                 ModalManager.showAdditionalImagesPreview(additionalImages);
             } else {
+                console.log('⚠️ No additional images after filtering');
                 // Clear preview if no additional images
                 const previewContainer = document.getElementById('additionalImagesPreview');
                 if (previewContainer) {
@@ -114,6 +147,7 @@ const EditProjectManager = {
                 }
             }
         } else {
+            console.log('⚠️ No images array or empty array');
             // Clear preview if no images
             const previewContainer = document.getElementById('additionalImagesPreview');
             if (previewContainer) {

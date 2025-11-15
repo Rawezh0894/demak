@@ -280,7 +280,18 @@ function closeProjectModal() {
 
 // Edit project
 function editProject(projectId) {
-    // This would typically fetch project data and populate the form
+    console.log('🔧 editProject called with projectId:', projectId);
+    console.log('🔧 EditProjectManager available:', typeof EditProjectManager !== 'undefined');
+    
+    // Use EditProjectManager if available
+    if (typeof EditProjectManager !== 'undefined' && EditProjectManager.openEditModal) {
+        console.log('✅ Using EditProjectManager.openEditModal');
+        EditProjectManager.openEditModal(projectId);
+        return;
+    }
+    
+    console.log('⚠️ EditProjectManager not available, using fallback');
+    // Fallback: This would typically fetch project data and populate the form
     // For now, we'll just open the modal in edit mode
     currentProjectId = projectId;
     
@@ -472,43 +483,67 @@ function removeAdditionalImage(index) {
 
 // Remove existing additional image (from database)
 function removeExistingAdditionalImage(index) {
+    console.log('🗑️ removeExistingAdditionalImage called with index:', index);
     const additionalImagesPreview = document.getElementById('additionalImagesPreview');
-    if (!additionalImagesPreview) return;
+    console.log('🗑️ additionalImagesPreview found:', !!additionalImagesPreview);
+    
+    if (!additionalImagesPreview) {
+        console.error('❌ additionalImagesPreview container not found!');
+        return;
+    }
     
     const thumbItem = additionalImagesPreview.querySelector(`[data-image-index="${index}"]`);
+    console.log('🗑️ thumbItem found:', !!thumbItem);
+    
     if (thumbItem) {
         // Mark image for deletion by adding to hidden input
         const imageId = thumbItem.getAttribute('data-image-id');
+        console.log('🗑️ Image ID to delete:', imageId);
+        
         if (imageId) {
             // Get or create container for deleted image IDs
             let deletedImagesContainer = document.getElementById('deleted_additional_images_container');
             if (!deletedImagesContainer) {
+                console.log('🗑️ Creating deleted_additional_images_container');
                 deletedImagesContainer = document.createElement('div');
                 deletedImagesContainer.id = 'deleted_additional_images_container';
                 deletedImagesContainer.style.display = 'none';
-                document.getElementById('projectForm').appendChild(deletedImagesContainer);
+                const projectForm = document.getElementById('projectForm');
+                if (projectForm) {
+                    projectForm.appendChild(deletedImagesContainer);
+                } else {
+                    console.error('❌ projectForm not found!');
+                }
             }
             
             // Check if this image ID is already marked for deletion
             const existingInput = deletedImagesContainer.querySelector(`input[value="${imageId}"]`);
             if (!existingInput) {
+                console.log('🗑️ Marking image for deletion:', imageId);
                 // Create hidden input for this deleted image
                 const deletedImageInput = document.createElement('input');
                 deletedImageInput.type = 'hidden';
                 deletedImageInput.name = 'deleted_additional_images[]';
                 deletedImageInput.value = imageId;
                 deletedImagesContainer.appendChild(deletedImageInput);
+            } else {
+                console.log('🗑️ Image already marked for deletion');
             }
+        } else {
+            console.log('⚠️ No image ID found, skipping deletion mark');
         }
         
         // Remove from preview
+        console.log('🗑️ Removing thumbItem from preview');
         thumbItem.remove();
         
         // Remove from stored array
         if (window.existingAdditionalImages && window.existingAdditionalImages[index]) {
+            console.log('🗑️ Removing from existingAdditionalImages array');
             window.existingAdditionalImages.splice(index, 1);
             // Update indices for remaining items
             const allThumbItems = additionalImagesPreview.querySelectorAll('.thumb-item');
+            console.log('🗑️ Updating indices for', allThumbItems.length, 'remaining items');
             allThumbItems.forEach((item, newIndex) => {
                 item.setAttribute('data-image-index', newIndex);
                 const button = item.querySelector('button');
@@ -516,12 +551,19 @@ function removeExistingAdditionalImage(index) {
                     button.setAttribute('onclick', `removeExistingAdditionalImage(${newIndex})`);
                 }
             });
+        } else {
+            console.log('⚠️ existingAdditionalImages not found or index out of range');
         }
         
         // If no more images, hide the preview container
         if (additionalImagesPreview.children.length === 0) {
+            console.log('🗑️ No more images, hiding container');
             additionalImagesPreview.classList.add('hidden');
+        } else {
+            console.log('🗑️ Remaining images:', additionalImagesPreview.children.length);
         }
+    } else {
+        console.error('❌ thumbItem not found for index:', index);
     }
 }
 
