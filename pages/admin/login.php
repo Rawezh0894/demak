@@ -33,12 +33,6 @@ require_once '../../process/admin/login.php';
         <div class="particle"></div>
     </div>
     
-    <!-- Back to Home Link -->
-    <a href="../../index.php" class="back-link flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
-        <i class="fas fa-arrow-left"></i>
-        <span><?php echo t('back_to_home'); ?></span>
-    </a>
-    
     <div class="min-h-screen flex items-center justify-center px-2 sm:px-4 lg:px-8 py-4">
         <div class="w-full max-w-sm sm:max-w-md space-y-6 sm:space-y-8">
             <!-- Logo and Title -->
@@ -130,22 +124,31 @@ require_once '../../process/admin/login.php';
                 </div>
             </div>
             
-            <!-- Footer -->
-            <div class="text-center text-sm text-gray-500 dark:text-gray-400">
+            <!-- Footer with Back to Home and Dark Mode Toggle -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+                <!-- Back to Home Link -->
+                <a href="../../index.php" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700">
+                    <i class="fas fa-arrow-left"></i>
+                    <span><?php echo t('back_to_home'); ?></span>
+                </a>
+                
+                <!-- Dark Mode Toggle -->
+                <button 
+                    onclick="toggleDarkMode()" 
+                    class="flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
+                    title="<?php echo t('dark_mode'); ?>"
+                >
+                    <i id="lightModeIcon" class="fas fa-sun text-lg"></i>
+                    <i id="darkModeIcon" class="fas fa-moon text-lg hidden"></i>
+                </button>
+            </div>
+            
+            <!-- Footer Copyright -->
+            <div class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
                 <p>&copy; <?php echo date('Y'); ?> <?php echo t('construction_company'); ?>. <?php echo t('all_rights_reserved'); ?>.</p>
             </div>
         </div>
     </div>
-    
-    <!-- Dark Mode Toggle -->
-    <button 
-        onclick="toggleDarkMode()" 
-        class="fixed top-4 right-4 z-50 flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
-        title="<?php echo t('dark_mode'); ?>"
-    >
-        <i id="lightModeIcon" class="fas fa-sun text-lg"></i>
-        <i id="darkModeIcon" class="fas fa-moon text-lg hidden"></i>
-    </button>
     
     <!-- JavaScript -->
     <script src="../../assets/js/admin/login.js"></script>

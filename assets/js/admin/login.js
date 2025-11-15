@@ -113,15 +113,39 @@ function initializeFormValidation() {
         });
     }
     
-    // Real-time validation
+    // Real-time validation - only validate on blur if user has typed something
     if (usernameInput) {
-        usernameInput.addEventListener('blur', validateUsername);
-        usernameInput.addEventListener('input', clearError);
+        usernameInput.addEventListener('blur', function() {
+            // Only validate if user has typed something
+            if (usernameInput.value.trim().length > 0) {
+                validateUsername();
+            } else {
+                clearError('username');
+            }
+        });
+        usernameInput.addEventListener('input', function() {
+            // Clear error when user starts typing
+            if (usernameInput.value.trim().length > 0) {
+                clearError('username');
+            }
+        });
     }
     
     if (passwordInput) {
-        passwordInput.addEventListener('blur', validatePassword);
-        passwordInput.addEventListener('input', clearError);
+        passwordInput.addEventListener('blur', function() {
+            // Only validate if user has typed something
+            if (passwordInput.value.length > 0) {
+                validatePassword();
+            } else {
+                clearError('password');
+            }
+        });
+        passwordInput.addEventListener('input', function() {
+            // Clear error when user starts typing
+            if (passwordInput.value.length > 0) {
+                clearError('password');
+            }
+        });
     }
 }
 
