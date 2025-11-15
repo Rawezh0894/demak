@@ -33,7 +33,26 @@ require_once '../../process/admin/login.php';
         <div class="particle"></div>
     </div>
     
-    <div class="min-h-screen flex items-center justify-center px-2 sm:px-4 lg:px-8 py-4">
+    <!-- Top Navigation Bar -->
+    <div class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <!-- Back to Home Link -->
+        <a href="../../index.php" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <i class="fas fa-arrow-left"></i>
+            <span><?php echo t('back_to_home'); ?></span>
+        </a>
+        
+        <!-- Dark Mode Toggle -->
+        <button 
+            onclick="toggleDarkMode()" 
+            class="flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
+            title="<?php echo t('dark_mode'); ?>"
+        >
+            <i id="lightModeIcon" class="fas fa-sun text-base"></i>
+            <i id="darkModeIcon" class="fas fa-moon text-base hidden"></i>
+        </button>
+    </div>
+    
+    <div class="min-h-screen flex items-center justify-center px-2 sm:px-4 lg:px-8 py-4 pt-20">
         <div class="w-full max-w-sm sm:max-w-md space-y-6 sm:space-y-8">
             <!-- Logo and Title -->
             <div class="text-center">
@@ -122,25 +141,6 @@ require_once '../../process/admin/login.php';
                         <?php echo t('secure_admin_access'); ?>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Footer with Back to Home and Dark Mode Toggle -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
-                <!-- Back to Home Link -->
-                <a href="../../index.php" class="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <i class="fas fa-arrow-left"></i>
-                    <span><?php echo t('back_to_home'); ?></span>
-                </a>
-                
-                <!-- Dark Mode Toggle -->
-                <button 
-                    onclick="toggleDarkMode()" 
-                    class="flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
-                    title="<?php echo t('dark_mode'); ?>"
-                >
-                    <i id="lightModeIcon" class="fas fa-sun text-lg"></i>
-                    <i id="darkModeIcon" class="fas fa-moon text-lg hidden"></i>
-                </button>
             </div>
             
             <!-- Footer Copyright -->
