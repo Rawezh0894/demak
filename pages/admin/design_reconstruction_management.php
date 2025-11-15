@@ -489,7 +489,7 @@ require_once '../../process/design-reconstruction/design-reconstruction.php';
                                 <button onclick="editProject(<?php echo $project['id']; ?>)" 
                                         class="flex-1 action-btn action-btn-edit">
                                     <i class="fas fa-edit"></i>
-                                    <span><?php echo t('edit_project'); ?></span>
+                                    <span>دەستکاری</span>
                                 </button>
                                 <button onclick="deleteProject(<?php echo $project['id']; ?>)" 
                                         class="action-btn action-btn-delete">

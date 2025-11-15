@@ -327,7 +327,7 @@ const AddProjectManager = {
                         <button onclick="editProject(${project.id})" 
                                 class="flex-1 action-btn action-btn-edit">
                             <i class="fas fa-edit"></i>
-                            <span>Edit</span>
+                            <span>دەستکاری</span>
                         </button>
                         <button onclick="deleteProject(${project.id})" 
                                 class="action-btn action-btn-delete">
