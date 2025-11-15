@@ -3,6 +3,29 @@
  * Handles form validation, password toggle, and dark mode
  */
 
+/**
+ * Toggle password visibility - defined early so it's available for onclick
+ */
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('passwordToggleIcon');
+    
+    if (passwordInput && toggleIcon) {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+}
+
+// Make togglePassword globally available immediately
+window.togglePassword = togglePassword;
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize dark mode from localStorage
     initializeDarkMode();
@@ -66,35 +89,19 @@ function toggleDarkMode() {
  */
 function initializePasswordToggle() {
     const passwordInput = document.getElementById('password');
-    const toggleButton = document.querySelector('[onclick="togglePassword()"]');
+    const toggleButton = document.querySelector('button[onclick="togglePassword()"]');
     
     if (passwordInput && toggleButton) {
+        // Remove onclick attribute and use event listener instead
+        toggleButton.removeAttribute('onclick');
         toggleButton.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             togglePassword();
         });
     }
 }
 
-/**
- * Toggle password visibility
- */
-function togglePassword() {
-    const passwordInput = document.getElementById('password');
-    const toggleIcon = document.getElementById('passwordToggleIcon');
-    
-    if (passwordInput && toggleIcon) {
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleIcon.classList.remove('fa-eye');
-            toggleIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            toggleIcon.classList.remove('fa-eye-slash');
-            toggleIcon.classList.add('fa-eye');
-        }
-    }
-}
 
 /**
  * Initialize form validation
