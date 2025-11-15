@@ -5,30 +5,6 @@
     
     // Global variables
     let projectsDataForJS = {};
-
-    function updateSliderProgress(counterEl, slideIndex, totalSlidesOverride) {
-        if (!counterEl) return;
-
-        const totalEl = counterEl.querySelector('.total-slides');
-        const currentEl = counterEl.querySelector('.current-slide');
-        const fillEl = counterEl.querySelector('.slide-progress-fill');
-
-        if (typeof totalSlidesOverride === 'number' && totalEl) {
-            totalEl.textContent = totalSlidesOverride;
-        }
-
-        if (currentEl) {
-            currentEl.textContent = slideIndex + 1;
-        }
-
-        if (!fillEl || !totalEl) return;
-
-        const totalSlides = parseInt(totalEl.textContent || '1', 10);
-        const safeTotal = Math.max(totalSlides, 1);
-        const progress = ((slideIndex + 1) / safeTotal) * 100;
-
-        fillEl.style.width = `${Math.min(Math.max(progress, 0), 100)}%`;
-    }
     
     // Initialize function
     function initializeCommercialResidentialDesign(projectsData) {
@@ -148,7 +124,7 @@
                 
                 // Show/hide project
                 if (matchesSearch && matchesCategory && matchesArea && matchesFloors) {
-                    project.style.display = 'grid';
+                    project.style.display = 'flex';
                     categoryVisibleCount++;
                     visibleCount++;
                 } else {
@@ -180,7 +156,10 @@
                 // Update slider counter
                 const counterEl = section.querySelector(`#counter-${categoryKey}`) || section.querySelector('.slide-counter');
                 if (counterEl) {
-                    updateSliderProgress(counterEl, 0, categoryVisibleCount);
+                    const totalSlides = counterEl.querySelector('.total-slides');
+                    if (totalSlides) {
+                        totalSlides.textContent = categoryVisibleCount;
+                    }
                 }
                 
                 // Update tabs - hide tabs for hidden projects
@@ -213,7 +192,10 @@
                                 // Update counter
                                 const counterEl = section.querySelector(`#counter-${categoryKey}`) || section.querySelector('.slide-counter');
                                 if (counterEl) {
-                                    updateSliderProgress(counterEl, firstVisibleIndex, visibleProjects.length);
+                                    const currentSlide = counterEl.querySelector('.current-slide');
+                                    if (currentSlide) {
+                                        currentSlide.textContent = firstVisibleIndex + 1;
+                                    }
                                 }
                                 
                                 // Update dots
@@ -287,7 +269,8 @@
         
         // Update counter
         const visibleIndex = visibleProjects.indexOf(projects[slideIndex]);
-        updateSliderProgress(counter, visibleIndex, visibleProjects.length);
+        counter.querySelector('.current-slide').textContent = visibleIndex + 1;
+        counter.querySelector('.total-slides').textContent = visibleProjects.length;
         
         // Update dots
         dots.querySelectorAll('.slider-dot').forEach((dot, index) => {

@@ -75,21 +75,6 @@
         });
     }
 
-    function updateSlideProgress(counterElement, slideIndex) {
-        if (!counterElement) return;
-        
-        const totalEl = counterElement.querySelector('.total-slides');
-        const fillEl = counterElement.querySelector('.slide-progress-fill');
-        
-        if (!totalEl || !fillEl) return;
-        
-        const totalSlides = parseInt(totalEl.textContent || '1', 10);
-        const safeTotal = Math.max(totalSlides, 1);
-        const progress = ((slideIndex + 1) / safeTotal) * 100;
-        
-        fillEl.style.width = `${Math.min(Math.max(progress, 0), 100)}%`;
-    }
-
     // Initialize slider for a specific category
     function initializeCategorySlider(categoryKey, projects) {
         const slider = document.getElementById(`slider-${categoryKey}`);
@@ -117,7 +102,6 @@
         
         // Ensure counter starts at slide 1
         counter.querySelector('.current-slide').textContent = 1;
-        updateSlideProgress(counter, 0);
         
         // Initialize dots
         dots.innerHTML = '';
@@ -213,8 +197,6 @@
         dots.querySelectorAll('.slider-dot').forEach((dot, index) => {
             dot.classList.toggle('active', index === slideIndex);
         });
-
-        updateSlideProgress(counter, slideIndex);
     }
 
     // Image gallery functions

@@ -84,53 +84,8 @@ function initializeCategorySlider(categoryKey, projects) {
     setTimeout(() => {
         slider.style.transform = 'translateX(0%)';
     }, 10);
-
-    const counter = document.getElementById(`counter-${categoryKey}`);
-    if (counter) {
-        const totalEl = counter.querySelector('.total-slides');
-        const currentEl = counter.querySelector('.current-slide');
-        if (totalEl) {
-            totalEl.textContent = projects.length;
-        }
-        if (currentEl) {
-            currentEl.textContent = 1;
-        }
-        updateSlideProgressElement(counter, 0);
-    }
     
     console.log(`Slider ${categoryKey} initialized with ${projects.length} slides`);
-}
-
-function setCounterState(categoryKey, slideIndex, totalSlides) {
-    const counter = document.getElementById(`counter-${categoryKey}`);
-    if (!counter) return;
-
-    const currentEl = counter.querySelector('.current-slide');
-    const totalEl = counter.querySelector('.total-slides');
-
-    if (currentEl) {
-        currentEl.textContent = slideIndex + 1;
-    }
-    if (totalEl && typeof totalSlides === 'number') {
-        totalEl.textContent = totalSlides;
-    }
-
-    updateSlideProgressElement(counter, slideIndex);
-}
-
-function updateSlideProgressElement(counter, slideIndex) {
-    if (!counter) return;
-
-    const totalEl = counter.querySelector('.total-slides');
-    const fillEl = counter.querySelector('.slide-progress-fill');
-
-    if (!totalEl || !fillEl) return;
-
-    const totalSlides = parseInt(totalEl.textContent || '1', 10);
-    const safeTotal = Math.max(totalSlides, 1);
-    const progress = ((slideIndex + 1) / safeTotal) * 100;
-
-    fillEl.style.width = `${Math.min(Math.max(progress, 0), 100)}%`;
 }
 
 // Navigation functions
@@ -203,8 +158,6 @@ function goToSlide(categoryKey, slideIndex) {
             tab.classList.toggle('active', index === slideIndex);
         });
     }
-
-    setCounterState(categoryKey, slideIndex, projects.length);
 }
 
 // Tab navigation

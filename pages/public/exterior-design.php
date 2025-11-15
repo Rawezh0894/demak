@@ -2,7 +2,6 @@
 session_start();
 require_once '../../config/db_conected.php';
 require_once '../../includes/translations.php';
-require_once '../../includes/project-showcase.php';
 require_once '../../config/exterior_design_loader.php';
 
 // Set page direction based on language
@@ -37,7 +36,6 @@ $exterior_design_projects = loadExteriorDesignData($pdo);
     <link rel="stylesheet" href="../../assets/css/main.css">
     <link rel="stylesheet" href="../../assets/css/infrastructure.css">
     <link rel="stylesheet" href="../../assets/css/responsive-slider.css">
-    <link rel="stylesheet" href="../../assets/css/project-showcase.css">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -88,7 +86,7 @@ $exterior_design_projects = loadExteriorDesignData($pdo);
         </section>
 
         <!-- Projects Section -->
-        <section class="category-section" id="projects-section" data-category="projects">
+        <section class="category-section" id="projects-section">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
                 <!-- Section Header -->
                 <div class="category-section-header">
@@ -101,19 +99,136 @@ $exterior_design_projects = loadExteriorDesignData($pdo);
                     </div>
                 </div>
 
-                <?php
-                renderProjectShowcase([
-                    'id' => 'projects',
-                    'projects' => $exterior_design_projects,
-                    'title' => t('exterior_design_implementation'),
-                    'description' => 'دیزاینی دەرەوەی پیشەیی بۆ بیناکان',
-                    'color' => '#10b981',
-                    'icon' => 'fas fa-tree',
-                    'page_dir' => $page_dir,
-                    'current_lang' => $current_lang,
-                    'category_key' => 'projects'
-                ]);
-                ?>
+                <!-- Projects Slider -->
+                <?php if (empty($exterior_design_projects)): ?>
+                <!-- No Projects Message -->
+                <div class="no-projects-message">
+                    <div class="no-projects-icon">
+                        <i class="fas fa-tree" style="color: #10b981;"></i>
+                    </div>
+                    <h3 class="no-projects-title"><?php echo t('no_projects_available'); ?></h3>
+                    <p class="no-projects-description"><?php echo t('no_projects_description'); ?></p>
+                    <div class="no-projects-cta">
+                        <a href="#contact-section" class="btn btn-primary">
+                            <i class="fas fa-envelope"></i>
+                            <?php echo t('contact_us_for_custom_project'); ?>
+                        </a>
+                    </div>
+                </div>
+                <?php else: ?>
+                <!-- Tab Navigation -->
+                <div class="tabs-nav-container" id="tabs-projects">
+                    <?php foreach ($exterior_design_projects as $index => $project): ?>
+                    <button class="tab-button <?php echo $index === 0 ? 'active' : ''; ?>" 
+                            onclick="showTab('projects', <?php echo $index; ?>)" 
+                            data-tab-index="<?php echo $index; ?>">
+                        <span class="tab-button-icon">
+                            <i class="fas fa-building"></i>
+                        </span>
+                        <span class="tab-button-text"><?php echo mb_substr($project['name_' . $current_lang] ?? $project['name'], 0, 30); ?></span>
+                        <?php if (strlen($project['name_' . $current_lang] ?? $project['name']) > 30): ?>
+                        <span class="tab-button-ellipsis">...</span>
+                        <?php endif; ?>
+                    </button>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Projects Slider Container -->
+                <div class="slider-container">
+                    <button class="slider-arrow slider-prev" onclick="prevSlide('projects')">
+                        <i class="fas fa-chevron-<?php echo $page_dir === 'rtl' ? 'right' : 'left'; ?>"></i>
+                    </button>
+                    
+                    <div class="projects-slider" id="slider-projects">
+                        <?php foreach ($exterior_design_projects as $index => $project): ?>
+                        <div class="project-slide" data-project-id="<?php echo $project['id']; ?>">
+                            <div class="project-slide-image">
+                                <div class="project-image-gallery">
+                                    <div class="main-image-container">
+                                        <img src="<?php echo $project['image']; ?>" 
+                                             alt="<?php echo $project['name_' . $current_lang] ?? $project['name']; ?>"
+                                             loading="lazy"
+                                             decoding="async"
+                                             class="project-image main-image">
+                                        <div class="image-counter">
+                                            <span class="current-image">1</span>
+                                            <span class="image-separator">/</span>
+                                            <span class="total-images"><?php echo (isset($project['images']) ? count($project['images']) : 0) + 1; ?></span>
+                                        </div>
+                                    </div>
+                                    <?php if (isset($project['images']) && count($project['images']) > 0): ?>
+                                    <div class="image-thumbnails" id="thumbnails-<?php echo $project['id']; ?>">
+                                        <!-- Main image thumbnail -->
+                                        <div class="thumbnail-item active" 
+                                             onclick="changeMainImage(<?php echo $project['id']; ?>, 0)">
+                                            <img src="<?php echo $project['image']; ?>" 
+                                                 alt="<?php echo ($project['name_' . $current_lang] ?? $project['name']) . ' - 1'; ?>"
+                                                 loading="lazy"
+                                                 class="thumbnail-image">
+                                        </div>
+                                        <!-- Gallery image thumbnails -->
+                                        <?php foreach ($project['images'] as $imgIndex => $image): ?>
+                                        <div class="thumbnail-item" 
+                                             onclick="changeMainImage(<?php echo $project['id']; ?>, <?php echo $imgIndex + 1; ?>)">
+                                            <img src="<?php echo $image; ?>" 
+                                                 alt="<?php echo ($project['name_' . $current_lang] ?? $project['name']) . ' - ' . ($imgIndex + 2); ?>"
+                                                 loading="lazy"
+                                                 class="thumbnail-image">
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="project-slide-overlay">
+                                    <button class="view-details-btn" onclick="showProjectDetails(<?php echo $project['id']; ?>)">
+                                        <i class="fas fa-eye"></i>
+                                        <?php echo t('view_details'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="project-slide-content">
+                                <h3 class="project-slide-title"><?php echo $project['name_' . $current_lang] ?? $project['name']; ?></h3>
+                                <div class="project-info-badges">
+                                    <div class="info-badge badge-price">
+                                        <div class="badge-icon"><i class="fas fa-dollar-sign"></i></div>
+                                        <div class="badge-text">
+                                            <span class="badge-label"><?php echo t('price'); ?></span>
+                                            <span class="badge-value"><?php echo $project['price']; ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="info-badge badge-duration">
+                                        <div class="badge-icon"><i class="fas fa-clock"></i></div>
+                                        <div class="badge-text">
+                                            <span class="badge-label"><?php echo t('duration'); ?></span>
+                                            <span class="badge-value"><?php echo $project['duration']; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-badge badge-about">
+                                    <div class="badge-icon"><i class="fas fa-info-circle"></i></div>
+                                    <div class="badge-text">
+                                        <span class="badge-label"><?php echo t('about'); ?></span>
+                                        <p class="badge-description"><?php echo $project['description_' . $current_lang] ?? $project['description']; ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    
+                    <button class="slider-arrow slider-next" onclick="nextSlide('projects')">
+                        <i class="fas fa-chevron-<?php echo $page_dir === 'rtl' ? 'left' : 'right'; ?>"></i>
+                    </button>
+                </div>
+
+                <!-- Slider Dots -->
+                <div class="slider-dots" id="dots-projects">
+                    <?php foreach ($exterior_design_projects as $index => $project): ?>
+                    <button class="slider-dot <?php echo $index === 0 ? 'active' : ''; ?>" 
+                            onclick="goToSlide('projects', <?php echo $index; ?>)"></button>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
             </div>
         </section>
 

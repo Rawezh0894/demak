@@ -16,21 +16,6 @@
     function isTouchDevice() {
         return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     }
-
-    function updateSlideProgress(counterEl, slideIndex) {
-        if (!counterEl) return;
-
-        const totalEl = counterEl.querySelector('.total-slides');
-        const fillEl = counterEl.querySelector('.slide-progress-fill');
-
-        if (!totalEl || !fillEl) return;
-
-        const totalSlides = parseInt(totalEl.textContent || '1', 10);
-        const safeTotal = Math.max(totalSlides, 1);
-        const progress = ((slideIndex + 1) / safeTotal) * 100;
-
-        fillEl.style.width = `${Math.min(Math.max(progress, 0), 100)}%`;
-    }
     
     // Initialize responsive slider system
     function initializeResponsiveSliders() {
@@ -109,7 +94,6 @@
                 if (currentSlide) {
                     currentSlide.textContent = slides.length;
                 }
-                updateSlideProgress(counter, Math.max(slides.length - 1, 0));
             }
         }
     }
