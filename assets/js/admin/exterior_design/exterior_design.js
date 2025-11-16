@@ -71,6 +71,9 @@ function initializeFormHandling() {
             const submitBtn = this.querySelector('button[type="submit"]');
             const formAction = this.querySelector('#formAction').value;
             
+            // Store original button text
+            const originalButtonText = submitBtn ? submitBtn.innerHTML : '';
+            
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>درێژەپێدە...';
@@ -157,19 +160,24 @@ function initializeFormHandling() {
                 } else {
                     console.error('❌ Server returned error:', data.message);
                     showErrorMessage(data.message || 'هەڵەیەک ڕوویدا');
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>پاشەکەوتکردن';
-                    }
                 }
             })
             .catch(error => {
                 console.error('❌ Fetch Error:', error);
                 console.error('❌ Error stack:', error.stack);
                 showErrorMessage('هەڵەیەک ڕوویدا: ' + error.message);
+            })
+            .finally(() => {
+                // Always restore button state
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>پاشەکەوتکردن';
+                    // Determine button text based on form action
+                    const formAction = document.getElementById('formAction')?.value;
+                    if (formAction === 'edit_project') {
+                        submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>نوێکردنەوە';
+                    } else {
+                        submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>پاشەکەوتکردن';
+                    }
                 }
             });
         });
