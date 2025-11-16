@@ -137,6 +137,7 @@ $page_dir = $languages[$current_lang]['dir'];
 
     <!-- JavaScript -->
     <script src="assets/js/index/index.js"></script>
+    <script src="assets/js/scroll-animations.js"></script>
     
     <!-- Dark Mode Toggle Script - Using function from navbar.php -->
     <!-- Note: toggleDarkMode() is defined in navbar.php with animation support -->

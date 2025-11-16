@@ -85,7 +85,7 @@ if (isset($current_lang) && $current_lang === 'ku') {
 }
 ?>
 <!-- Contact Section -->
-<section id="contact" class="py-20 bg-white dark:bg-gray-800">
+<section id="contact" class="section-animate py-20 bg-white dark:bg-gray-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">

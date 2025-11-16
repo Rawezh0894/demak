@@ -7,7 +7,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
 ?>
 
 <!-- Heritage Dimak Section -->
-<section id="heritage-dimak" class="py-20 bg-white dark:bg-gray-800 transition-colors duration-300">
+<section id="heritage-dimak" class="section-animate py-20 bg-white dark:bg-gray-800 transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="text-center mb-16">

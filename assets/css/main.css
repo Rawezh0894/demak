@@ -2578,3 +2578,90 @@ body:not(.dark-mode) #floatingContactPanel .border-gray-700 {
 body:not(.dark-mode) #floatingContactPanel .bg-gradient-to-br {
     background: linear-gradient(to bottom right, rgba(239, 246, 255, 0.5), transparent, rgba(236, 253, 245, 0.5)) !important;
 }
+
+/* ============================================
+   Scroll Animations for Sections
+   ============================================ */
+
+/* Section Animation Classes */
+.section-animate {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-animate.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered Animation Delays */
+.section-animate:nth-child(1) { transition-delay: 0.1s; }
+.section-animate:nth-child(2) { transition-delay: 0.2s; }
+.section-animate:nth-child(3) { transition-delay: 0.3s; }
+.section-animate:nth-child(4) { transition-delay: 0.4s; }
+.section-animate:nth-child(5) { transition-delay: 0.5s; }
+.section-animate:nth-child(6) { transition-delay: 0.6s; }
+
+/* Fade In Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide In From Left */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Slide In From Right */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Scale In Animation */
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .section-animate {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    
+    .section-animate.animate-in {
+        opacity: 1;
+        transform: none;
+    }
+}
