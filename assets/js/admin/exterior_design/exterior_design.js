@@ -275,6 +275,15 @@ function openAddProjectModal() {
             document.getElementById('additionalImagesPreview').innerHTML = '';
         }
         
+        // Clear deleted images container
+        const deletedContainer = document.getElementById('deleted_additional_images_container');
+        if (deletedContainer) {
+            deletedContainer.innerHTML = '';
+        }
+        
+        // Clear existing images tracking
+        window.existingAdditionalImages = [];
+        
         modal.classList.remove('hidden');
     }
 }
@@ -310,6 +319,36 @@ function editProject(projectId) {
                     if (previewImg && previewDiv) {
                         previewImg.src = '../../' + project.main_image;
                         previewDiv.classList.remove('hidden');
+                    }
+                }
+                
+                // Load additional images (exclude main image)
+                console.log('🖼️ Project images:', project.images);
+                if (project.images && Array.isArray(project.images) && project.images.length > 0) {
+                    // Filter out main image from additional images
+                    const additionalImages = project.images.filter(img => {
+                        const imgPath = typeof img === 'object' ? img.image_path : img;
+                        return imgPath !== project.main_image;
+                    });
+                    
+                    console.log('🖼️ Additional images after filtering:', additionalImages);
+                    
+                    if (additionalImages.length > 0) {
+                        loadProjectImages(additionalImages);
+                    } else {
+                        // Clear preview if no additional images
+                        const previewContainer = document.getElementById('additionalImagesPreview');
+                        if (previewContainer) {
+                            previewContainer.innerHTML = '';
+                            previewContainer.classList.add('hidden');
+                        }
+                    }
+                } else {
+                    // Clear preview if no images
+                    const previewContainer = document.getElementById('additionalImagesPreview');
+                    if (previewContainer) {
+                        previewContainer.innerHTML = '';
+                        previewContainer.classList.add('hidden');
                     }
                 }
                 
@@ -441,6 +480,100 @@ function removeMainImage() {
     const input = document.getElementById('mainImage');
     if (preview) preview.classList.add('hidden');
     if (input) input.value = '';
+}
+
+// Store images to track which ones to delete
+window.existingAdditionalImages = [];
+
+// Load project images for edit
+function loadProjectImages(images) {
+    const additionalImagesPreview = document.getElementById('additionalImagesPreview');
+    if (!additionalImagesPreview) return;
+    
+    // Clear existing preview
+    additionalImagesPreview.innerHTML = '';
+    
+    // Store images for tracking
+    window.existingAdditionalImages = images.map(img => ({
+        id: typeof img === 'object' ? img.id : null,
+        path: typeof img === 'object' ? (img.image_path || img.path) : img
+    }));
+    
+    if (images.length > 0) {
+        additionalImagesPreview.classList.remove('hidden');
+        
+        images.forEach((image, index) => {
+            const imagePath = typeof image === 'object' ? (image.image_path || image.path) : image;
+            const imageId = typeof image === 'object' ? image.id : null;
+            
+            const thumbItem = document.createElement('div');
+            thumbItem.className = 'thumb-item';
+            thumbItem.setAttribute('data-image-id', imageId || '');
+            thumbItem.setAttribute('data-image-index', index);
+            thumbItem.innerHTML = `
+                <img src="../../${imagePath}" alt="Preview ${index + 1}" class="w-full h-full object-cover">
+                <div class="remove-btn" onclick="removeExistingAdditionalImage(${index})">
+                    <i class="fas fa-times"></i>
+                </div>
+            `;
+            additionalImagesPreview.appendChild(thumbItem);
+        });
+    } else {
+        additionalImagesPreview.classList.add('hidden');
+    }
+}
+
+// Remove existing additional image (from database)
+function removeExistingAdditionalImage(index) {
+    const additionalImagesPreview = document.getElementById('additionalImagesPreview');
+    if (!additionalImagesPreview) return;
+    
+    const thumbItem = additionalImagesPreview.children[index];
+    if (!thumbItem) return;
+    
+    const imageId = thumbItem.getAttribute('data-image-id');
+    const imageData = window.existingAdditionalImages[index];
+    
+    if (imageId && imageData) {
+        // Create hidden input to mark image for deletion
+        const deletedImagesContainer = document.getElementById('deleted_additional_images_container');
+        if (!deletedImagesContainer) {
+            // Create container if it doesn't exist
+            const form = document.getElementById('projectForm');
+            const container = document.createElement('div');
+            container.id = 'deleted_additional_images_container';
+            container.style.display = 'none';
+            form.appendChild(container);
+        }
+        
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'deleted_additional_images[]';
+        hiddenInput.value = imageId;
+        document.getElementById('deleted_additional_images_container').appendChild(hiddenInput);
+        
+        console.log('🗑️ Marked image for deletion:', imageId, imageData.path);
+    }
+    
+    // Remove from preview
+    thumbItem.remove();
+    
+    // Remove from tracking array
+    window.existingAdditionalImages.splice(index, 1);
+    
+    // Update indices for remaining items
+    Array.from(additionalImagesPreview.children).forEach((item, idx) => {
+        item.setAttribute('data-image-index', idx);
+        const removeBtn = item.querySelector('.remove-btn');
+        if (removeBtn) {
+            removeBtn.setAttribute('onclick', `removeExistingAdditionalImage(${idx})`);
+        }
+    });
+    
+    // Hide preview if no images left
+    if (additionalImagesPreview.children.length === 0) {
+        additionalImagesPreview.classList.add('hidden');
+    }
 }
 
 function removeAdditionalImage(index) {
@@ -601,4 +734,6 @@ window.closeProjectModal = closeProjectModal;
 window.closeDeleteModal = closeDeleteModal;
 window.removeMainImage = removeMainImage;
 window.removeAdditionalImage = removeAdditionalImage;
+window.removeExistingAdditionalImage = removeExistingAdditionalImage;
+window.loadProjectImages = loadProjectImages;
 window.updateProjectsList = updateProjectsList;
