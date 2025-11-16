@@ -62,6 +62,9 @@ try {
     }
     
     // Additional images upload (if new images are provided)
+    // Get main image name to exclude it from additional images
+    $main_image_uploaded_name = isset($_FILES['main_image']['name']) ? $_FILES['main_image']['name'] : '';
+    
     if (isset($_FILES['additional_images']) && !empty($_FILES['additional_images']['name'][0])) {
         $upload_dir = '../../assets/images/projects/exterior_design/gallery/';
         if (!file_exists($upload_dir)) {
@@ -71,6 +74,14 @@ try {
         $file_count = count($_FILES['additional_images']['name']);
         for ($i = 0; $i < $file_count; $i++) {
             if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
+                // Skip if this is the main image (check by name)
+                $uploaded_file_name = $_FILES['additional_images']['name'][$i];
+                
+                // Skip if this file is the same as main image
+                if (!empty($main_image_uploaded_name) && $uploaded_file_name === $main_image_uploaded_name) {
+                    continue;
+                }
+                
                 $file_extension = pathinfo($_FILES['additional_images']['name'][$i], PATHINFO_EXTENSION);
                 $image_name = 'gallery_' . time() . '_' . $i . '_' . rand(1000, 9999) . '.' . $file_extension;
                 $image_path = $upload_dir . $image_name;
