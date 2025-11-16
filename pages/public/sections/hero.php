@@ -63,7 +63,7 @@ $brand_highlight_alignment = $is_rtl ? 'md:ml-auto md:mr-0' : 'md:mr-auto md:ml-
                     </span>
                 </h1>
                 <p class="text-lg md:text-xl text-white/85 mb-10 max-w-3xl mx-auto <?php echo $body_alignment; ?> drop-shadow-lg <?php echo $is_rtl ? 'md:mr-0 md:ml-auto' : 'md:ml-0 md:mr-auto'; ?>">
-                    <?php echo t('excellence_in_construction'); ?> · <?php echo t('we_build_dreams'); ?>
+                    <?php echo $current_lang === 'ku' ? 'خەونەکانت بە ئێمە بسپێرە' : ($current_lang === 'ar' ? 'أحلامك معنا' : 'Entrust Your Dreams to Us'); ?>
                 </p>
                 <div class="flex flex-col md:flex-row <?php echo $is_rtl ? 'md:items-center' : 'md:items-center'; ?> gap-6 md:gap-10 <?php echo $is_rtl ? 'md:flex-row-reverse' : ''; ?>">
                     <a href="#services" class="inline-flex items-center justify-center rounded-full border border-blue-400/60 text-white text-sm sm:text-base font-semibold tracking-wide py-3 px-10 bg-gradient-to-r from-blue-600/90 via-blue-500/90 to-sky-500/90 hover:from-blue-500/90 hover:via-blue-400/90 hover:to-sky-400/90 transition-all duration-300 shadow-lg shadow-blue-500/25 <?php echo $is_rtl ? 'self-center md:self-end' : 'self-center md:self-start'; ?>">
