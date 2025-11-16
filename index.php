@@ -119,11 +119,11 @@ $page_dir = $languages[$current_lang]['dir'];
         <!-- Include Hero Section -->
         <?php include 'pages/public/sections/hero.php'; ?>
         
-        <!-- Include Services Section -->
-        <?php include 'pages/public/sections/services.php'; ?>
-        
         <!-- Include Heritage Dimak Section -->
         <?php include 'pages/public/sections/heritage_dimak.php'; ?>
+        
+        <!-- Include Services Section -->
+        <?php include 'pages/public/sections/services.php'; ?>
         
         <!-- Include Contact Section -->
         <?php include 'pages/public/sections/contact.php'; ?>
