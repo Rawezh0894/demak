@@ -102,11 +102,19 @@ function initializeFormHandling() {
                 }
             }
             
+            console.log('📤 Sending request to:', window.location.href);
+            
             fetch(window.location.href, {
                 method: 'POST',
                 body: formData
             })
             .then(response => {
+                console.log('📥 Response received:', response.status, response.statusText);
+                console.log('📥 Response headers:', {
+                    'content-type': response.headers.get('content-type'),
+                    'content-length': response.headers.get('content-length')
+                });
+                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -116,13 +124,30 @@ function initializeFormHandling() {
                     return response.json();
                 } else {
                     return response.text().then(text => {
-                        console.error('Server returned HTML instead of JSON');
+                        console.error('❌ Server returned HTML instead of JSON');
+                        console.error('❌ Response text (first 500 chars):', text.substring(0, 500));
                         throw new Error('Server returned HTML instead of JSON');
                     });
                 }
             })
             .then(data => {
+                console.log('📥 Response data:', data);
+                
                 if (data.success) {
+                    console.log('✅ Success! Project ID:', data.project_id);
+                    console.log('✅ Message:', data.message);
+                    
+                    // Check if additional images were processed
+                    if (data.additional_images_count !== undefined) {
+                        console.log('✅ Additional images count:', data.additional_images_count);
+                        if (data.additional_images_count === 0) {
+                            console.warn('⚠️ Warning: No additional images were inserted into database!');
+                            console.warn('⚠️ Additional images array:', data.additional_images);
+                        } else {
+                            console.log('✅ Additional images paths:', data.additional_images);
+                        }
+                    }
+                    
                     showSuccessMessage(data.message || 'پڕۆژە بە سەرکەوتوویی هەڵگیرا');
                     closeProjectModal();
                     // Update projects list dynamically instead of reloading
@@ -130,6 +155,7 @@ function initializeFormHandling() {
                         updateProjectsList();
                     }, 500);
                 } else {
+                    console.error('❌ Server returned error:', data.message);
                     showErrorMessage(data.message || 'هەڵەیەک ڕوویدا');
                     if (submitBtn) {
                         submitBtn.disabled = false;
@@ -138,11 +164,12 @@ function initializeFormHandling() {
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('❌ Fetch Error:', error);
+                console.error('❌ Error stack:', error.stack);
                 showErrorMessage('هەڵەیەک ڕوویدا: ' + error.message);
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i><?php echo t("save_project"); ?>';
+                    submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>پاشەکەوتکردن';
                 }
             });
         });

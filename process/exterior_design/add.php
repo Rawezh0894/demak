@@ -169,11 +169,16 @@ try {
     
     // Return JSON response for AJAX
     header('Content-Type: application/json');
-    echo json_encode([
+    $response = [
         'success' => true,
         'message' => 'پڕۆژە بە سەرکەوتوویی زیاد کرا',
-        'project_id' => $project_id
-    ]);
+        'project_id' => $project_id,
+        'additional_images_count' => count($additional_images),
+        'additional_images' => $additional_images
+    ];
+    
+    error_log("✅ Final response: " . json_encode($response));
+    echo json_encode($response);
     exit;
     
 } catch (Exception $e) {
