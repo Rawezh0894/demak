@@ -26,10 +26,8 @@ try {
         throw new Exception('ناوی پڕۆژە زۆر درێژە (زیاتر لە 255 پیت)');
     }
     
-    // Validate price format
-    if (!preg_match('/^[0-9,.\s]+$/', $project_price)) {
-        throw new Exception('نرخەکە پێویستە تەنها ژمارە بێت');
-    }
+    // Price and duration can contain both text and numbers - no strict validation needed
+    // Just ensure they are not empty (already checked above)
     
     
     // Handle file uploads
