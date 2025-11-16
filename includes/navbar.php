@@ -450,84 +450,126 @@ document.addEventListener('click', function(event) {
 });
 
 // Smooth scroll for anchor links without page reload
-document.addEventListener('DOMContentLoaded', function() {
-    // Get current page path
-    const currentPage = window.location.pathname.split('/').pop();
-    const isIndexPage = currentPage === 'index.php' || currentPage === '' || currentPage === 'index.html';
+(function() {
+    'use strict';
     
-    // Handle all navigation links with hash
-    const navLinks = document.querySelectorAll('a[href*="#"]');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            
-            // Check if it's an anchor link to a section
-            if (href && href.includes('#')) {
-                const parts = href.split('#');
-                const pagePath = parts[0];
-                const sectionId = parts[1];
-                
-                // Check if we're on the same page or going to index.php
-                const isSamePage = isIndexPage && (pagePath === '' || pagePath === 'index.php' || pagePath.includes('index.php'));
-                
-                if (isSamePage && sectionId) {
-                    // Prevent default navigation
-                    e.preventDefault();
-                    
-                    // Find the target section
-                    const targetSection = document.getElementById(sectionId);
-                    
-                    if (targetSection) {
-                        // Calculate offset for sticky navbar (64px height)
-                        const navbarHeight = 64;
-                        const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-                        
-                        // Smooth scroll to section
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                        
-                        // Update URL hash without reload
-                        if (history.pushState) {
-                            history.pushState(null, null, '#' + sectionId);
-                        } else {
-                            window.location.hash = '#' + sectionId;
-                        }
-                        
-                        // Update active navigation states
-                        initializeNavigation();
-                        initializeSidebarNavigation();
-                        
-                        // Close mobile menu if open
-                        const mobileMenu = document.getElementById('mobileMenu');
-                        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                            mobileMenu.classList.add('hidden');
-                        }
-                    }
-                }
-            }
-        });
-    });
-    
-    // Handle initial hash on page load
-    if (window.location.hash && isIndexPage) {
-        const hash = window.location.hash.substring(1);
-        const targetSection = document.getElementById(hash);
+    function handleNavLinkClick(e) {
+        const link = e.currentTarget;
+        const href = link.getAttribute('href');
         
-        if (targetSection) {
-            // Small delay to ensure page is fully loaded
-            setTimeout(() => {
+        if (!href || !href.includes('#')) {
+            return; // Not an anchor link
+        }
+        
+        // Parse the href
+        const parts = href.split('#');
+        const pagePath = parts[0].replace(/^\.\.\/\.\.\//, '').replace(/^\.\.\//, '').replace(/^\//, '');
+        const sectionId = parts[1];
+        
+        if (!sectionId) {
+            return; // No section ID
+        }
+        
+        // Get current page
+        const currentPath = window.location.pathname;
+        const currentPage = currentPath.split('/').pop() || 'index.php';
+        
+        // Check if we're on index.php or root
+        const isIndexPage = currentPage === 'index.php' || currentPage === '' || currentPath.endsWith('/');
+        
+        // Check if the link points to index.php or current page
+        const pointsToIndex = pagePath === '' || pagePath === 'index.php' || pagePath.includes('index.php');
+        const isSamePage = isIndexPage && (pointsToIndex || pagePath === currentPage);
+        
+        if (isSamePage) {
+            // Prevent default navigation
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Find the target section
+            const targetSection = document.getElementById(sectionId);
+            
+            if (targetSection) {
+                // Calculate offset for sticky navbar (64px height)
                 const navbarHeight = 64;
                 const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
                 
+                // Smooth scroll to section
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
                 });
-            }, 100);
+                
+                // Update URL hash without reload
+                if (history.pushState) {
+                    history.pushState(null, null, '#' + sectionId);
+                } else {
+                    window.location.hash = '#' + sectionId;
+                }
+                
+                // Update active navigation states
+                if (typeof initializeNavigation === 'function') {
+                    initializeNavigation();
+                }
+                if (typeof initializeSidebarNavigation === 'function') {
+                    initializeSidebarNavigation();
+                }
+                
+                // Close mobile menu if open
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            }
         }
     }
-});
+    
+    // Initialize on DOM ready
+    function initSmoothScroll() {
+        // Handle all navigation links with hash (both desktop and mobile)
+        const navLinks = document.querySelectorAll('.nav-link[href*="#"]');
+        
+        navLinks.forEach(link => {
+            // Remove any existing listeners by removing and re-adding
+            link.removeEventListener('click', handleNavLinkClick, false);
+            // Add new listener with capture phase to ensure it runs first
+            link.addEventListener('click', handleNavLinkClick, true);
+        });
+    }
+    
+    // Run immediately and also on DOM ready (in case links are added dynamically)
+    initSmoothScroll();
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSmoothScroll);
+    }
+    
+    // Also run after a short delay to catch any dynamically added links
+    setTimeout(initSmoothScroll, 100);
+    
+    // Handle initial hash on page load
+    window.addEventListener('load', function() {
+        const currentPath = window.location.pathname;
+        const currentPage = currentPath.split('/').pop() || 'index.php';
+        const isIndexPage = currentPage === 'index.php' || currentPage === '' || currentPath.endsWith('/');
+        
+        if (window.location.hash && isIndexPage) {
+            const hash = window.location.hash.substring(1);
+            const targetSection = document.getElementById(hash);
+            
+            if (targetSection) {
+                // Small delay to ensure page is fully loaded
+                setTimeout(() => {
+                    const navbarHeight = 64;
+                    const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
+        }
+    });
+})();
 </script>

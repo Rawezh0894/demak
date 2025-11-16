@@ -72,16 +72,22 @@ function filterProjects(type) {
     });
 }
 
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+// Smooth scrolling for anchor links (only for pure hash links, not handled by navbar)
+document.querySelectorAll('a[href^="#"]:not(.nav-link)').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+        const href = this.getAttribute('href');
+        // Only handle if it's a pure hash link (not index.php#section)
+        if (href && href.startsWith('#') && href.length > 1) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                const navbarHeight = 64;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
         }
     });
 });
