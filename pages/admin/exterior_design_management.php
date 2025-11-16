@@ -756,10 +756,38 @@ require_once '../../process/exterior_design/exterior_design.php';
         
         document.getElementById('additionalImages')?.addEventListener('change', function(e) {
             const previewContainer = document.getElementById('additionalImagesPreview');
+            const mainImageInput = document.getElementById('mainImage');
+            const mainImageFile = mainImageInput?.files[0];
+            
             previewContainer.innerHTML = '';
             previewContainer.classList.remove('hidden');
             
-            Array.from(e.target.files).forEach((file, index) => {
+            // Get main image name to exclude it
+            const mainImageName = mainImageFile ? mainImageFile.name : '';
+            
+            // Filter out the main image and remove duplicates from additional images
+            const seenNames = new Set();
+            const additionalFiles = Array.from(e.target.files).filter(file => {
+                // Skip if it's the main image
+                if (file.name === mainImageName) {
+                    return false;
+                }
+                // Skip if we've seen this file name before (duplicate)
+                if (seenNames.has(file.name)) {
+                    return false;
+                }
+                seenNames.add(file.name);
+                return true;
+            });
+            
+            // Update the file input to exclude main image and duplicates
+            if (additionalFiles.length !== e.target.files.length) {
+                const dataTransfer = new DataTransfer();
+                additionalFiles.forEach(file => dataTransfer.items.add(file));
+                e.target.files = dataTransfer.files;
+            }
+            
+            additionalFiles.forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const thumbItem = document.createElement('div');

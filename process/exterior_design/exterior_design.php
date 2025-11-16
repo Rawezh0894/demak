@@ -68,10 +68,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Invalid request. Please try again.']);
         exit;
     } else if (isset($_POST['action'])) {
+        // Initialize processed_actions array if not exists
+        if (!isset($_SESSION['processed_actions'])) {
+            $_SESSION['processed_actions'] = [];
+        }
+        
+        // Clean old processed actions (older than 10 seconds) before checking
+        $current_time = time();
+        foreach ($_SESSION['processed_actions'] as $key => $timestamp) {
+            if ($current_time - $timestamp > 10) { // 10 seconds
+                unset($_SESSION['processed_actions'][$key]);
+            }
+        }
+        
         // Prevent duplicate submissions by checking if already processed
-        $action_key = $_POST['action'] . '_' . md5(serialize($_POST));
-        if (!isset($_SESSION['processed_actions'][$action_key])) {
-            $_SESSION['processed_actions'][$action_key] = time();
+        // For add_project: allow multiple submissions but prevent rapid duplicates (within 3 seconds)
+        // For edit/delete: use project_id to prevent duplicate operations on same project
+        $recent_action_found = false;
+        $action_key = '';
+        
+        if ($_POST['action'] === 'add_project') {
+            // For add_project, use simple action key with short cooldown
+            $action_key = $_POST['action'] . '_last';
+            if (isset($_SESSION['processed_actions'][$action_key])) {
+                $action_timestamp = $_SESSION['processed_actions'][$action_key];
+                if (($current_time - $action_timestamp) < 3) { // 3 seconds cooldown
+                    $recent_action_found = true;
+                }
+            }
+        } else {
+            // For edit/delete, use project_id to make it unique per project
+            $unique_id = isset($_POST['project_id']) && !empty($_POST['project_id']) ? $_POST['project_id'] : 'unknown';
+            $action_key = $_POST['action'] . '_' . $unique_id;
+            if (isset($_SESSION['processed_actions'][$action_key])) {
+                $action_timestamp = $_SESSION['processed_actions'][$action_key];
+                if (($current_time - $action_timestamp) < 3) { // 3 seconds cooldown
+                    $recent_action_found = true;
+                }
+            }
+        }
+        
+        if (!$recent_action_found) {
+            $_SESSION['processed_actions'][$action_key] = $current_time;
             
             try {
                 switch ($_POST['action']) {
@@ -88,14 +126,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo json_encode(['success' => false, 'message' => 'Invalid action']);
                         exit;
                 }
+                
+                // Keep the action key for 3 seconds to prevent immediate duplicate submissions
+                // It will be automatically cleaned up after 10 seconds
             } catch (Exception $e) {
                 error_log('Form processing error: ' . $e->getMessage());
+                // Remove action key on error so user can retry
+                if (isset($_SESSION['processed_actions'][$action_key])) {
+                    unset($_SESSION['processed_actions'][$action_key]);
+                }
                 echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
                 exit;
             }
         } else {
-            // Action already processed
-            echo json_encode(['success' => false, 'message' => 'Action already processed']);
+            // Action already processed recently
+            echo json_encode(['success' => false, 'message' => 'Action already processed. Please wait a moment and try again.']);
             exit;
         }
     } else {
@@ -104,11 +149,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Clean old processed actions (older than 1 hour)
+// Clean old processed actions (older than 10 seconds) - already done in POST handler above, but keep this as backup
 if (isset($_SESSION['processed_actions'])) {
     $current_time = time();
     foreach ($_SESSION['processed_actions'] as $key => $timestamp) {
-        if ($current_time - $timestamp > 3600) { // 1 hour
+        if ($current_time - $timestamp > 10) { // 10 seconds
             unset($_SESSION['processed_actions'][$key]);
         }
     }
