@@ -454,7 +454,9 @@ document.addEventListener('click', function(event) {
     'use strict';
     
     function handleNavLinkClick(e) {
-        const link = e.currentTarget;
+        const link = e.currentTarget || e.target.closest('a');
+        if (!link) return;
+        
         const href = link.getAttribute('href');
         
         if (!href || !href.includes('#')) {
@@ -463,28 +465,33 @@ document.addEventListener('click', function(event) {
         
         // Parse the href
         const parts = href.split('#');
-        const pagePath = parts[0].replace(/^\.\.\/\.\.\//, '').replace(/^\.\.\//, '').replace(/^\//, '');
+        let pagePath = parts[0].trim();
         const sectionId = parts[1];
         
         if (!sectionId) {
             return; // No section ID
         }
         
+        // Clean up the page path
+        pagePath = pagePath.replace(/^\.\.\/\.\.\//, '').replace(/^\.\.\//, '').replace(/^\//, '').replace(/\/$/, '');
+        
         // Get current page
         const currentPath = window.location.pathname;
         const currentPage = currentPath.split('/').pop() || 'index.php';
+        const currentPageClean = currentPage || 'index.php';
         
         // Check if we're on index.php or root
-        const isIndexPage = currentPage === 'index.php' || currentPage === '' || currentPath.endsWith('/');
+        const isIndexPage = currentPageClean === 'index.php' || currentPageClean === '' || currentPath.endsWith('/') || currentPath === '/';
         
         // Check if the link points to index.php or current page
-        const pointsToIndex = pagePath === '' || pagePath === 'index.php' || pagePath.includes('index.php');
-        const isSamePage = isIndexPage && (pointsToIndex || pagePath === currentPage);
+        const pointsToIndex = pagePath === '' || pagePath === 'index.php' || pagePath.endsWith('index.php') || pagePath.includes('index.php');
+        const isSamePage = isIndexPage && pointsToIndex;
         
         if (isSamePage) {
-            // Prevent default navigation
+            // Prevent default navigation - MUST be first
             e.preventDefault();
             e.stopPropagation();
+            e.stopImmediatePropagation();
             
             // Find the target section
             const targetSection = document.getElementById(sectionId);
@@ -520,6 +527,8 @@ document.addEventListener('click', function(event) {
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
                     mobileMenu.classList.add('hidden');
                 }
+                
+                return false;
             }
         }
     }
@@ -530,28 +539,30 @@ document.addEventListener('click', function(event) {
         const navLinks = document.querySelectorAll('.nav-link[href*="#"]');
         
         navLinks.forEach(link => {
-            // Remove any existing listeners by removing and re-adding
-            link.removeEventListener('click', handleNavLinkClick, false);
+            // Clone node to remove all existing listeners
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+            
             // Add new listener with capture phase to ensure it runs first
-            link.addEventListener('click', handleNavLinkClick, true);
+            newLink.addEventListener('click', handleNavLinkClick, true);
         });
     }
     
-    // Run immediately and also on DOM ready (in case links are added dynamically)
-    initSmoothScroll();
-    
+    // Run on DOM ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initSmoothScroll);
+    } else {
+        initSmoothScroll();
     }
     
     // Also run after a short delay to catch any dynamically added links
-    setTimeout(initSmoothScroll, 100);
+    setTimeout(initSmoothScroll, 200);
     
     // Handle initial hash on page load
     window.addEventListener('load', function() {
         const currentPath = window.location.pathname;
         const currentPage = currentPath.split('/').pop() || 'index.php';
-        const isIndexPage = currentPage === 'index.php' || currentPage === '' || currentPath.endsWith('/');
+        const isIndexPage = currentPage === 'index.php' || currentPage === '' || currentPath.endsWith('/') || currentPath === '/';
         
         if (window.location.hash && isIndexPage) {
             const hash = window.location.hash.substring(1);
