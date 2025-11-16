@@ -17,25 +17,17 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeSearch() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
+        let searchTimeout;
         searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const projectCards = document.querySelectorAll('.project-card');
-            let visibleCount = 0;
+            const searchTerm = this.value.trim();
             
-            projectCards.forEach(card => {
-                const projectName = card.dataset.name;
-                if (projectName && projectName.includes(searchTerm)) {
-                    card.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            // Clear previous timeout
+            clearTimeout(searchTimeout);
             
-            const noProjectsFound = document.getElementById('noProjectsFound');
-            if (noProjectsFound) {
-                noProjectsFound.classList.toggle('hidden', visibleCount > 0);
-            }
+            // Debounce search - wait 500ms after user stops typing
+            searchTimeout = setTimeout(() => {
+                updateProjectsList(1, searchTerm);
+            }, 500);
         });
     }
 }
@@ -133,14 +125,15 @@ function initializeFormHandling() {
                 if (data.success) {
                     showSuccessMessage(data.message || 'پڕۆژە بە سەرکەوتوویی هەڵگیرا');
                     closeProjectModal();
+                    // Update projects list dynamically instead of reloading
                     setTimeout(() => {
-                        window.location.reload();
-                    }, 1500);
+                        updateProjectsList();
+                    }, 500);
                 } else {
                     showErrorMessage(data.message || 'هەڵەیەک ڕوویدا');
                     if (submitBtn) {
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i><?php echo t("save_project"); ?>';
+                        submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>پاشەکەوتکردن';
                     }
                 }
             })
@@ -346,9 +339,10 @@ function confirmDelete() {
         if (data.success) {
             showSuccessMessage(data.message || 'پڕۆژە بە سەرکەوتوویی سڕایەوە');
             closeDeleteModal();
+            // Update projects list dynamically instead of reloading
             setTimeout(() => {
-                window.location.reload();
-            }, 1500);
+                updateProjectsList();
+            }, 500);
         } else {
             showErrorMessage(data.message || 'هەڵەیەک ڕوویدا');
         }
@@ -439,6 +433,138 @@ function removeAdditionalImage(index) {
     }
 }
 
+// Global pagination state
+let currentPage = 1;
+let totalPages = 1;
+let currentSearch = '';
+
+// Update projects list dynamically
+function updateProjectsList(page = 1, search = '') {
+    currentPage = page;
+    currentSearch = search || '';
+    
+    // Build query string
+    const params = new URLSearchParams();
+    if (page > 1) params.append('page', page);
+    if (search) params.append('search', search);
+    
+    const url = '../../process/exterior_design/get_projects_list.php' + 
+                (params.toString() ? '?' + params.toString() : '');
+    
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                return response.text().then(text => {
+                    throw new Error('Server returned HTML instead of JSON.');
+                });
+            }
+        })
+        .then(data => {
+            if (data.success) {
+                renderProjectsList(data.projects);
+                if (data.pagination) {
+                    totalPages = data.pagination.total_pages;
+                }
+            } else {
+                console.error('API Error:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            // Fallback to page reload if dynamic update fails
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        });
+}
+
+// Render projects list
+function renderProjectsList(projects) {
+    const projectsGrid = document.getElementById('projectsGrid');
+    if (!projectsGrid) return;
+    
+    if (projects.length === 0) {
+        projectsGrid.innerHTML = `
+            <div class="col-span-full text-center py-16">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-12">
+                    <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-8">
+                        <i class="fas fa-folder-open text-gray-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                        ${window.translations && window.translations.noProjectsFound ? window.translations.noProjectsFound : 'هیچ پڕۆژەیەک نەدۆزرایەوە'}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 text-lg">
+                        هێشتا هیچ پڕۆژەیەک زیاد نەکراوە
+                    </p>
+                    <button onclick="openAddProjectModal()" 
+                            class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        <i class="fas fa-plus mr-3"></i>
+                        ${window.translations && window.translations.addNewProject ? window.translations.addNewProject : 'زیادکردنی پڕۆژەی نوێ'}
+                    </button>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    projectsGrid.innerHTML = projects.map(project => `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden project-card transition-all duration-300 hover:shadow-2xl hover:-translate-y-2" 
+             data-name="${(project.name || '').toLowerCase()}"
+             data-price="${project.price || ''}">
+            <!-- Project Image -->
+            <div class="relative h-56 bg-gray-200 dark:bg-gray-700">
+                ${project.main_image ? 
+                    `<img src="../../${project.main_image}" alt="${project.name || ''}" class="w-full h-full object-cover">` :
+                    `<div class="w-full h-full flex items-center justify-center">
+                        <i class="fas fa-image text-gray-400 text-5xl"></i>
+                    </div>`
+                }
+            </div>
+            
+            <!-- Project Content -->
+            <div class="p-8">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                    ${project.name || ''}
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 text-base mb-6 line-clamp-2">
+                    ${project.description || ''}
+                </p>
+                
+                <!-- Project Info -->
+                <div class="flex items-center justify-between text-base text-gray-500 dark:text-gray-400 mb-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-dollar-sign mr-2 text-green-600"></i>
+                        <span class="font-semibold">${project.price || ''}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-clock mr-2 text-blue-600"></i>
+                        <span class="font-semibold">${project.duration || ''}</span>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex gap-3">
+                    <button onclick="editProject(${project.id})" 
+                            class="flex-1 action-btn action-btn-edit">
+                        <i class="fas fa-edit"></i>
+                        <span>دەستکاری</span>
+                    </button>
+                    <button onclick="deleteProject(${project.id})" 
+                            class="action-btn action-btn-delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
 // Make functions globally available
 window.openAddProjectModal = openAddProjectModal;
 window.editProject = editProject;
@@ -448,3 +574,4 @@ window.closeProjectModal = closeProjectModal;
 window.closeDeleteModal = closeDeleteModal;
 window.removeMainImage = removeMainImage;
 window.removeAdditionalImage = removeAdditionalImage;
+window.updateProjectsList = updateProjectsList;

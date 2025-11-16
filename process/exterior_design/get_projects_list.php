@@ -66,10 +66,11 @@ try {
     
     // Load images for each project
     foreach ($projects as &$project) {
-        $stmt = $pdo->prepare("SELECT * FROM exterior_design_images WHERE project_id = ? ORDER BY sort_order ASC");
-        $stmt->execute([$project['id']]);
-        $project['images'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $image_stmt = $pdo->prepare("SELECT * FROM exterior_design_images WHERE project_id = ? ORDER BY sort_order ASC");
+        $image_stmt->execute([$project['id']]);
+        $project['images'] = $image_stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    unset($project);
     
     // Prepare response data
     $response_data = [
