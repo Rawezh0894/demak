@@ -7,7 +7,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
 ?>
 
 <!-- Heritage Dimak Section -->
-<section id="heritage-dimak" class="py-20 bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900 transition-colors duration-300">
+<section id="heritage-dimak" class="py-20 bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="text-center mb-16">
@@ -19,38 +19,13 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                 <?php echo $current_lang === 'ku' ? 'دیمەک' : ($current_lang === 'ar' ? 'ديماك' : 'Dimak'); ?>
             </h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-500 dark:from-blue-400 dark:to-cyan-400 mx-auto rounded-full"></div>
+            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-500 mx-auto rounded-full"></div>
         </div>
 
         <!-- Main Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <!-- Image/Visual Section -->
-            <div class="order-2 lg:order-1 <?php echo $flex_direction; ?>">
-                <div class="relative group">
-                    <!-- Decorative Background -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 dark:from-blue-500/10 dark:to-cyan-500/10 rounded-3xl blur-3xl transform group-hover:scale-110 transition-all duration-500"></div>
-                    
-                    <!-- Main Image Container -->
-                    <div class="relative bg-white dark:bg-gray-800 rounded-3xl shadow-2xl dark:shadow-gray-900/50 overflow-hidden transform group-hover:scale-[1.02] transition-all duration-500">
-                        <div class="aspect-[4/3] bg-gradient-to-br from-amber-50 via-stone-100 to-amber-50 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 flex items-center justify-center transition-colors duration-300">
-                            <!-- Placeholder for Dimak image - can be replaced with actual image -->
-                            <div class="text-center p-8">
-                                <i class="fas fa-cube text-8xl text-amber-600 dark:text-amber-400 mb-4 opacity-50"></i>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">
-                                    <?php echo $current_lang === 'ku' ? 'وێنەی دیمەک' : ($current_lang === 'ar' ? 'صورة ديماك' : 'Dimak Image'); ?>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Floating Elements -->
-                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-blue-500/10 dark:bg-blue-400/20 rounded-full blur-xl animate-pulse transition-colors duration-300"></div>
-                    <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-cyan-500/10 dark:bg-cyan-400/20 rounded-full blur-xl animate-pulse delay-300 transition-colors duration-300"></div>
-                </div>
-            </div>
-
+        <div class="max-w-4xl mx-auto">
             <!-- Text Content Section -->
-            <div class="order-1 lg:order-2 <?php echo $text_alignment; ?>">
+            <div class="<?php echo $text_alignment; ?>">
                 <div class="space-y-6">
                     <!-- Introduction -->
                     <div class="prose prose-lg dark:prose-invert max-w-none">
@@ -73,7 +48,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Benefit 1: Structural Binding -->
-                            <div class="group p-6 bg-white/60 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg dark:hover:shadow-blue-500/20">
+                            <div class="group p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg">
                                 <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
                                     <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                         <i class="fas fa-link text-white text-lg"></i>
@@ -90,7 +65,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                             </div>
 
                             <!-- Benefit 2: Moisture Absorption -->
-                            <div class="group p-6 bg-white/60 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg dark:hover:shadow-blue-500/20">
+                            <div class="group p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg">
                                 <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
                                     <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                         <i class="fas fa-tint text-white text-lg"></i>
@@ -107,7 +82,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                             </div>
 
                             <!-- Benefit 3: Architectural Beauty -->
-                            <div class="group p-6 bg-white/60 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg dark:hover:shadow-blue-500/20 md:col-span-2">
+                            <div class="group p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg md:col-span-2">
                                 <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
                                     <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                         <i class="fas fa-palette text-white text-lg"></i>
@@ -126,7 +101,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                     </div>
 
                     <!-- Cultural Significance -->
-                    <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-2xl border-l-4 border-blue-500 dark:border-blue-400 transition-all duration-300">
+                    <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl border-l-4 border-blue-500">
                         <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
                             <i class="fas fa-landmark text-blue-600 dark:text-blue-400 text-2xl mt-1"></i>
                             <div>
