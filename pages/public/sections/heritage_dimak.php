@@ -101,14 +101,14 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                     </div>
 
                     <!-- Cultural Significance -->
-                    <div class="mt-8 p-6 bg-blue-50 dark:bg-gray-700/50 rounded-2xl border-l-4 border-blue-500 transition-colors duration-300">
+                    <div class="mt-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl border-l-4 border-blue-500 dark:border-blue-400 transition-colors duration-300">
                         <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
                             <i class="fas fa-landmark text-blue-600 dark:text-blue-400 text-2xl mt-1 transition-colors duration-300"></i>
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 transition-colors duration-300">
                                     <?php echo $current_lang === 'ku' ? 'گرنگیداری کولتووری' : ($current_lang === 'ar' ? 'الأهمية الثقافية' : 'Cultural Significance'); ?>
                                 </h4>
-                                <p class="text-gray-700 dark:text-gray-300 leading-relaxed transition-colors duration-300">
+                                <p class="text-gray-600 dark:text-gray-300 leading-relaxed transition-colors duration-300">
                                     <?php echo $current_lang === 'ku' ? 'دیمەک نیشانەیەکی گرنگی میراتی کوردی و تەلارسازی ناوچەی هەورامانە، کە نیشاندەری زیرەکی و داهێنانی پیشەسازانی کوردییە' : ($current_lang === 'ar' ? 'ديماك علامة مهمة على التراث الكردي والهندسة المعمارية لمنطقة هورامان، مما يدل على ذكاء وإبداع الحرفيين الأكراد' : 'Dimak is an important symbol of Kurdish heritage and the architecture of the Hawraman region, representing the intelligence and creativity of Kurdish craftsmen'); ?>
                                 </p>
                             </div>
