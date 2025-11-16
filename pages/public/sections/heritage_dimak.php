@@ -7,7 +7,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
 ?>
 
 <!-- Heritage Dimak Section -->
-<section id="heritage-dimak" class="py-20 bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+<section id="heritage-dimak" class="py-20 bg-white dark:bg-gray-800 transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="text-center mb-16">
@@ -48,7 +48,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Benefit 1: Structural Binding -->
-                            <div class="group p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg">
+                            <div class="group p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg">
                                 <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
                                     <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                         <i class="fas fa-link text-white text-lg"></i>
@@ -65,7 +65,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                             </div>
 
                             <!-- Benefit 2: Moisture Absorption -->
-                            <div class="group p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg">
+                            <div class="group p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg">
                                 <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
                                     <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                         <i class="fas fa-tint text-white text-lg"></i>
@@ -82,7 +82,7 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                             </div>
 
                             <!-- Benefit 3: Architectural Beauty -->
-                            <div class="group p-6 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg md:col-span-2">
+                            <div class="group p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg md:col-span-2">
                                 <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
                                     <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
                                         <i class="fas fa-palette text-white text-lg"></i>
@@ -101,14 +101,14 @@ $flex_direction = $is_rtl ? 'flex-row-reverse' : '';
                     </div>
 
                     <!-- Cultural Significance -->
-                    <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl border-l-4 border-blue-500">
+                    <div class="mt-8 p-6 bg-blue-50 dark:bg-gray-700/50 rounded-2xl border-l-4 border-blue-500 transition-colors duration-300">
                         <div class="flex items-start space-x-4 <?php echo $is_rtl ? 'space-x-reverse' : ''; ?>">
-                            <i class="fas fa-landmark text-blue-600 dark:text-blue-400 text-2xl mt-1"></i>
+                            <i class="fas fa-landmark text-blue-600 dark:text-blue-400 text-2xl mt-1 transition-colors duration-300"></i>
                             <div>
-                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 transition-colors duration-300">
                                     <?php echo $current_lang === 'ku' ? 'گرنگیداری کولتووری' : ($current_lang === 'ar' ? 'الأهمية الثقافية' : 'Cultural Significance'); ?>
                                 </h4>
-                                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                <p class="text-gray-700 dark:text-gray-300 leading-relaxed transition-colors duration-300">
                                     <?php echo $current_lang === 'ku' ? 'دیمەک نیشانەیەکی گرنگی میراتی کوردی و تەلارسازی ناوچەی هەورامانە، کە نیشاندەری زیرەکی و داهێنانی پیشەسازانی کوردییە' : ($current_lang === 'ar' ? 'ديماك علامة مهمة على التراث الكردي والهندسة المعمارية لمنطقة هورامان، مما يدل على ذكاء وإبداع الحرفيين الأكراد' : 'Dimak is an important symbol of Kurdish heritage and the architecture of the Hawraman region, representing the intelligence and creativity of Kurdish craftsmen'); ?>
                                 </p>
                             </div>
