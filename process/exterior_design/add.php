@@ -72,9 +72,9 @@ try {
     }
     
     if (isset($_FILES['additional_images']) && !empty($_FILES['additional_images']['name'][0])) {
-        $upload_dir = '../../assets/images/projects/exterior_design/gallery/';
-        if (!file_exists($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
+        $gallery_upload_dir = '../../assets/images/projects/exterior_design/gallery/';
+        if (!file_exists($gallery_upload_dir)) {
+            mkdir($gallery_upload_dir, 0755, true);
         }
         
         $file_count = count($_FILES['additional_images']['name']);
@@ -97,7 +97,7 @@ try {
                 
                 $file_extension = pathinfo($_FILES['additional_images']['name'][$i], PATHINFO_EXTENSION);
                 $image_name = 'gallery_' . time() . '_' . $i . '_' . rand(1000, 9999) . '.' . $file_extension;
-                $image_path = $upload_dir . $image_name;
+                $image_path = $gallery_upload_dir . $image_name;
                 
                 error_log("🔍   - Moving to: " . $image_path);
                 if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $image_path)) {
