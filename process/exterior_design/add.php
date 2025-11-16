@@ -62,6 +62,15 @@ try {
     // Get main image name to exclude it from additional images
     $main_image_uploaded_name = isset($_FILES['main_image']['name']) ? $_FILES['main_image']['name'] : '';
     
+    // Debug: Log additional images
+    error_log("🔍 Additional images check:");
+    error_log("🔍 _FILES['additional_images'] exists: " . (isset($_FILES['additional_images']) ? 'yes' : 'no'));
+    if (isset($_FILES['additional_images'])) {
+        error_log("🔍 _FILES['additional_images']['name']: " . print_r($_FILES['additional_images']['name'], true));
+        error_log("🔍 _FILES['additional_images']['error']: " . print_r($_FILES['additional_images']['error'], true));
+        error_log("🔍 First file name: " . (isset($_FILES['additional_images']['name'][0]) ? $_FILES['additional_images']['name'][0] : 'not set'));
+    }
+    
     if (isset($_FILES['additional_images']) && !empty($_FILES['additional_images']['name'][0])) {
         $upload_dir = '../../assets/images/projects/exterior_design/gallery/';
         if (!file_exists($upload_dir)) {
@@ -69,13 +78,20 @@ try {
         }
         
         $file_count = count($_FILES['additional_images']['name']);
+        error_log("🔍 File count: " . $file_count);
+        
         for ($i = 0; $i < $file_count; $i++) {
+            error_log("🔍 Processing file $i:");
+            error_log("🔍   - Name: " . ($_FILES['additional_images']['name'][$i] ?? 'not set'));
+            error_log("🔍   - Error: " . ($_FILES['additional_images']['error'][$i] ?? 'not set'));
+            
             if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
                 // Skip if this is the main image (check by name)
                 $uploaded_file_name = $_FILES['additional_images']['name'][$i];
                 
                 // Skip if this file is the same as main image
                 if (!empty($main_image_uploaded_name) && $uploaded_file_name === $main_image_uploaded_name) {
+                    error_log("🔍   - Skipped (same as main image)");
                     continue;
                 }
                 
@@ -83,7 +99,9 @@ try {
                 $image_name = 'gallery_' . time() . '_' . $i . '_' . rand(1000, 9999) . '.' . $file_extension;
                 $image_path = $upload_dir . $image_name;
                 
+                error_log("🔍   - Moving to: " . $image_path);
                 if (move_uploaded_file($_FILES['additional_images']['tmp_name'][$i], $image_path)) {
+                    error_log("✅   - File moved successfully");
                     // Compress additional image (max 1200x800, quality 85)
                     if (!class_exists('ImageCompressor')) {
                         require_once '../../includes/ImageCompressor.php';
@@ -91,9 +109,16 @@ try {
                     ImageCompressor::compress($image_path, null, 85, 1200, 800);
                     
                     $additional_images[] = 'assets/images/projects/exterior_design/gallery/' . $image_name;
+                    error_log("✅   - Added to additional_images array: " . $additional_images[count($additional_images) - 1]);
+                } else {
+                    error_log("❌   - Failed to move file");
                 }
+            } else {
+                error_log("❌   - Upload error: " . $_FILES['additional_images']['error'][$i]);
             }
         }
+        
+        error_log("🔍 Total additional images processed: " . count($additional_images));
     }
     
     // Insert project into database
@@ -120,6 +145,7 @@ try {
     $project_id = $pdo->lastInsertId();
     
     // Insert additional images
+    error_log("🔍 Inserting additional images into database. Count: " . count($additional_images));
     if (!empty($additional_images)) {
         $image_stmt = $pdo->prepare("
             INSERT INTO exterior_design_images (project_id, image_path, is_main, sort_order) 
@@ -127,8 +153,13 @@ try {
         ");
         
         foreach ($additional_images as $index => $image_path) {
+            error_log("🔍 Inserting image $index: " . $image_path);
             $image_stmt->execute([$project_id, $image_path, $index + 1]);
+            error_log("✅ Image $index inserted successfully");
         }
+        error_log("✅ All additional images inserted into database");
+    } else {
+        error_log("⚠️ No additional images to insert");
     }
     
     // Log the action

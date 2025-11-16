@@ -86,6 +86,30 @@ function initializeFormHandling() {
             
             const formData = new FormData(this);
             
+            // Debug: Check additional images
+            const additionalImagesInput = document.getElementById('additionalImages');
+            console.log('📤 Form submission - additionalImagesInput:', additionalImagesInput);
+            console.log('📤 Form submission - additionalImagesInput.files:', additionalImagesInput ? additionalImagesInput.files : 'N/A');
+            console.log('📤 Form submission - additionalImagesInput.files.length:', additionalImagesInput ? additionalImagesInput.files.length : 'N/A');
+            
+            // Check FormData for additional_images
+            const additionalImagesInFormData = formData.getAll('additional_images[]');
+            console.log('📤 FormData - additional_images[] count:', additionalImagesInFormData.length);
+            for (let i = 0; i < additionalImagesInFormData.length; i++) {
+                const file = additionalImagesInFormData[i];
+                console.log(`📤 FormData - additional_images[${i}]:`, file instanceof File ? file.name : file);
+            }
+            
+            // Log all FormData entries
+            console.log('📤 FormData entries:');
+            for (let pair of formData.entries()) {
+                if (pair[1] instanceof File) {
+                    console.log(`📤   ${pair[0]}: File - ${pair[1].name} (${pair[1].size} bytes)`);
+                } else {
+                    console.log(`📤   ${pair[0]}: ${pair[1]}`);
+                }
+            }
+            
             fetch(window.location.href, {
                 method: 'POST',
                 body: formData
