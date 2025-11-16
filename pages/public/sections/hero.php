@@ -71,13 +71,13 @@ $brand_highlight_alignment = $is_rtl ? 'md:ml-auto md:mr-0' : 'md:mr-auto md:ml-
                     </a>
                     <div class="flex flex-wrap <?php echo $badge_alignment; ?> gap-3 text-white/85 text-sm sm:text-base">
                         <span class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-300/40 text-sky-100 shadow-md shadow-blue-900/20">
-                            <?php echo t('innovative_design'); ?>
+                            <?php echo $current_lang === 'ku' ? 'نوێکاری' : ($current_lang === 'ar' ? 'الابتكار' : 'Innovation'); ?>
                         </span>
                         <span class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-300/40 text-sky-100 shadow-md shadow-blue-900/20">
-                            <?php echo t('precision_engineering'); ?>
+                            <?php echo $current_lang === 'ku' ? 'کوالێتی' : ($current_lang === 'ar' ? 'الجودة' : 'Quality'); ?>
                         </span>
                         <span class="px-4 py-2 rounded-full bg-blue-500/10 border border-blue-300/40 text-sky-100 shadow-md shadow-blue-900/20">
-                            <?php echo t('timely_delivery'); ?>
+                            <?php echo $current_lang === 'ku' ? 'متمانە' : ($current_lang === 'ar' ? 'الثقة' : 'Trust'); ?>
                         </span>
                     </div>
                 </div>
