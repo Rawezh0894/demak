@@ -448,4 +448,86 @@ document.addEventListener('click', function(event) {
         userMenu.classList.add('hidden');
     }
 });
+
+// Smooth scroll for anchor links without page reload
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current page path
+    const currentPage = window.location.pathname.split('/').pop();
+    const isIndexPage = currentPage === 'index.php' || currentPage === '' || currentPage === 'index.html';
+    
+    // Handle all navigation links with hash
+    const navLinks = document.querySelectorAll('a[href*="#"]');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Check if it's an anchor link to a section
+            if (href && href.includes('#')) {
+                const parts = href.split('#');
+                const pagePath = parts[0];
+                const sectionId = parts[1];
+                
+                // Check if we're on the same page or going to index.php
+                const isSamePage = isIndexPage && (pagePath === '' || pagePath === 'index.php' || pagePath.includes('index.php'));
+                
+                if (isSamePage && sectionId) {
+                    // Prevent default navigation
+                    e.preventDefault();
+                    
+                    // Find the target section
+                    const targetSection = document.getElementById(sectionId);
+                    
+                    if (targetSection) {
+                        // Calculate offset for sticky navbar (64px height)
+                        const navbarHeight = 64;
+                        const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                        
+                        // Smooth scroll to section
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Update URL hash without reload
+                        if (history.pushState) {
+                            history.pushState(null, null, '#' + sectionId);
+                        } else {
+                            window.location.hash = '#' + sectionId;
+                        }
+                        
+                        // Update active navigation states
+                        initializeNavigation();
+                        initializeSidebarNavigation();
+                        
+                        // Close mobile menu if open
+                        const mobileMenu = document.getElementById('mobileMenu');
+                        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                }
+            }
+        });
+    });
+    
+    // Handle initial hash on page load
+    if (window.location.hash && isIndexPage) {
+        const hash = window.location.hash.substring(1);
+        const targetSection = document.getElementById(hash);
+        
+        if (targetSection) {
+            // Small delay to ensure page is fully loaded
+            setTimeout(() => {
+                const navbarHeight = 64;
+                const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+    }
+});
 </script>
