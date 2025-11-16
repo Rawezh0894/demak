@@ -122,6 +122,9 @@ $page_dir = $languages[$current_lang]['dir'];
         <!-- Include Services Section -->
         <?php include 'pages/public/sections/services.php'; ?>
         
+        <!-- Include Heritage Dimak Section -->
+        <?php include 'pages/public/sections/heritage_dimak.php'; ?>
+        
         <!-- Include Contact Section -->
         <?php include 'pages/public/sections/contact.php'; ?>
         
